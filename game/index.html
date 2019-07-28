@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="de">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Saisonknobeln</title>
+		<style>
+			body {
+				overflow:hidden;
+				padding:0;
+				border:0;
+				margin:0;
+			}
+			
+			#mati_spiel_alles {
+				position:fixed;
+				top:0;
+				left:0;
+				right:0;
+				bottom:0;
+				background-color:#ddd;
+				color:black;
+				font-family: Helvetica, Arial, sans-serif;
+			}
+			
+			#mati_spiel_spielerliste_container {
+				position:absolute;
+				bottom:0;
+				left:0;
+				top:6em;
+				width:50%;
+				overflow:hidden;
+			}
+			#mati_spiel_spielerwarteliste_container {
+				position:absolute;
+				bottom:0;
+				right:0;
+				top:6em;
+				width:50%;
+				overflow:hidden;
+			}
+			#mati_spiel_spielerliste {
+				position:absolute;
+				top:0;
+				left:1em;
+				bottom:1em;
+				right:.5em;
+				background-color:#666;
+				border-radius:1em;
+			}
+			#mati_spiel_spielerwarteliste {
+				position:absolute;
+				top:0;
+				left:.5em;
+				bottom:1em;
+				right:1em;
+				background-color:#666;
+				border-radius:1em;
+			}
+			#mati_spiel_spielerliste_content,
+			#mati_spiel_spielerwarteliste_content {
+				position:absolute;
+				top:2em;
+				left:.2em;
+				right:.2em;
+				bottom:.2em;
+				overflow:hidden;
+				background-color:black;
+				border-bottom-left-radius:.8em;
+				border-bottom-right-radius:.8em;
+			}
+			#mati_spiel_spielerliste_caption,
+			#mati_spiel_spielerwarteliste_caption {
+				position:absolute;
+				top:0;
+				left:0;
+				right:0;
+				height:2em;
+				line-height:2em;
+				vertical-align:middle;
+				padding-left:1em;
+				color:white;
+			}
+			h1 {
+				font-size:2em;
+				line-height:1.5em;
+				vertical-align:middle;
+				height:1.5em;
+				font-weight:bold;
+				text-align:center;
+				margin:0;
+				padding:0;
+			}
+			#mati_spiel_joincode_container {
+				height:2em;
+				line-height:2em;
+				vertical-align:middle;
+				text-align:center;
+			}
+			
+			#mati_spiel_spielerliste_content ul,
+			#mati_spiel_spielerwarteliste_content ul {
+				margin:0;
+				padding:0;
+				list-style-type: none;
+			}
+			#mati_spiel_spielerliste_content li,
+            #mati_spiel_spielerwarteliste_content li {
+				padding:0;
+				margin:0;
+				height:2em;
+				vertical-align:middle;
+				overflow:hidden;
+			}
+			#mati_spiel_spielerliste_content span.mati_spieler_img,
+			#mati_spiel_spielerwarteliste_content span.mati_spieler_img {
+				float:left;
+				border-radius:.9em;
+				padding:.1em;
+				width:1.6em;
+				height:1.6em;
+				margin-top:.1em;
+				margin-left:.1em;
+				margin-right:.4em;
+				overflow:hidden;
+			}
+			#mati_spiel_spielerliste_content span.mati_spieler_img img,
+            #mati_spiel_spielerwarteliste_content span.mati_spieler_img img {
+				float:left;
+				width:1.6em;
+				height:1.6em;
+				border-radius:.8em;
+			}
+			#mati_spiel_spielerliste_content span.mati_spieler_text,
+			#mati_spiel_spielerwarteliste_content span.mati_spieler_text {
+				display:block;
+				float:left;
+				height:2em;
+				line-height:2em;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="mati_spiel_alles">
+			<div id="mati_spiel_lobby">
+				<h1>Saisonknobeln</h1>
+				
+				<div id="mati_spiel_joincode_container">Join-Code: <span id="mati_spiel_joincode">???</span></div>
+				
+				<div id="mati_spiel_spielerliste_container">
+					<div id="mati_spiel_spielerliste">
+						<div id="mati_spiel_spielerliste_caption">
+							Spieler
+						</div>
+						<div id="mati_spiel_spielerliste_content">
+						</div>
+					</div>
+				</div>
+				
+				<div id="mati_spiel_spielerwarteliste_container">
+					<div id="mati_spiel_spielerwarteliste">
+						<div id="mati_spiel_spielerwarteliste_caption">
+							Warteliste
+						</div>
+						<div id="mati_spiel_spielerwarteliste_content">
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+
+
+		<script src="https://tiltspot.tv/api/game/game-1.0.0.js" rel="script" type="application/javascript"></script>
+		<script src="matiUtil.js" rel="script" type="application/javascript"></script>
+		<script src="matiFarbutil.js" rel="script" type="application/javascript"></script>
+		<script src="saisonknobeln.js" rel="script" type="application/javascript"></script>
+		<script>
+			Tiltspot.on.ready = function() {
+				console.log('ready');
+				document.getElementById('mati_spiel_joincode').innerText = Tiltspot.get.entryCode();
+				mati.knobel.spielerChanged();
+			};
+			Tiltspot.on.connect = function(controllerId) {
+				console.log('Connect Controller ' + controllerId);
+				mati.knobel.spielerChanged();
+			}; 
+			Tiltspot.on.disconnect = function(controllerId) {
+				console.log('Controller ' + controllerId + ' disconnected');
+				mati.knobel.spielerChanged();
+			};
+			Tiltspot.on.reconnect = function(controllerId) {
+				console.log('Controller ' + controllerId + ' is back!');
+				mati.knobel.spielerChanged();
+			};
+			Tiltspot.on.msg = function (controllerId, msg, data) {
+				console.log('msg', controllerId, msg, data);
+				//switch (msg) { 
+					//case 'move':
+						//alert(msg);
+						//if(data.val != null) alert(msg, data);
+						//break;
+				//}
+			};				
+		
+			var onAenderungDerFenstergroesse = function() {
+				var allesFontSize = Math.min(window.innerWidth, window.innerHeight) / 23;
+				document.getElementById('mati_spiel_alles').style["font-size"] = allesFontSize + "px";
+			};
+			onAenderungDerFenstergroesse();
+			window.addEventListener( 'resize', onAenderungDerFenstergroesse, false );
+		</script>
+
+	</body>
+</html>

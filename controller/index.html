@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="de">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Saisonknobeln</title>
+		<script src='https://tiltspot.tv/api/controller/controller-1.0.0.js' rel='script' type='application/javascript'></script>
+		<script>
+			var mati = {};
+			
+			Tiltspot.on.ready = function(){
+				console.log('ready');
+			}
+			
+			Tiltspot.on.msg = function (controllerId, msg, data) {
+				console.log('msg', controllerId, msg, data);
+				//switch (msg) { 
+					//case 'move':
+						//alert(msg);
+						//if(data.val != null) alert(msg, data);
+						//break;
+				//}
+			};
+			
+			window.addEventListener("load", function () {
+				var onAenderungDerFenstergroesse = function() {
+					var allesFontSize = Math.min(window.innerWidth, window.innerHeight) / 23;
+					document.getElementById('mati_controller_alles').style["font-size"] = allesFontSize + "px";
+				};
+				onAenderungDerFenstergroesse();
+				window.addEventListener( 'resize', onAenderungDerFenstergroesse, false );
+			});
+		</script>
+		<style>
+			body {
+				overflow:hidden;
+				padding:0;
+				border:0;
+				margin:0;
+			}
+		
+			#mati_controller_alles {
+				position:fixed;
+				top:0;
+				left:0;
+				right:0;
+				bottom:0;
+				background-color:black;
+				color:white;
+				font-family: Helvetica, Arial, sans-serif;
+				
+				-webkit-user-select: none;  
+				-moz-user-select: none;    
+				-ms-user-select: none;      
+				user-select: none;
+			}
+			
+			.mati_hauptmenuebutton,
+			.mati_hauptmenuebutton_deaktiviert {
+				display:block;
+				text-decoration:none;
+				color: white;
+				background-color:#16d;
+				padding:.5em;
+				text-align:center;
+				line-height:2em;
+				border-radius:1.5em;
+				vertical-align:middle;
+				border:0;
+				font-family: Sans-Serif;
+				font-size:100%;
+				text-align:center;
+				width:15em;
+				box-sizing: border-box;
+				margin:1em auto;
+			}
+			.mati_hauptmenuebutton_deaktiviert {
+				opacity: .3;
+			}
+			.mati_hauptmenuebutton:focus {
+				color:#fc5;
+				background-color:#38f;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="mati_controller_alles">
+			<div id="mati_hauptmenue">
+				<div class="mati_hauptmenuebutton">Neue Spiel</div>
+				<div class="mati_hauptmenuebutton">Spiel fortsetzen</div>
+				<div class="mati_hauptmenuebutton">Beenden</div>
+			</div>
+		</div>
+	</body>
+</html>
