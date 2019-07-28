@@ -3,7 +3,9 @@ Simple jam game written in HTML/JS for the tiltspot.tv platform
 
 ## Status
 
-Saisonknobeln ist aktuell noch kein Spiel, sondern in einer frühen Stadium. Man sieht lediglich alle verbundenen Spieler in einer Liste. Interaktionsmöglichkeiten gibt es noch keine.
+Early version. No interaction yet. Only german.
+
+Saisonknobeln ist aktuell noch kein Spiel, sondern in einem frühen Stadium. Man sieht lediglich alle verbundenen Spieler in einer Liste. Interaktionsmöglichkeiten gibt es noch keine.
 
 ## Nötige Tools zum lokalen ausführen
 
