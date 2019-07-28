@@ -1,2 +1,2 @@
-# saisonknobeln
+# Saisonknobeln
 Simple jam game written in HTML/JS for the tiltspot.tv platform
