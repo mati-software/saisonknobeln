@@ -35,6 +35,6 @@ Im Command-Line-Tool von node.js in den Ordner des Tiltspot Game Testers wechsel
 
 Beim ersten Anstarten fragt die Windows-Firewall ggf. nach, ob sie den Zugriff über diesen Port erlauben soll, was man bestätigen muss.
 
-Anschließend im Browser die eigene IP-Adresse aufrufen. Es öffnet sich der Game Tester samt der Hauptansicht von Saisonknobeln. Per Smartphones im lokalen Netz oder per emuliertem Smartphone (Entwicklertools von z. B. Firefox oder Chrome) kann die Controller-Ansicht geöffnet werden. Die smartphones sind automatisch mit dem Game Tester verbunden. Mit dem Button oben rechts kann man das Spiel starten.
+Anschließend im Browser die eigene IP-Adresse aufrufen. Es öffnet sich der Game Tester samt der Hauptansicht von Saisonknobeln. Per Smartphones im lokalen Netz oder per emuliertem Smartphone (Entwicklertools von z. B. Firefox oder Chrome) kann die Controller-Ansicht geöffnet werden. Die Smartphones sind automatisch mit dem Game Tester verbunden. Mit dem Button oben rechts kann man das Spiel starten.
 
 Es ist wichtig, dass man das Spiel erst startet, nachdem die Smartphones bereits verbunden sind. Da Tiltspot noch in Entwicklung ist, funktioniert das spätere Verbinden nicht.
