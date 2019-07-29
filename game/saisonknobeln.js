@@ -382,34 +382,6 @@ mati.knobel.spielerChanged = function() {
 			else {
 				mati.knobel.spielerImLaufendenSpiel.push(knobelSpieler);
 			}
-			
-			
-			//Testcode TODO deletme
-			mati.knobel.spielerFarben = new Map();
-			mati.knobel.spielerImLaufendenSpiel.push(new mati.Spieler(user.controllerId));
-			mati.knobel.spielerFarben = new Map();
-			mati.knobel.spielerImLaufendenSpiel.push(new mati.Spieler(user.controllerId));
-			mati.knobel.spielerFarben = new Map();
-			mati.knobel.spielerImLaufendenSpiel.push(new mati.Spieler(user.controllerId));
-			mati.knobel.spielerFarben = new Map();
-			mati.knobel.spielerImLaufendenSpiel.push(new mati.Spieler(user.controllerId));
-			mati.knobel.spielerFarben = new Map();
-			mati.knobel.spielerImLaufendenSpiel.push(new mati.Spieler(user.controllerId));
-			mati.knobel.spielerFarben = new Map();
-			mati.knobel.spielerImLaufendenSpiel.push(new mati.Spieler(user.controllerId));
-			mati.knobel.spielerFarben = new Map();
-			mati.knobel.spielerImLaufendenSpiel.push(new mati.Spieler(user.controllerId));
-			mati.knobel.spielerFarben = new Map();
-			mati.knobel.spielerAufWarteliste.push(new mati.Spieler(user.controllerId));
-			mati.knobel.spielerFarben = new Map();
-			mati.knobel.spielerAufWarteliste.push(new mati.Spieler(user.controllerId));
-			mati.knobel.spielerFarben = new Map();
-			mati.knobel.spielerAufWarteliste.push(new mati.Spieler(user.controllerId));
-			mati.knobel.spielerFarben = new Map();
-			mati.knobel.spielerAufWarteliste.push(new mati.Spieler(user.controllerId));
-			
-			
-			
 		}
 		else {
 			knobelSpieler.verbindungAbgebrochen = !user.isLoggedIn;
