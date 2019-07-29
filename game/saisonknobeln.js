@@ -11,11 +11,8 @@ mati.Spieler = class {
 		}
 		
 		this.cssFarbe100 = matiFarbutil.toCssString(this.farbe);
-		this.cssFarbe75 = matiFarbutil.toCssString(matiFarbutil.gedimmteFarbe(this.farbe, .75));
 		this.cssFarbe50 = matiFarbutil.toCssString(matiFarbutil.gedimmteFarbe(this.farbe, .5));
-		this.cssFarbe25 = matiFarbutil.toCssString(matiFarbutil.gedimmteFarbe(this.farbe, .25));
-
-		this.cssFarbeHell75 = matiFarbutil.toCssString(matiFarbutil.aufgehellteFarbe(this.farbe, .75));
+		this.cssFarbe30 = matiFarbutil.toCssString(matiFarbutil.gedimmteFarbe(this.farbe, .3));
 		this.cssFarbeHell50 = matiFarbutil.toCssString(matiFarbutil.aufgehellteFarbe(this.farbe, .5));
 		
 		this.verbindungAbgebrochen = false;
@@ -385,6 +382,34 @@ mati.knobel.spielerChanged = function() {
 			else {
 				mati.knobel.spielerImLaufendenSpiel.push(knobelSpieler);
 			}
+			
+			
+			//Testcode TODO deletme
+			mati.knobel.spielerFarben = new Map();
+			mati.knobel.spielerImLaufendenSpiel.push(new mati.Spieler(user.controllerId));
+			mati.knobel.spielerFarben = new Map();
+			mati.knobel.spielerImLaufendenSpiel.push(new mati.Spieler(user.controllerId));
+			mati.knobel.spielerFarben = new Map();
+			mati.knobel.spielerImLaufendenSpiel.push(new mati.Spieler(user.controllerId));
+			mati.knobel.spielerFarben = new Map();
+			mati.knobel.spielerImLaufendenSpiel.push(new mati.Spieler(user.controllerId));
+			mati.knobel.spielerFarben = new Map();
+			mati.knobel.spielerImLaufendenSpiel.push(new mati.Spieler(user.controllerId));
+			mati.knobel.spielerFarben = new Map();
+			mati.knobel.spielerImLaufendenSpiel.push(new mati.Spieler(user.controllerId));
+			mati.knobel.spielerFarben = new Map();
+			mati.knobel.spielerImLaufendenSpiel.push(new mati.Spieler(user.controllerId));
+			mati.knobel.spielerFarben = new Map();
+			mati.knobel.spielerAufWarteliste.push(new mati.Spieler(user.controllerId));
+			mati.knobel.spielerFarben = new Map();
+			mati.knobel.spielerAufWarteliste.push(new mati.Spieler(user.controllerId));
+			mati.knobel.spielerFarben = new Map();
+			mati.knobel.spielerAufWarteliste.push(new mati.Spieler(user.controllerId));
+			mati.knobel.spielerFarben = new Map();
+			mati.knobel.spielerAufWarteliste.push(new mati.Spieler(user.controllerId));
+			
+			
+			
 		}
 		else {
 			knobelSpieler.verbindungAbgebrochen = !user.isLoggedIn;
@@ -410,11 +435,11 @@ mati.knobel.renderLobbySpielerListe = function(container, knobelSpielerListe) {
 				}
 	
 				return `
-					<li>
+					<li class="mati_spieler">
 						<span class="mati_spieler_img" style="background-color:${knobelSpieler.cssFarbeHell50}">
 							<img src="${tiltspotUser.profilePicture}" />
 						</span>
-						<span class="mati_spieler_text" style="color:${knobelSpieler.cssFarbeHell50}">${matiUtil.htmlEscape(tiltspotUser.nickname)}</span>
+						<span class="mati_spieler_text" style="color: ${knobelSpieler.cssFarbeHell50}; background: ${knobelSpieler.cssFarbe50} linear-gradient(135deg, ${knobelSpieler.cssFarbe50}, ${knobelSpieler.cssFarbe30});">${matiUtil.htmlEscape(tiltspotUser.nickname)}</span>
 					</li>
 				`;
 			}).join('')}

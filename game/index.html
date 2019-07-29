@@ -47,9 +47,9 @@
 			#mati_spiel_spielerliste {
 				position:absolute;
 				top:0;
-				left:1em;
 				bottom:1em;
 				right:.5em;
+				width:12em;
 				background-color:#666;
 				border-radius:1em;
 			}
@@ -58,7 +58,7 @@
 				top:0;
 				left:.5em;
 				bottom:1em;
-				right:1em;
+				width:12em;
 				background-color:#666;
 				border-radius:1em;
 			}
@@ -70,9 +70,10 @@
 				right:.2em;
 				bottom:.2em;
 				overflow:hidden;
-				background-color:black;
+				background-color:silver;
 				border-bottom-left-radius:.8em;
 				border-bottom-right-radius:.8em;
+				padding-left:.6em;
 			}
 			#mati_spiel_spielerliste_caption,
 			#mati_spiel_spielerwarteliste_caption {
@@ -106,42 +107,52 @@
 			#mati_spiel_spielerliste_content ul,
 			#mati_spiel_spielerwarteliste_content ul {
 				margin:0;
-				padding:0;
+				padding:.1em 0 .1em 0;
 				list-style-type: none;
 			}
-			#mati_spiel_spielerliste_content li,
-            #mati_spiel_spielerwarteliste_content li {
+			.mati_spieler {
 				padding:0;
 				margin:0;
-				height:2em;
+				height:2.2em;
 				vertical-align:middle;
 				overflow:hidden;
+				position:relative;
+				width:10em;
 			}
-			#mati_spiel_spielerliste_content span.mati_spieler_img,
-			#mati_spiel_spielerwarteliste_content span.mati_spieler_img {
-				float:left;
+			span.mati_spieler_img {
+				position:absolute;
+				left:.2em;
+				top:.2em;
 				border-radius:.9em;
 				padding:.1em;
 				width:1.6em;
 				height:1.6em;
-				margin-top:.1em;
-				margin-left:.1em;
-				margin-right:.4em;
 				overflow:hidden;
+				z-index:2;
+				box-shadow:0 0 .2em black;
 			}
-			#mati_spiel_spielerliste_content span.mati_spieler_img img,
-            #mati_spiel_spielerwarteliste_content span.mati_spieler_img img {
+			span.mati_spieler_img img {
 				float:left;
 				width:1.6em;
 				height:1.6em;
 				border-radius:.8em;
 			}
-			#mati_spiel_spielerliste_content span.mati_spieler_text,
-			#mati_spiel_spielerwarteliste_content span.mati_spieler_text {
+			span.mati_spieler_text {
+				position:absolute;
 				display:block;
-				float:left;
-				height:2em;
-				line-height:2em;
+				line-height:1.4em;
+				top:.4em;
+				bottom:.4em;
+				left:1em;
+				right:.2em;
+				padding-left:1.2em;
+				padding-right:.1em;
+				background-color:black;
+				z-index:1;
+				box-shadow:0 0 .2em black;
+				overflow:hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
 			}
 		</style>
 	</head>
