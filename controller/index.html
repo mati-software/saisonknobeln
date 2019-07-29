@@ -4,39 +4,13 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Saisonknobeln</title>
-		<script src='https://tiltspot.tv/api/controller/controller-1.0.0.js' rel='script' type='application/javascript'></script>
-		<script>
-			var mati = {};
-			
-			Tiltspot.on.ready = function(){
-				console.log('ready');
-			}
-			
-			Tiltspot.on.msg = function (controllerId, msg, data) {
-				console.log('msg', controllerId, msg, data);
-				//switch (msg) { 
-					//case 'move':
-						//alert(msg);
-						//if(data.val != null) alert(msg, data);
-						//break;
-				//}
-			};
-			
-			window.addEventListener("load", function () {
-				var onAenderungDerFenstergroesse = function() {
-					var allesFontSize = Math.min(window.innerWidth, window.innerHeight) / 23;
-					document.getElementById('mati_controller_alles').style["font-size"] = allesFontSize + "px";
-				};
-				onAenderungDerFenstergroesse();
-				window.addEventListener( 'resize', onAenderungDerFenstergroesse, false );
-			});
-		</script>
 		<style>
 			body {
 				overflow:hidden;
 				padding:0;
 				border:0;
 				margin:0;
+				background-color:black;
 			}
 		
 			#mati_controller_alles {
@@ -45,7 +19,6 @@
 				left:0;
 				right:0;
 				bottom:0;
-				background-color:black;
 				color:white;
 				font-family: Helvetica, Arial, sans-serif;
 				
@@ -55,41 +28,95 @@
 				user-select: none;
 			}
 			
-			.mati_hauptmenuebutton,
-			.mati_hauptmenuebutton_deaktiviert {
-				display:block;
-				text-decoration:none;
-				color: white;
-				background-color:#16d;
+			.mati_buttonbox {
+				position:absolute;
+				left:0;
+				right:0;
+				bottom:0;
+				top:4em;
+				border-width:.5em;
+				border-style:solid;
+				box-shadow: inset 0 0 1em black;
+			}
+			
+			.mati_button,
+			.mati_button_deaktiviert,
+			.mati_button_focus {
+				color: black;
 				padding:.5em;
 				text-align:center;
 				line-height:2em;
 				border-radius:1.5em;
 				vertical-align:middle;
-				border:0;
-				font-family: Sans-Serif;
-				font-size:100%;
-				text-align:center;
-				width:15em;
-				box-sizing: border-box;
-				margin:1em auto;
+				margin:1em;
+				box-shadow:0 0 1em black;
 			}
-			.mati_hauptmenuebutton_deaktiviert {
+			.mati_button_deaktiviert {
 				opacity: .3;
 			}
-			.mati_hauptmenuebutton:focus {
-				color:#fc5;
-				background-color:#38f;
-			}
+		</style>
+		<style id="mati_farbstyle">
 		</style>
 	</head>
 	<body>
 		<div id="mati_controller_alles">
-			<div id="mati_hauptmenue">
-				<div class="mati_hauptmenuebutton">Neue Spiel</div>
-				<div class="mati_hauptmenuebutton">Spiel fortsetzen</div>
-				<div class="mati_hauptmenuebutton">Beenden</div>
+			<div id="mati_hauptmenue" class="mati_buttonbox">
+				<div class="mati_button">Neue Spiel</div>
+				<div class="mati_button">Spiel fortsetzen</div>
+				<div class="mati_button">Beenden</div>
 			</div>
 		</div>
+		
+		<script src="matiUtil.js" rel="script" type="application/javascript"></script>
+		<script src="matiFarbutil.js" rel="script" type="application/javascript"></script>
+		<script src='https://tiltspot.tv/api/controller/controller-1.0.0.js' rel='script' type='application/javascript'></script>
+		<script>
+			var mati = {};
+			
+			mati.farbe = matiFarbutil.WEISS;
+			mati.renderFarbe = function() {
+				let hell50dunkel80 = matiFarbutil.toCssString(matiFarbutil.gedimmteFarbe(matiFarbutil.aufgehellteFarbe(mati.farbe, .5), .8));
+				let hell50 = matiFarbutil.toCssString(matiFarbutil.aufgehellteFarbe(mati.farbe, .5));
+				let dunkel50 = matiFarbutil.toCssString(matiFarbutil.gedimmteFarbe(mati.farbe, .5));
+				let dunkel30 = matiFarbutil.toCssString(matiFarbutil.gedimmteFarbe(mati.farbe, .3));
+				document.getElementById('mati_farbstyle').innerHTML = `
+					.mati_buttonbox {
+						background: ${dunkel50} radial-gradient(circle, ${dunkel50}, ${dunkel30});
+						border-color: ${hell50};
+					}
+					
+					.mati_button,
+					.mati_button_deaktiviert {
+						background: ${hell50} radial-gradient(circle, ${hell50}, ${hell50dunkel80});
+					}
+					.mati_button_focus {
+						background: ${hell50dunkel80} radial-gradient(circle, ${hell50dunkel80}, ${hell50});
+					}
+				`;
+			};
+			mati.renderFarbe();
+			
+			Tiltspot.on.ready = function(){
+				console.log('ready');
+			}
+			
+			Tiltspot.on.msg = function (msg, data) {
+				console.log('msg', msg, data);
+				switch (msg) { 
+					case 'setFarbe':
+						mati.farbe = data;
+						mati.renderFarbe();
+				}
+			};
+			
+			window.addEventListener("load", function () {
+				var onAenderungDerFenstergroesse = function() {
+					var allesFontSize = Math.min(window.innerWidth, window.innerHeight) / 20;
+					document.getElementById('mati_controller_alles').style["font-size"] = allesFontSize + "px";
+				};
+				onAenderungDerFenstergroesse();
+				window.addEventListener( 'resize', onAenderungDerFenstergroesse, false );
+			});
+		</script>
 	</body>
 </html>

@@ -21,6 +21,11 @@
 				background-color:#ddd;
 				color:black;
 				font-family: Helvetica, Arial, sans-serif;
+				
+				-webkit-user-select: none;  
+				-moz-user-select: none;    
+				-ms-user-select: none;      
+				user-select: none;
 			}
 			
 			#mati_spiel_spielerliste_container {
@@ -171,9 +176,9 @@
 		</div>
 
 
-		<script src="https://tiltspot.tv/api/game/game-1.0.0.js" rel="script" type="application/javascript"></script>
 		<script src="matiUtil.js" rel="script" type="application/javascript"></script>
 		<script src="matiFarbutil.js" rel="script" type="application/javascript"></script>
+		<script src="https://tiltspot.tv/api/game/game-1.0.0.js" rel="script" type="application/javascript"></script>
 		<script src="saisonknobeln.js" rel="script" type="application/javascript"></script>
 		<script>
 			Tiltspot.on.ready = function() {

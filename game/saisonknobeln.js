@@ -378,6 +378,7 @@ mati.knobel.spielerChanged = function() {
 		if (knobelSpieler === null) {
 			//Knobel-Spieler neu erstellen
 			knobelSpieler = new mati.Spieler(user.controllerId);
+			Tiltspot.send.msg(user.controllerId, 'setFarbe', knobelSpieler.farbe);
 			if (spielLaeuft) {
 				mati.knobel.spielerAufWarteliste.push(knobelSpieler);
 			}
