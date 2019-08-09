@@ -43,3 +43,15 @@ matiUtil.schriftgroesseAnpassenDamitHoehePasst = function(container, content) {
 		content.style["font-size"] = neueSchriftgroesse + '%';
 	}
 };
+
+matiUtil.loadJson = function(dateipfad, callback) {   
+    var request = new XMLHttpRequest();
+    request.overrideMimeType("application/json");
+	//Funktioniert nicht in Edge: request.responseType('json');
+	//Edge kennt json nicht als responseType, daher haendisch JSON.parse
+	request.addEventListener("load", function () {
+		callback(JSON.parse(request.responseText));
+    });
+    request.open('GET', dateipfad, true);
+    request.send();  
+ };

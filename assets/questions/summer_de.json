@@ -1,0 +1,41 @@
+{
+	"name" : "Sommer",
+	"questions" : [
+		{
+			"text" : "Schokoeis oder Vanilleeis?",
+			"antwortMoeglichkeiten" : ["Schokoeis", "Vanilleeis"]
+		},
+		{
+			"text" : "Badebekleidung für Frauen: Badeanzug oder Bikini?",
+			"antwortMoeglichkeiten" : ["Badeanzug", "Bikini"]
+		},
+		{
+			"text" : "Schwimmbad oder Badesee?",
+			"antwortMoeglichkeiten" : ["Schwimmbad", "Badesee"]
+		},
+		{
+			"text" : "Strandurlaub oder Urlaub in den Bergen?",
+			"antwortMoeglichkeiten" : ["Strandurlaub", "Urlaub in den Bergen"]
+		},
+		{
+			"text" : "Als Mann bei heißem Wetter oberkörperfrei draußen rum rennen?",
+			"antwortMoeglichkeiten" : ["Ja", "Nein"]
+		},
+		{
+			"text" : "Olympische Sommerspiele oder Fußball-WM?",
+			"antwortMoeglichkeiten" : ["Olympische Sommerspiele", "Fußball-WM"]
+		},
+		{
+			"text" : "Lieber Tageshöchsttemperatur von 25°C oder von 35°C?",
+			"antwortMoeglichkeiten" : ["25°C", "35°C"]
+		},
+		{
+			"text" : "Im Schwimmbad die meiste Zeit im Wasser verbringen oder die meiste Zeit in der Sonne liegen?",
+			"antwortMoeglichkeiten" : ["Zeit im Wasser verbringen", "In der Sonne liegen"]
+		},
+		{
+			"text" : "Zitronenlimonade oder Orangenlimonade?",
+			"antwortMoeglichkeiten" : ["Zitronenlimonade", "Orangenlimonade"]
+		}
+	]
+}

@@ -28,12 +28,21 @@
 				user-select: none;
 			}
 			
+			#mati_content_container {
+				position:absolute;
+				left:0;
+				right:0;
+				bottom:0;
+				top:4.4em;
+				box-shadow:0 0 .4em black;
+			}
+			
 			.mati_buttonbox {
 				position:absolute;
 				left:0;
 				right:0;
 				bottom:0;
-				top:4em;
+				top:0;
 				border-width:.5em;
 				border-style:solid;
 				box-shadow: inset 0 0 1em black;
@@ -54,16 +63,69 @@
 			.mati_button_deaktiviert {
 				opacity: .3;
 			}
+			
+			.mati_spieler {
+				padding:0;
+				margin:0;
+				height:2.2em;
+				vertical-align:middle;
+				overflow:hidden;
+				position:relative;
+				width:10em;
+			}
+			span.mati_spieler_img {
+				position:absolute;
+				left:.2em;
+				top:.2em;
+				border-radius:.9em;
+				padding:.1em;
+				width:1.6em;
+				height:1.6em;
+				overflow:hidden;
+				z-index:2;
+				box-shadow:0 0 .2em black;
+			}
+			span.mati_spieler_img img {
+				float:left;
+				width:1.6em;
+				height:1.6em;
+				border-radius:.8em;
+			}
+			span.mati_spieler_text {
+				position:absolute;
+				display:block;
+				line-height:1.4em;
+				top:.4em;
+				bottom:.4em;
+				left:1em;
+				right:.2em;
+				padding-left:1.2em;
+				padding-right:.1em;
+				background-color:black;
+				z-index:1;
+				box-shadow:0 0 .2em black;
+				overflow:hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+			}
+			#mati_spieler_container {
+				font-size:200%;
+			}
+			
 		</style>
 		<style id="mati_farbstyle">
 		</style>
 	</head>
 	<body>
 		<div id="mati_controller_alles">
-			<div id="mati_hauptmenue" class="mati_buttonbox">
-				<div class="mati_button">Neue Spiel</div>
-				<div class="mati_button">Spiel fortsetzen</div>
-				<div class="mati_button">Beenden</div>
+			<div id="mati_spieler_container">
+			</div>
+			<div id="mati_content_container">
+				<div id="mati_hauptmenue" class="mati_buttonbox">
+					<div class="mati_button">Neue Spiel</div>
+					<div class="mati_button">Spiel fortsetzen</div>
+					<div class="mati_button">Beenden</div>
+				</div>
 			</div>
 		</div>
 		
@@ -80,6 +142,10 @@
 				let dunkel50 = matiFarbutil.toCssString(matiFarbutil.gedimmteFarbe(mati.farbe, .5));
 				let dunkel30 = matiFarbutil.toCssString(matiFarbutil.gedimmteFarbe(mati.farbe, .3));
 				document.getElementById('mati_farbstyle').innerHTML = `
+					body {
+						background-color:${dunkel30};
+					}
+				
 					.mati_buttonbox {
 						background: ${dunkel50} radial-gradient(circle, ${dunkel50}, ${dunkel30});
 						border-color: ${hell50};
@@ -92,12 +158,31 @@
 					.mati_button_focus {
 						background: ${hell50dunkel80} radial-gradient(circle, ${hell50dunkel80}, ${hell50});
 					}
+					.mati_spieler_img {
+						background-color:${hell50};
+					}
+					.mati_spieler_text {
+						color: ${hell50};
+						background: ${dunkel50} linear-gradient(135deg, ${dunkel50}, ${dunkel30});
+					}
 				`;
 			};
 			mati.renderFarbe();
 			
+			mati.renderSpieler = function() {
+				document.getElementById('mati_spieler_container').innerHTML = `
+					<div class="mati_spieler">
+						<span class="mati_spieler_img">
+							<img src="${Tiltspot.get.user().profilePicture}" />
+						</span>
+						<span class="mati_spieler_text">${matiUtil.htmlEscape(Tiltspot.get.user().nickname)}</span>
+					</div>
+				`;
+			}
+			
 			Tiltspot.on.ready = function(){
 				console.log('ready');
+				mati.renderSpieler();
 			}
 			
 			Tiltspot.on.msg = function (msg, data) {
@@ -109,14 +194,14 @@
 				}
 			};
 			
-			window.addEventListener("load", function () {
-				var onAenderungDerFenstergroesse = function() {
-					var allesFontSize = Math.min(window.innerWidth, window.innerHeight) / 20;
-					document.getElementById('mati_controller_alles').style["font-size"] = allesFontSize + "px";
-				};
-				onAenderungDerFenstergroesse();
-				window.addEventListener( 'resize', onAenderungDerFenstergroesse, false );
-			});
+			
+			
+			var onAenderungDerFenstergroesse = function() {
+				var allesFontSize = Math.min(window.innerWidth, window.innerHeight) / 20;
+				document.getElementById('mati_controller_alles').style["font-size"] = allesFontSize + "px";
+			};
+			onAenderungDerFenstergroesse();
+			window.addEventListener( 'resize', onAenderungDerFenstergroesse, false );
 		</script>
 	</body>
 </html>

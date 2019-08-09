@@ -107,7 +107,7 @@
 			#mati_spiel_spielerliste_content ul,
 			#mati_spiel_spielerwarteliste_content ul {
 				margin:0;
-				padding:.1em 0 .1em 0;
+				padding:.3em 0 .3em 0;
 				list-style-type: none;
 			}
 			.mati_spieler {
@@ -154,35 +154,24 @@
 				white-space: nowrap;
 				text-overflow: ellipsis;
 			}
+			
+			#mati_movable_content_holder_1,
+			#mati_movable_content_holder_2 {
+				position:absolute;
+				width:100%;
+				height:100%;
+				overflow:hidden;
+			}
 		</style>
 	</head>
 	<body>
 		<div id="mati_spiel_alles">
+			<div id="mati_movable_content_holder_1">
+			</div>
+			<div id="mati_movable_content_holder_2">
+			</div>
+		
 			<div id="mati_spiel_lobby">
-				<h1>Saisonknobeln</h1>
-				
-				<div id="mati_spiel_joincode_container">Join-Code: <span id="mati_spiel_joincode">???</span></div>
-				
-				<div id="mati_spiel_spielerliste_container">
-					<div id="mati_spiel_spielerliste">
-						<div id="mati_spiel_spielerliste_caption">
-							Spieler
-						</div>
-						<div id="mati_spiel_spielerliste_content">
-						</div>
-					</div>
-				</div>
-				
-				<div id="mati_spiel_spielerwarteliste_container">
-					<div id="mati_spiel_spielerwarteliste">
-						<div id="mati_spiel_spielerwarteliste_caption">
-							Warteliste
-						</div>
-						<div id="mati_spiel_spielerwarteliste_content">
-						</div>
-					</div>
-				</div>
-				
 			</div>
 		</div>
 
@@ -194,8 +183,7 @@
 		<script>
 			Tiltspot.on.ready = function() {
 				console.log('ready');
-				document.getElementById('mati_spiel_joincode').innerText = Tiltspot.get.entryCode();
-				mati.knobel.spielerChanged();
+				mati.knobel.setSpracheCode('en');
 			};
 			Tiltspot.on.connect = function(controllerId) {
 				console.log('Connect Controller ' + controllerId);

@@ -27,303 +27,219 @@ mati.Spieler = class {
 
 
 mati.knobel = {
-	spielablaufPos : -1,
+	spracheCode : 'en',
 	aktuelleRubrik : null,
-	rubriken : ['herbst', 'winter', 'fruehling', 'sommer'],
+	rubriken : [],
+	guiTexte : {},
 	aktuelleFrageIndizes : {
-		'herbst' : -1,
-		'winter' : -1,
-		'fruehling' : -1,
-		'sommer' : -1
 	},
 	fragen : {
-		'herbst' : [],
-		'winter' : [],
-		'fruehling' : [],
-		'sommer' : []
 	},
 	spielerImLaufendenSpiel : [],
 	spielerAufWarteliste : [],
-	spielerFarben : new Map()
+	spielerFarben : new Map(),
+	befehlsQueue : [],
+	befehlsQueueWirdAbgearbeitet : false,
+	spielLaeuft : false,
+	queueEnthaeltLaufendesSpiel : false
 };
 
-mati.knobel.ladeFragen = function() {
-	//TODO auslagern und von dateisystem laden
+mati.knobel.setSpracheCode = function(neuerSpracheCode) {
+	//TODO sprache an clients senden
 	
-	mati.knobel.fragen['herbst'].push({
-		'text' : 'Weißwein oder Rotwein?',
-		'antwortMoeglichkeiten' : ['Weißwein', 'Rotwein']
-	});
-	mati.knobel.fragen['herbst'].push({
-		'text' : 'An Halloween kostümieren oder nicht kostümieren?',
-		'antwortMoeglichkeiten' : ['kostümieren', 'nicht kostümieren']
-	});
-	mati.knobel.fragen['herbst'].push({
-		'text' : 'Äpfel lieber süß oder sauer?',
-		'antwortMoeglichkeiten' : ['süß', 'sauer']
-	});
-	mati.knobel.fragen['herbst'].push({
-		'text' : 'Walnüsse oder Haselnüsse?',
-		'antwortMoeglichkeiten' : ['Walnüsse', 'Haselnüsse']
-	});
-	mati.knobel.fragen['herbst'].push({
-		'text' : 'Gehören Pilze auf eine gute Pizza?',
-		'antwortMoeglichkeiten' : ['Ja', 'Nein']
-	});
-	mati.knobel.fragen['herbst'].push({
-		'text' : 'Am 11.11. Karneval oder Sankt Martin?',
-		'antwortMoeglichkeiten' : ['Karneval', 'Sankt Martin']
-	});
-	mati.knobel.fragen['herbst'].push({
-		'text' : 'Sind Windräder eine gute Sache?',
-		'antwortMoeglichkeiten' : ['Ja', 'Nein']
-	});
-	mati.knobel.fragen['herbst'].push({
-		'text' : 'Welche Filmreihe ist besser: "Halloween" oder "Freitag der 13."?',
-		'antwortMoeglichkeiten' : ['Halloween', 'Freitag der 13.']
+	//neue Sprache uebernehmen (in Queue, damit Reihenfolge stimmt falls jemand 2 mal ganz schnell die Sprache umstellt)
+	mati.knobel.befehlsQueue.push(function() {
+		mati.knobel.spracheCode = neuerSpracheCode;
+		mati.knobel.gotoNaechsterBefehl();
 	});
 	
-	mati.knobel.fragen['winter'].push({
-		'text' : 'Zu Weihnachten lieber bunte Lichterketten oder einfarbige Lichterketten?',
-		'antwortMoeglichkeiten' : ['bunt', 'einfarbig']
+	//Rubriken laden
+	mati.knobel.befehlsQueue.push(function() {
+		matiUtil.loadJson(Tiltspot.get.assetUrl("category-list.json"), function(rubriken) {
+			mati.knobel.rubriken = rubriken;
+			mati.knobel.gotoNaechsterBefehl();
+		});
 	});
-	mati.knobel.fragen['winter'].push({
-		'text' : 'Ist Glüwein genießbar?',
-		'antwortMoeglichkeiten' : ['Ja', 'Nein']
+	//Fragen laden
+	mati.knobel.befehlsQueue.push(function() {
+		let anzahlGeladeneRubriken = 0;
+		for (let rubrik of mati.knobel.rubriken) {
+			mati.knobel.aktuelleFrageIndizes[rubrik] = -1;
+			matiUtil.loadJson(Tiltspot.get.assetUrl("questions/" + rubrik + "_" + mati.knobel.spracheCode + ".json"), function(data) {
+				mati.knobel.fragen[rubrik] = data.questions;
+				anzahlGeladeneRubriken++;
+				if (anzahlGeladeneRubriken === mati.knobel.rubriken.length) {
+					mati.knobel.gotoNaechsterBefehl();
+				}
+			});
+		}
 	});
-	mati.knobel.fragen['winter'].push({
-		'text' : 'Welche Wintersportart ist cooler, Eishockey oder Skispringen?',
-		'antwortMoeglichkeiten' : ['Eishockey', 'Skispringen']
+	//Gui-Texte laden
+	mati.knobel.befehlsQueue.push(function() {
+		matiUtil.loadJson(Tiltspot.get.assetUrl("gui-l10n/" + mati.knobel.spracheCode + ".json"), function(guiTexte) {
+			mati.knobel.guiTexte = guiTexte;
+			mati.knobel.gotoNaechsterBefehl();
+		});
 	});
-	mati.knobel.fragen['winter'].push({
-		'text' : 'Ski oder Snowboard?',
-		'antwortMoeglichkeiten' : ['Ski', 'Snowboard']
-	});
-	mati.knobel.fragen['winter'].push({
-		'text' : 'Soll es im Winter schneien?',
-		'antwortMoeglichkeiten' : ['Ja', 'Nein']
-	});
-	mati.knobel.fragen['winter'].push({
-		'text' : 'Kirchenbesuch an Weihnachten?',
-		'antwortMoeglichkeiten' : ['Ja', 'Nein']
-	});
-	mati.knobel.fragen['winter'].push({
-		'text' : 'An Silvester selbst Knaller und Raketen abfeuern?',
-		'antwortMoeglichkeiten' : ['Ja', 'Nein']
-	});
-	mati.knobel.fragen['winter'].push({
-		'text' : 'Gewürzspekulatius oder Butterspekulatius?',
-		'antwortMoeglichkeiten' : ['Gewürzspekulatius', 'Butterspekulatius']
-	});
-	mati.knobel.fragen['winter'].push({
-		'text' : 'Wer bringt die Weihnachtsgeschenke?',
-		'antwortMoeglichkeiten' : ['Christkind', 'Weihnachtsmann']
-	});
-	mati.knobel.fragen['winter'].push({
-		'text' : 'Handschuhe bei kaltem Wetter?',
-		'antwortMoeglichkeiten' : ['Ja', 'Nein']
-	});
-	
-	mati.knobel.fragen['fruehling'].push({
-		'text' : 'Tulpen oder Rosen?',
-		'antwortMoeglichkeiten' : ['Tulpen', 'Rosen']
-	});
-	mati.knobel.fragen['fruehling'].push({
-		'text' : 'Ist die Zeitumstellung auf Sommerzeit eine gute Sache?',
-		'antwortMoeglichkeiten' : ['Ja', 'Nein']
-	});
-	mati.knobel.fragen['fruehling'].push({
-		'text' : 'Kräuter aus dem eigenen Kräuter-Garten?',
-		'antwortMoeglichkeiten' : ['Ja', 'Nein']
-	});
-	mati.knobel.fragen['fruehling'].push({
-		'text' : 'Fasten in der Fastenzeit?',
-		'antwortMoeglichkeiten' : ['Ja', 'Nein']
-	});
-	mati.knobel.fragen['fruehling'].push({
-		'text' : 'Zum Karneval kostümieren oder nicht kostümieren?',
-		'antwortMoeglichkeiten' : ['kostümieren', 'nicht kostümieren']
-	});
-	mati.knobel.fragen['fruehling'].push({
-		'text' : 'Welche Liebeskomödie ist besser, "Harry und Sally" oder "Tatsächlich Liebe"?',
-		'antwortMoeglichkeiten' : ['Harry und Sally', 'Tatsächlich Liebe']
-	});
-	mati.knobel.fragen['fruehling'].push({
-		'text' : 'Kirchenbesuch an Ostern?',
-		'antwortMoeglichkeiten' : ['Ja', 'Nein']
-	});
-	mati.knobel.fragen['fruehling'].push({
-		'text' : '"Berlinale" oder "Filmfestspiele von Cannes"?',
-		'antwortMoeglichkeiten' : ['Berlinale', 'Filmfestspiele von Cannes']
-	});
+	//HTML rendern
+	mati.knobel.befehlsQueue.push(function() {
+		document.getElementById('mati_spiel_lobby').innerHTML = `
+			<h1>Saisonknobeln</h1>
+			
+			<div id="mati_spiel_joincode_container">${mati.knobel.l10nHtml('Join-Code')}: <span id="mati_spiel_joincode">${matiUtil.htmlEscape(Tiltspot.get.entryCode())}</span></div>
+			
+			<div id="mati_spiel_spielerliste_container">
+				<div id="mati_spiel_spielerliste">
+					<div id="mati_spiel_spielerliste_caption">
+						${mati.knobel.l10nHtml('Spieler')}
+					</div>
+					<div id="mati_spiel_spielerliste_content">
+					</div>
+				</div>
+			</div>
+			
+			<div id="mati_spiel_spielerwarteliste_container">
+				<div id="mati_spiel_spielerwarteliste">
+					<div id="mati_spiel_spielerwarteliste_caption">
+						${mati.knobel.l10nHtml('Warteliste')}
+					</div>
+					<div id="mati_spiel_spielerwarteliste_content">
+					</div>
+				</div>
+			</div>
+		`;
 
-	mati.knobel.fragen['sommer'].push({
-		'text' : 'Schokoeis oder Vanilleeis?',
-		'antwortMoeglichkeiten' : ['Schokoeis', 'Vanilleeis']
+		mati.knobel.spielerChanged();
+		
+		mati.knobel.gotoNaechsterBefehl();
 	});
-	mati.knobel.fragen['sommer'].push({
-		'text' : 'Badebekleidung für Frauen: Badeanzug oder Bikini?',
-		'antwortMoeglichkeiten' : ['Badeanzug', 'Bikini']
-	});
-	mati.knobel.fragen['sommer'].push({
-		'text' : 'Schwimmbad oder Badesee?',
-		'antwortMoeglichkeiten' : ['Schwimmbad', 'Badesee']
-	});
-	mati.knobel.fragen['sommer'].push({
-		'text' : 'Strandurlaub oder Urlaub in den Bergen?',
-		'antwortMoeglichkeiten' : ['Strandurlaub', 'Urlaub in den Bergen']
-	});
-	mati.knobel.fragen['sommer'].push({
-		'text' : 'Als Mann bei heißem Wetter oberkörperfrei draußen rum rennen?',
-		'antwortMoeglichkeiten' : ['Ja', 'Nein']
-	});
-	mati.knobel.fragen['sommer'].push({
-		'text' : 'Olympische Sommerspiele oder Fußball-WM?',
-		'antwortMoeglichkeiten' : ['Olympische Sommerspiele', 'Fußball-WM']
-	});
-	mati.knobel.fragen['sommer'].push({
-		'text' : 'Lieber Tageshöchsttemperatur von 25°C oder von 35°C?',
-		'antwortMoeglichkeiten' : ['25°C', '35°C']
-	});
-	mati.knobel.fragen['sommer'].push({
-		'text' : 'Im Schwimmbad die meiste Zeit im Wasser verbringen oder die meiste Zeit in der Sonne liegen?',
-		'antwortMoeglichkeiten' : ['Zeit im Wasser verbringen', 'In der Sonne liegen']
-	});
-	mati.knobel.fragen['sommer'].push({
-		'text' : 'Zitronenlimonade oder Orangenlimonade?',
-		'antwortMoeglichkeiten' : ['Zitronenlimonade', 'Orangenlimonade']
-	});
+	
+	mati.knobel.starteBefehlsQueueAbarbeitung();
+	
+
+	
+	
+	
+	
+
+	
+
 	
 };
 
+mati.knobel.starteBefehlsQueueAbarbeitung = function() {
+	if (!mati.knobel.befehlsQueueWirdAbgearbeitet) {
+		mati.knobel.gotoNaechsterBefehl();
+	}
+};
 mati.knobel.gotoNaechsterBefehl = function() {
-	spielablaufPos = (spielablaufPos + 1) % mati.knobel.spielablauf.size;
-};
-
-mati.knobel.spielInit = function() {
-	mati.knobel.aktuelleRubrik = null;
-	mati.knobel.gotoNaechsterBefehl();
-};
-
-mati.knobel.waehleNaechsteRubrik = function() {
-	if (aktuelleRubrik === null) {
-		aktuelleRubrik = rubriken[0];
+	if (mati.knobel.befehlsQueue.length > 0) {
+		let befehl = mati.knobel.befehlsQueue.shift();
+		mati.knobel.befehlsQueueWirdAbgearbeitet = true;
+		befehl();
 	}
 	else {
-		var alterIndex = rubriken.indexOf(aktuelleRubrik);
-		var neuerIndex = (alterIndex + 1) % fragen.length;
-		aktuelleRubrik = rubriken[neuerIndex];
+		mati.knobel.befehlsQueueWirdAbgearbeitet = false;
 	}
-	mati.knobel.gotoNaechsterBefehl();
 };
 
-mati.knobel.zeigeRubrikIntro = function() {
-	//TODO
-	mati.knobel.gotoNaechsterBefehl();
-};
 
-mati.knobel.waehleNaechsteFrage = function() {
-	mati.knobel.aktuelleFrageIndizes[mati.knobel.aktuelleRubrik]++;
-	mati.knobel.gotoNaechsterBefehl();
-};
 
-mati.knobel.zeigeFrage = function() {
-	var frage = mati.knobel.fragen[mati.knobel.aktuelleRubrik][mati.knobel.aktuelleFrageIndizes[mati.knobel.aktuelleRubrik]];
 
-};
 
-mati.knobel.spielablauf = [
-	mati.knobel.spielInit,
+
+
+
+
+
+
+
+
+
+
+
+
+mati.knobel.neuesSpielStarten = function() {
+	mati.knobel.queueEnthaeltLaufendesSpiel = true;
 	
-	//Herbst
-	mati.knobel.waehleNaechsteRubrik,
-	mati.knobel.zeigeRubrikIntro,
+	mati.knobel.befehlsQueue.push(function() {
+		mati.knobel.spielLaeuft = true;
+		mati.knobel.aktuelleRubrik = null;
+		mati.knobel.gotoNaechsterBefehl();
+	});
 	
-	mati.knobel.waehleNaechsteFrage,
-	mati.knobel.zeigeFrage,
-	mati.knobel.zeigeFrageErgebnis,
-	
-	mati.knobel.waehleNaechsteFrage,
-	mati.knobel.zeigeFrage,
-	mati.knobel.zeigeFrageErgebnis,
-	
-	mati.knobel.waehleNaechsteFrage,
-	mati.knobel.zeigeFrage,
-	mati.knobel.zeigeFrageErgebnis,
-	
-	mati.knobel.waehleNaechsteFrage,
-	mati.knobel.zeigeFrage,
-	mati.knobel.zeigeFrageErgebnis,
-	
-	mati.knobel.zeigeZwischenstand,
-	
-	//Winter
-	mati.knobel.waehleNaechsteRubrik,
-	mati.knobel.zeigeRubrikIntro,
-	
-	mati.knobel.waehleNaechsteFrage,
-	mati.knobel.zeigeFrage,
-	mati.knobel.zeigeFrageErgebnis,
-	
-	mati.knobel.waehleNaechsteFrage,
-	mati.knobel.zeigeFrage,
-	mati.knobel.zeigeFrageErgebnis,
-	
-	mati.knobel.waehleNaechsteFrage,
-	mati.knobel.zeigeFrage,
-	mati.knobel.zeigeFrageErgebnis,
-	
-	mati.knobel.waehleNaechsteFrage,
-	mati.knobel.zeigeFrage,
-	mati.knobel.zeigeFrageErgebnis,
-	
-	mati.knobel.zeigeZwischenstand,
-	
-	//Fruehling
-	mati.knobel.waehleNaechsteRubrik,
-	mati.knobel.zeigeRubrikIntro,
-	
-	mati.knobel.waehleNaechsteFrage,
-	mati.knobel.zeigeFrage,
-	mati.knobel.zeigeFrageErgebnis,
-	
-	mati.knobel.waehleNaechsteFrage,
-	mati.knobel.zeigeFrage,
-	mati.knobel.zeigeFrageErgebnis,
-	
-	mati.knobel.waehleNaechsteFrage,
-	mati.knobel.zeigeFrage,
-	mati.knobel.zeigeFrageErgebnis,
-	
-	mati.knobel.waehleNaechsteFrage,
-	mati.knobel.zeigeFrage,
-	mati.knobel.zeigeFrageErgebnis,
-	
-	mati.knobel.zeigeZwischenstand,
-	
-	//Sommer
-	mati.knobel.waehleNaechsteRubrik,
-	mati.knobel.zeigeRubrikIntro,
-	
-	mati.knobel.waehleNaechsteFrage,
-	mati.knobel.zeigeFrage,
-	mati.knobel.zeigeFrageErgebnis,
-	
-	mati.knobel.waehleNaechsteFrage,
-	mati.knobel.zeigeFrage,
-	mati.knobel.zeigeFrageErgebnis,
-	
-	mati.knobel.waehleNaechsteFrage,
-	mati.knobel.zeigeFrage,
-	mati.knobel.zeigeFrageErgebnis,
-	
-	mati.knobel.waehleNaechsteFrage,
-	mati.knobel.zeigeFrage,
-	mati.knobel.zeigeFrageErgebnis,
-	
-	mati.knobel.zeigeEndresult,
-	mati.knobel.zeigeHauptmenue];
-	
+	for (let rubrik of mati.knobel.rubriken) {
+		mati.knobel.befehlsQueue.push(function() {
+			//naechste Rubrik waehlen
+			if (mati.knobel.aktuelleRubrik === null) {
+				mati.knobel.aktuelleRubrik = mati.knobel.rubriken[0];
+			}
+			else {
+				var alterIndex = mati.knobel.rubriken.indexOf(mati.knobel.aktuelleRubrik);
+				var neuerIndex = (alterIndex + 1) % fragen.length;
+				mati.knobel.aktuelleRubrik = mati.knobel.rubriken[neuerIndex];
+			}
+			
+			//TODO Zeige Rubrikintro
+			
+			mati.knobel.gotoNaechsterBefehl();
+		});
+		
+		for (let i=0; i<3; i++) {
+			mati.knobel.befehlsQueue.push(function() {
+				//naechste Frage waehlen
+				mati.knobel.aktuelleFrageIndizes[mati.knobel.aktuelleRubrik] = (mati.knobel.aktuelleFrageIndizes[mati.knobel.aktuelleRubrik] + 1) % mati.knobel.fragen[mati.knobel.aktuelleRubrik].length;
+				
+				//TODO zeige Frage
+				let frage = mati.knobel.fragen[mati.knobel.aktuelleRubrik][mati.knobel.aktuelleFrageIndizes[mati.knobel.aktuelleRubrik]];
+				
+				mati.knobel.gotoNaechsterBefehl();
+			});
+			mati.knobel.befehlsQueue.push(function() {
+				//TODO zeige Frage-Ergebnis
+				
+				mati.knobel.gotoNaechsterBefehl();
+			});
+		}
+		
+		mati.knobel.befehlsQueue.push(function() {
+			//TODO zeige Zwischenstand (bei der Letzten Kategorie Endresultat)
+			
+			mati.knobel.gotoNaechsterBefehl();
+		});
+	}
+	mati.knobel.befehlsQueue.push(function() {
+		//TODO zeige Sieger
+		
+		mati.knobel.gotoNaechsterBefehl();
+	});
+	mati.knobel.befehlsQueue.push(function() {
+		//TODO zeige Hauptmenue
+		
+		mati.knobel.spielLaeuft = false;
+		mati.knobel.queueEnthaeltLaufendesSpiel = false;
+		
+		mati.knobel.gotoNaechsterBefehl();
+	});
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 mati.knobel.findeKnobelSpieler = function(id) {
 	for (let knobelSpieler of mati.knobel.spielerImLaufendenSpiel) {
 		if (knobelSpieler.id === id) {
@@ -339,8 +255,7 @@ mati.knobel.findeKnobelSpieler = function(id) {
 };
 	
 mati.knobel.spielerChanged = function() {
-	let spielLaeuft = mati.knobel.spielAblaufPos >= 0;
-	if (!spielLaeuft) {
+	if (!mati.knobel.spielLaeuft) {
 		//Alle Spieler in der Warteschlange mit ins Spiel aufnehmen
 		mati.knobel.spielerImLaufendenSpiel = mati.knobel.spielerImLaufendenSpiel.concat(mati.knobel.spielerAufWarteliste);
 		mati.knobel.spielerAufWarteliste = [];
@@ -351,7 +266,7 @@ mati.knobel.spielerChanged = function() {
 		let knobelSpieler = mati.knobel.spielerImLaufendenSpiel[i];
 		let user = Tiltspot.get.user(knobelSpieler.id);
 		if (user === null || user === undefined || !user.isLoggedIn) {
-			if (spielLaeuft) {
+			if (mati.knobel.spielLaeuft) {
 				knobelSpieler.verbindungAbgebrochen = true;
 			}
 			else {
@@ -376,7 +291,7 @@ mati.knobel.spielerChanged = function() {
 			//Knobel-Spieler neu erstellen
 			knobelSpieler = new mati.Spieler(user.controllerId);
 			Tiltspot.send.msg(user.controllerId, 'setFarbe', knobelSpieler.farbe);
-			if (spielLaeuft) {
+			if (mati.knobel.spielLaeuft) {
 				mati.knobel.spielerAufWarteliste.push(knobelSpieler);
 			}
 			else {
@@ -418,4 +333,16 @@ mati.knobel.renderLobbySpielerListe = function(container, knobelSpielerListe) {
 		</ul>
 	`;
 	matiUtil.schriftgroesseAnpassenDamitHoehePasst(container, container.querySelector("ul"));
+};
+
+mati.knobel.l10n = function(textKey) {
+	let text = mati.knobel.guiTexte[textKey];
+	if (text) {
+		return text;
+	}
+	return textKey;
+};
+
+mati.knobel.l10nHtml = function(textKey) {
+	return matiUtil.htmlEscape(mati.knobel.l10n(textKey));
 };

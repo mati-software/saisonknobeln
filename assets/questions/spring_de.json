@@ -1,0 +1,37 @@
+{
+	"name" : "Frühling",
+	"questions" : [
+		{
+			"text" : "Tulpen oder Rosen?",
+			"antwortMoeglichkeiten" : ["Tulpen", "Rosen"]
+		},
+		{
+			"text" : "Ist die Zeitumstellung auf Sommerzeit eine gute Sache?",
+			"antwortMoeglichkeiten" : ["Ja", "Nein"]
+		},
+		{
+			"text" : "Kräuter aus dem eigenen Kräuter-Garten?",
+			"antwortMoeglichkeiten" : ["Ja", "Nein"]
+		},
+		{
+			"text" : "Fasten in der Fastenzeit?",
+			"antwortMoeglichkeiten" : ["Ja", "Nein"]
+		},
+		{
+			"text" : "Zum Karneval kostümieren oder nicht kostümieren?",
+			"antwortMoeglichkeiten" : ["kostümieren", "nicht kostümieren"]
+		},
+		{
+			"text" : "Welche Liebeskomödie ist besser, 'Harry und Sally' oder 'Tatsächlich Liebe'?",
+			"antwortMoeglichkeiten" : ["Harry und Sally", "Tatsächlich Liebe"]
+		},
+		{
+			"text" : "Kirchenbesuch an Ostern?",
+			"antwortMoeglichkeiten" : ["Ja", "Nein"]
+		},
+		{
+			"text" : "'Berlinale' oder 'Filmfestspiele von Cannes'?",
+			"antwortMoeglichkeiten" : ["Berlinale", "Filmfestspiele von Cannes"]
+		}
+	]
+}
