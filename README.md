@@ -23,7 +23,7 @@ Nach dem Download und dem Entpacken mit node.js in das entpackte Verzeichnis wec
 
 `npm install`
 
-ausführen. Anschließend die `config.js` in einem Texteditor anpasse. Bei `Server_IP` die IP-Adresse des eigenen Rechners eingeben, also irgendwas a la `192.168.xxx.xxx`. Den `Server_Port` kann man auf `80` ändern. Bei `Path_To_Game`, `Path_To_Controller` und `Path_To_Assets` den Pfad zu den drei Ordnern von Saisonknobeln angaben (so lange noch keine `assets` exitieren muss man nur die anderen beiden Ordner angeben). Backslashes müssen doppelt geschrieben werden. Also z. B. sowas wie:
+ausführen. Anschließend die `config.js` in einem Texteditor anpasse. Bei `Server_IP` die IP-Adresse des eigenen Rechners eingeben, also irgendwas a la `192.168.xxx.xxx`. Den `Server_Port` kann man auf `80` ändern. Bei `Path_To_Game`, `Path_To_Controller` und `Path_To_Assets` den Pfad zu den drei Ordnern von Saisonknobeln angaben. Backslashes müssen doppelt geschrieben werden. Also z. B. sowas wie:
 
 `Path_To_Game: "D:\\tiltspot-games\\Saisonknobeln\\game"`
 
