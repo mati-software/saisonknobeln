@@ -112,6 +112,35 @@
 				font-size:200%;
 			}
 			
+			#mati_flaggen_container {
+				position:absolute;
+				bottom:1em;
+				left:1em;
+				right:1em;
+				text-align:center;
+			}
+			
+			img.mati_flagge {
+				height:3em;
+				width:auto;
+				border:.5em solid transparent; 
+			}
+			@keyframes mati_animation_flagge_aktiv {
+				from {
+					border-color: rgba(255, 255, 255, 0);
+				}
+				to {
+					border-color: rgba(255, 255, 255, 1)
+				}
+			}
+			img.mati_flagge_aktiv {
+				border-color: white;
+				animation-name: mati_animation_flagge_aktiv;
+				animation-duration: 2s;
+				animation-iteration-count: infinite;
+				animation-direction: alternate;
+			}
+			
 		</style>
 		<style id="mati_farbstyle">
 		</style>
@@ -122,9 +151,6 @@
 			</div>
 			<div id="mati_content_container">
 				<div id="mati_hauptmenue" class="mati_buttonbox">
-					<div class="mati_button">Neue Spiel</div>
-					<div class="mati_button">Spiel fortsetzen</div>
-					<div class="mati_button">Beenden</div>
 				</div>
 			</div>
 		</div>
@@ -133,9 +159,12 @@
 		<script src="matiFarbutil.js" rel="script" type="application/javascript"></script>
 		<script src='https://tiltspot.tv/api/controller/controller-1.0.0.js' rel='script' type='application/javascript'></script>
 		<script>
-			var mati = {};
+			var mati = {
+				farbe : matiFarbutil.WEISS,
+				spracheCode : 'en',
+				sprachen : []
+			};
 			
-			mati.farbe = matiFarbutil.WEISS;
 			mati.renderFarbe = function() {
 				let hell50dunkel80 = matiFarbutil.toCssString(matiFarbutil.gedimmteFarbe(matiFarbutil.aufgehellteFarbe(mati.farbe, .5), .8));
 				let hell50 = matiFarbutil.toCssString(matiFarbutil.aufgehellteFarbe(mati.farbe, .5));
@@ -169,7 +198,8 @@
 			};
 			mati.renderFarbe();
 			
-			mati.renderSpieler = function() {
+			Tiltspot.on.ready = function(){
+				console.log('ready');
 				document.getElementById('mati_spieler_container').innerHTML = `
 					<div class="mati_spieler">
 						<span class="mati_spieler_img">
@@ -178,19 +208,49 @@
 						<span class="mati_spieler_text">${matiUtil.htmlEscape(Tiltspot.get.user().nickname)}</span>
 					</div>
 				`;
-			}
-			
-			Tiltspot.on.ready = function(){
-				console.log('ready');
-				mati.renderSpieler();
-			}
+				
+				matiUtil.pushBefehl(function() {
+					matiUtil.loadJson(Tiltspot.get.assetUrl("language-list.json"), function(sprachen) {
+						console.log(sprachen);
+						mati.sprachen = sprachen;
+						matiUtil.gotoNaechsterBefehl();
+					});
+				});
+			};
 			
 			Tiltspot.on.msg = function (msg, data) {
 				console.log('msg', msg, data);
 				switch (msg) { 
 					case 'setFarbe':
-						mati.farbe = data;
-						mati.renderFarbe();
+						matiUtil.pushBefehl(function() {
+							mati.farbe = data;
+							mati.renderFarbe();
+							matiUtil.gotoNaechsterBefehl();
+						});
+						break;
+					case 'setSpracheCode':
+						matiUtil.pushBefehl(function() {
+							mati.spracheCode = data;
+							matiUtil.loadJson(Tiltspot.get.assetUrl(`gui-l10n/${mati.spracheCode}.json`), function(guiTexte) {
+								matiUtil.l10nTexte = guiTexte;
+								document.getElementById('mati_hauptmenue').innerHTML = `
+									<div class="mati_button">${matiUtil.l10nHtml('Neues Spiel')}</div>
+									<div class="mati_button">${matiUtil.l10nHtml('Spiel fortsetzen')}</div>
+									<div class="mati_button">${matiUtil.l10nHtml('Beenden')}</div>
+									
+									
+									<div id="mati_flaggen_container">
+										${mati.sprachen.map(function (sprache) {
+											return `
+												<img class="${sprache.code === mati.spracheCode ? 'mati_flagge mati_flagge_aktiv' : 'mati_flagge'}" src="${Tiltspot.get.assetUrl(`gui-l10n/${sprache.code}.svg`)}" alt="${Tiltspot.get.assetUrl(`gui-l10n/${sprache.name}.svg`)}" />
+											`;
+										}).join('')}
+									</div>
+								`;
+								matiUtil.gotoNaechsterBefehl();
+							});
+						});
+						break;
 				}
 			};
 			

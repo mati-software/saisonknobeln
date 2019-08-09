@@ -1,4 +1,49 @@
-var matiUtil = {};
+var matiUtil = {
+	befehlsQueue : [],
+	befehlsQueueWirdAbgearbeitet : false,
+	l10nTexte : {}
+};
+
+
+
+
+matiUtil.l10n = function(textKey) {
+	let text = matiUtil.l10nTexte[textKey];
+	if (text) {
+		return text;
+	}
+	return textKey;
+};
+
+matiUtil.l10nHtml = function(textKey) {
+	return matiUtil.htmlEscape(matiUtil.l10n(textKey));
+};
+
+
+
+
+matiUtil.gotoNaechsterBefehl = function() {
+	if (matiUtil.befehlsQueue.length > 0) {
+		let befehl = matiUtil.befehlsQueue.shift();
+		matiUtil.befehlsQueueWirdAbgearbeitet = true;
+		befehl();
+	}
+	else {
+		matiUtil.befehlsQueueWirdAbgearbeitet = false;
+	}
+};
+matiUtil.pushBefehl = function(befehlsFunktion) {
+	matiUtil.befehlsQueue.push(befehlsFunktion);
+	if (!matiUtil.befehlsQueueWirdAbgearbeitet) {
+		matiUtil.gotoNaechsterBefehl();
+	}
+};
+
+
+
+
+
+
 
 matiUtil.shuffleArray = function(array) {
 	for (var i = array.length - 1; i > 0; i--) {
