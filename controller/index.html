@@ -35,6 +35,7 @@
 				bottom:0;
 				top:4.4em;
 				box-shadow:0 0 .4em black;
+				z-index:2;
 			}
 			
 			.mati_buttonbox {
@@ -46,22 +47,57 @@
 				border-width:.5em;
 				border-style:solid;
 				box-shadow: inset 0 0 1em black;
+				
+				display: none;
+				
+				backface-visibility: hidden;
 			}
 			
-			.mati_button,
-			.mati_button_deaktiviert,
-			.mati_button_focus {
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			.mati_button {
 				color: black;
 				padding:.5em;
 				text-align:center;
 				line-height:2em;
 				border-radius:1.5em;
 				vertical-align:middle;
-				margin:1em;
-				box-shadow:0 0 1em black;
 			}
-			.mati_button_deaktiviert {
-				opacity: .3;
+			.mati_buttonbox .mati_button {
+				box-shadow:0 0 1em black;
+				margin:1em;
+			}
+			
+			@keyframes mati_animation_buttoneffekt {
+				from {
+					transform: scale(1);
+					opacity:1;
+				}
+				to {
+					transform: scale(4);
+					opacity:0;
+				}
+			}
+			.mati_buttoneffekt_container {
+				position:absolute;
+				left:1.5em;
+				right:1.5em;
+				animation-name: mati_animation_buttoneffekt;
+				animation-duration: 1s;
+				animation-timing-function: linear;
+				z-index:3;
 			}
 			
 			.mati_spieler {
@@ -72,6 +108,7 @@
 				overflow:hidden;
 				position:relative;
 				width:10em;
+				z-index:1;
 			}
 			span.mati_spieler_img {
 				position:absolute;
@@ -141,6 +178,11 @@
 				animation-direction: alternate;
 			}
 			
+			#mati_warten_text {
+				padding:1em;
+				text-align:center;
+			}
+			
 		</style>
 		<style id="mati_farbstyle">
 		</style>
@@ -156,6 +198,10 @@
 					<div id="mati_flaggen_container">
 					</div>
 				</div>
+				<div id="mati_wartebild" class="mati_buttonbox">
+					<div id="mati_warten_text">
+					</div>
+				</div>
 			</div>
 		</div>
 		
@@ -166,7 +212,9 @@
 			var mati = {
 				farbe : matiFarbutil.WEISS,
 				spracheCode : 'en',
-				sprachen : []
+				sprachen : [],
+				aktuellSichbarerContainer : null,
+				aktuellerContainerLautSpielstatus : null
 			};
 			
 			mati.renderFarbe = function() {
@@ -184,8 +232,7 @@
 						border-color: ${hell50};
 					}
 					
-					.mati_button,
-					.mati_button_deaktiviert {
+					.mati_button {
 						background: ${hell50} radial-gradient(circle, ${hell50}, ${hell50dunkel80});
 					}
 					.mati_button_focus {
@@ -202,8 +249,52 @@
 			};
 			mati.renderFarbe();
 			
+			mati.zeigeContainer = function(containerElement, rueckwaerts, callback) {
+				//TODO aktuell sichtbaren container verschwinden lassen
+			
+				let breite = document.getElementById('mati_controller_alles').offsetWidth;
+				containerElement.style['transition-property'] = 'none';
+				containerElement.style['transition-duration'] = '0s';
+				
+				//TODO aender den code, mach stattdessen ne loesung wo du den Flush-Unsinn nicht brauchst (beim window onresize globale style anpassen)
+				
+				//Render-Flush um Animations-Abschaltung zu uebernehmen
+				containerElement.offsetHeight;
+				
+				containerElement.style['transform'] = `perspective(${breite*4}px) translateZ(${-breite/2}px) rotateY(${rueckwaerts ? -90 : 90}deg) translateZ(${breite/2}px)`;
+				containerElement.style['display'] = 'block';
+				containerElement.style['transition-property'] = 'transform';
+				containerElement.style['transition-duration'] = '1s';
+				
+				if (mati.aktuellSichbarerContainer !== null) {
+					mati.aktuellSichbarerContainer.style['transition-property'] = 'transform';
+					mati.aktuellSichbarerContainer.style['transition-duration'] = '1s';
+					//Flush
+					mati.aktuellSichbarerContainer.offsetHeight;
+				}
+				
+				//Render-Flush um Animations-Anschaltung zu uebernehmen
+				containerElement.offsetHeight;
+				containerElement.style['transform'] = `perspective(${breite*4}px) translateZ(${-breite/2}px) rotateY(0deg) translateZ(${breite/2}px)`;
+				
+				if (mati.aktuellSichbarerContainer !== null) {
+					mati.aktuellSichbarerContainer.style['transform'] = `perspective(${breite*4}px) translateZ(${-breite/2}px) rotateY(${rueckwaerts ? 90 : -90}deg) translateZ(${breite/2}px)`;
+				}
+				
+				setTimeout(function () {
+					if (mati.aktuellSichbarerContainer !== null) {
+						mati.aktuellSichbarerContainer.style['display'] = 'none';
+					}
+					
+					mati.aktuellSichbarerContainer = containerElement;
+					if (containerElement.id !== 'mati_hauptmenue') {
+						mati.aktuellerContainerLautSpielstatus = containerElement;
+					}
+					callback();
+				}, 1000);
+			};
+			
 			Tiltspot.on.ready = function(){
-				console.log('ready');
 				document.getElementById('mati_spieler_container').innerHTML = `
 					<div class="mati_spieler">
 						<span class="mati_spieler_img">
@@ -215,7 +306,6 @@
 				
 				matiUtil.pushBefehl(function() {
 					matiUtil.loadJson(Tiltspot.get.assetUrl("language-list.json"), function(sprachen) {
-						console.log(sprachen);
 						mati.sprachen = sprachen;
 						
 						document.getElementById('mati_flaggen_container').innerHTML = mati.sprachen.map(function (sprache) {
@@ -237,7 +327,6 @@
 			};
 			
 			Tiltspot.on.msg = function (msg, data) {
-				console.log('msg', msg, data);
 				switch (msg) { 
 					case 'setFarbe':
 						matiUtil.pushBefehl(function() {
@@ -251,25 +340,115 @@
 							mati.spracheCode = data;
 							matiUtil.loadJson(Tiltspot.get.assetUrl(`gui-l10n/${mati.spracheCode}.json`), function(guiTexte) {
 								matiUtil.l10nTexte = guiTexte;
+								
+								document.getElementById('mati_warten_text').innerText = matiUtil.l10n('Bitte warten bis die nächste Interaktion möglich ist!');
+								
 								document.getElementById('mati_hauptmenue_buttons').innerHTML = `
-									<div class="mati_button">${matiUtil.l10nHtml('Neues Spiel')}</div>
-									<div class="mati_button">${matiUtil.l10nHtml('Spiel fortsetzen')}</div>
-									<div class="mati_button">${matiUtil.l10nHtml('Beenden')}</div>
+									<div class="mati_button" id="mati_button_neues_spiel">${matiUtil.l10nHtml('Neues Spiel')}</div>
+									<div class="mati_button" id="mati_button_spiel_fortsetzen" style="display: none">${matiUtil.l10nHtml('Spiel fortsetzen')}</div>
+									<div class="mati_button" id="mati_button_beenden">${matiUtil.l10nHtml('Beenden')}</div>
 								`;
 								
 								for (let flaggeElement of document.getElementsByClassName('mati_flagge_aktiv')) {
 									flaggeElement.classList.remove('mati_flagge_aktiv');
 								}
-								
 								document.getElementById(`mati_flagge_code_${mati.spracheCode}`).classList.add('mati_flagge_aktiv');
 								
 								matiUtil.gotoNaechsterBefehl();
 							});
 						});
 						break;
+					case 'zeigeHauptmenue':
+						matiUtil.pushBefehl(function() {
+							if (data.spielLaeuft) {
+								document.getElementById('mati_button_spiel_fortsetzen').style['display'] = 'block';
+								document.getElementById('mati_button_neues_spiel').style['display'] = 'none';
+								document.getElementById('mati_flaggen_container').style['display'] = 'none';
+							}
+							else {
+								document.getElementById('mati_button_spiel_fortsetzen').style['display'] = 'none';
+								document.getElementById('mati_button_neues_spiel').style['display'] = 'block';
+								document.getElementById('mati_flaggen_container').style['display'] = 'block';
+							}
+							mati.zeigeContainer(document.getElementById('mati_hauptmenue'), data.spielLaeuft, matiUtil.gotoNaechsterBefehl);
+						});
+						break;
+					case 'zeigeWarten':
+						matiUtil.pushBefehl(function() {
+							mati.zeigeContainer(document.getElementById('mati_wartebild'), false, matiUtil.gotoNaechsterBefehl);
+						});
+						break;
 				}
 			};
 			
+			
+			
+			document.getElementById('mati_hauptmenue_buttons').addEventListener('touchstart', function (event) {
+				if (!event.target.matches('.mati_button')) {
+					return;
+				}
+				event.target.classList.add('mati_button_focus');
+			}, false);
+			document.getElementById('mati_hauptmenue_buttons').addEventListener('touchend', function (event) {
+				if (!event.target.matches('.mati_button')) {
+					return;
+				}
+				event.target.classList.remove('mati_button_focus');
+				
+				let boundingClientRect = event.target.getBoundingClientRect();
+				
+				console.log('boundingClientRect', boundingClientRect);
+				console.log(event);
+				
+				//Testen ob der Toch auch auf dem Button beendet wurde
+				let buttonWurdeGeklickt = false;
+				for (let touch of event.changedTouches) {
+					if (touch.clientX >= boundingClientRect.left
+							&& touch.clientX <= boundingClientRect.right
+							&& touch.clientY >= boundingClientRect.top
+							&& touch.clientY <= boundingClientRect.bottom) {
+						buttonWurdeGeklickt = true;
+					}
+				}
+				
+				if (buttonWurdeGeklickt) {
+					//Button-Effekt
+					let cloneButton = event.target.cloneNode(true);
+					let cloneContainer = document.createElement("div");
+					cloneContainer.classList.add('mati_buttoneffekt_container');
+					cloneContainer.style['top'] = boundingClientRect.top + 'px';
+					cloneContainer.appendChild(cloneButton);
+					document.getElementById('mati_controller_alles').appendChild(cloneContainer);
+					setTimeout(function () {
+						document.getElementById('mati_controller_alles').removeChild(cloneContainer);
+					}, 1000);
+					
+					switch (event.target.id) {
+						case 'mati_button_neues_spiel':
+							Tiltspot.send.msg('neuesSpiel');
+							break;
+					}
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+				}
+			}, false);
+			document.getElementById('mati_hauptmenue_buttons').addEventListener('touchcancel', function (event) {
+				if (!event.target.matches('.mati_button')) {
+					return;
+				}
+				event.target.classList.remove('mati_button_focus');
+			}, false);
+
 			
 			
 			var onAenderungDerFenstergroesse = function() {

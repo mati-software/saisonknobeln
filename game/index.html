@@ -184,6 +184,7 @@
 			Tiltspot.on.ready = function() {
 				console.log('ready');
 				mati.knobel.setSpracheCode('en');
+				mati.knobel.zeigeHauptmenue();
 			};
 			Tiltspot.on.connect = function(controllerId) {
 				console.log('Connect Controller ' + controllerId);
@@ -202,6 +203,9 @@
 				switch (msg) { 
 					case 'setSpracheCode':
 						mati.knobel.setSpracheCode(data);
+						break;
+					case 'neuesSpiel':
+						mati.knobel.neuesSpiel(data);
 						break;
 				}
 			};				

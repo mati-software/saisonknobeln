@@ -129,16 +129,24 @@ mati.knobel.setSpracheCode = function(neuerSpracheCode) {
 
 
 
+mati.knobel.zeigeHauptmenue = function() {
+	//TODO mach spielerliste sichtbar
+	
+	matiUtil.pushBefehl(function() {
+		Tiltspot.broadcast.msg('zeigeHauptmenue', {spielLaeuft : mati.knobel.spielLaeuft});
+		matiUtil.gotoNaechsterBefehl();
+	});
+};
 
 
 
-
-mati.knobel.neuesSpielStarten = function() {
+mati.knobel.neuesSpiel = function() {
 	mati.knobel.queueEnthaeltLaufendesSpiel = true;
 	
 	matiUtil.pushBefehl(function() {
 		mati.knobel.spielLaeuft = true;
 		mati.knobel.aktuelleRubrik = null;
+		Tiltspot.broadcast.msg('zeigeWarten');
 		matiUtil.gotoNaechsterBefehl();
 	});
 	
@@ -150,7 +158,7 @@ mati.knobel.neuesSpielStarten = function() {
 			}
 			else {
 				var alterIndex = mati.knobel.rubriken.indexOf(mati.knobel.aktuelleRubrik);
-				var neuerIndex = (alterIndex + 1) % fragen.length;
+				var neuerIndex = (alterIndex + 1) % mati.knobel.rubriken.length;
 				mati.knobel.aktuelleRubrik = mati.knobel.rubriken[neuerIndex];
 			}
 			

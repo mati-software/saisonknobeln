@@ -3,5 +3,6 @@
 	"Spiel fortsetzen" : "Resume Game",
 	"Beenden" : "Exit",
 	"Spieler" : "Players",
-	"Warteliste" : "Waitlist"
+	"Warteliste" : "Waitlist",
+	"Bitte warten bis die nächste Interaktion möglich ist!" : "Please wait until the next interaction is possible!"
 }
