@@ -151,6 +151,10 @@
 			</div>
 			<div id="mati_content_container">
 				<div id="mati_hauptmenue" class="mati_buttonbox">
+					<div id="mati_hauptmenue_buttons">
+					</div>
+					<div id="mati_flaggen_container">
+					</div>
 				</div>
 			</div>
 		</div>
@@ -213,6 +217,20 @@
 					matiUtil.loadJson(Tiltspot.get.assetUrl("language-list.json"), function(sprachen) {
 						console.log(sprachen);
 						mati.sprachen = sprachen;
+						
+						document.getElementById('mati_flaggen_container').innerHTML = mati.sprachen.map(function (sprache) {
+							return `
+								<img id="mati_flagge_code_${sprache.code}" class="${sprache.code === mati.spracheCode ? 'mati_flagge mati_flagge_aktiv' : 'mati_flagge'}" src="${Tiltspot.get.assetUrl(`gui-l10n/${sprache.code}.svg`)}" alt="${Tiltspot.get.assetUrl(`gui-l10n/${sprache.name}.svg`)}" />
+							`;
+						}).join('');
+						
+						for (let sprache of mati.sprachen) {
+							let spracheCode = sprache.code;
+							document.getElementById(`mati_flagge_code_${sprache.code}`).addEventListener('click', function() {
+								Tiltspot.send.msg('setSpracheCode', spracheCode);
+							});
+						}
+						
 						matiUtil.gotoNaechsterBefehl();
 					});
 				});
@@ -233,20 +251,18 @@
 							mati.spracheCode = data;
 							matiUtil.loadJson(Tiltspot.get.assetUrl(`gui-l10n/${mati.spracheCode}.json`), function(guiTexte) {
 								matiUtil.l10nTexte = guiTexte;
-								document.getElementById('mati_hauptmenue').innerHTML = `
+								document.getElementById('mati_hauptmenue_buttons').innerHTML = `
 									<div class="mati_button">${matiUtil.l10nHtml('Neues Spiel')}</div>
 									<div class="mati_button">${matiUtil.l10nHtml('Spiel fortsetzen')}</div>
 									<div class="mati_button">${matiUtil.l10nHtml('Beenden')}</div>
-									
-									
-									<div id="mati_flaggen_container">
-										${mati.sprachen.map(function (sprache) {
-											return `
-												<img class="${sprache.code === mati.spracheCode ? 'mati_flagge mati_flagge_aktiv' : 'mati_flagge'}" src="${Tiltspot.get.assetUrl(`gui-l10n/${sprache.code}.svg`)}" alt="${Tiltspot.get.assetUrl(`gui-l10n/${sprache.name}.svg`)}" />
-											`;
-										}).join('')}
-									</div>
 								`;
+								
+								for (let flaggeElement of document.getElementsByClassName('mati_flagge_aktiv')) {
+									flaggeElement.classList.remove('mati_flagge_aktiv');
+								}
+								
+								document.getElementById(`mati_flagge_code_${mati.spracheCode}`).classList.add('mati_flagge_aktiv');
+								
 								matiUtil.gotoNaechsterBefehl();
 							});
 						});

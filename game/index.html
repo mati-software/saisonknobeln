@@ -199,12 +199,11 @@
 			};
 			Tiltspot.on.msg = function (controllerId, msg, data) {
 				console.log('msg', controllerId, msg, data);
-				//switch (msg) { 
-					//case 'move':
-						//alert(msg);
-						//if(data.val != null) alert(msg, data);
-						//break;
-				//}
+				switch (msg) { 
+					case 'setSpracheCode':
+						mati.knobel.setSpracheCode(data);
+						break;
+				}
 			};				
 		
 			var onAenderungDerFenstergroesse = function() {
