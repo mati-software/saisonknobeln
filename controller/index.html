@@ -2,7 +2,7 @@
 <html lang="de">
 	<head>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
 		<title>Saisonknobeln</title>
 		<style>
 			body {
@@ -26,6 +26,8 @@
 				-moz-user-select: none;    
 				-ms-user-select: none;      
 				user-select: none;
+				
+				touch-action: none;
 			}
 			
 			#mati_content_container {
@@ -194,12 +196,16 @@
 			<div id="mati_content_container">
 				<div id="mati_hauptmenue" class="mati_buttonbox">
 					<div id="mati_hauptmenue_buttons">
+						<div class="mati_button" id="mati_button_neues_spiel"></div>
+						<div class="mati_button" id="mati_button_beenden"></div>
 					</div>
 					<div id="mati_flaggen_container">
 					</div>
 				</div>
 				<div id="mati_pausemenue" class="mati_buttonbox">
 					<div id="mati_pausemenue_buttons">
+						<div class="mati_button" id="mati_button_spiel_fortsetzen"></div>
+						<div class="mati_button" id="mati_button_spiel_abbrechen"></div>
 					</div>
 				</div>
 				<div id="mati_wartebild" class="mati_buttonbox">
@@ -218,7 +224,9 @@
 				spracheCode : null,
 				sprachen : [],
 				aktuellSichbarerContainer : null,
-				aktuellerContainerLautSpielstatus : null
+				aktuellerContainerLautSpielstatus : null,
+				buttonMitFokus : null,
+				pointerIdFuerButtonMitFokus : null
 			};
 			
 			mati.renderFarbe = function() {
@@ -362,21 +370,16 @@
 								
 								document.getElementById('mati_warten_text').innerText = matiUtil.l10n('Bitte warten bis die nächste Interaktion möglich ist!');
 								
-								document.getElementById('mati_hauptmenue_buttons').innerHTML = `
-									<div class="mati_button" id="mati_button_neues_spiel">${matiUtil.l10nHtml('Neues Spiel')}</div>
-									<div class="mati_button" id="mati_button_beenden">${matiUtil.l10nHtml('Beenden')}</div>
-								`;
+								document.getElementById('mati_button_neues_spiel').innerText = matiUtil.l10n('Neues Spiel');
+								document.getElementById('mati_button_beenden').innerText = matiUtil.l10n('Beenden');
 								
 								for (let flaggeElement of document.getElementsByClassName('mati_flagge_aktiv')) {
 									flaggeElement.classList.remove('mati_flagge_aktiv');
 								}
 								document.getElementById(`mati_flagge_code_${mati.spracheCode}`).classList.add('mati_flagge_aktiv');
-								
-								document.getElementById('mati_pausemenue_buttons').innerHTML = `
-									<div class="mati_button" id="mati_button_spiel_fortsetzen">${matiUtil.l10nHtml('Spiel fortsetzen')}</div>
-									<div class="mati_button" id="mati_button_spiel_abbrechen">${matiUtil.l10nHtml('Laufendes Spiel abbrechen')}</div>
-									<div class="mati_button" id="mati_button_beenden_pausemenue">${matiUtil.l10nHtml('Beenden')}</div>
-								`;
+
+								document.getElementById('mati_button_spiel_fortsetzen').innerText = matiUtil.l10n('Spiel fortsetzen');
+								document.getElementById('mati_button_spiel_abbrechen').innerText = matiUtil.l10n('Laufendes Spiel abbrechen');
 								
 								matiUtil.gotoNaechsterBefehl();
 							});
@@ -400,34 +403,46 @@
 			
 			
 			
-			document.getElementById('mati_hauptmenue_buttons').addEventListener('touchstart', function (event) {
-				if (!event.target.matches('.mati_button')) {
+			
+			
+			
+			
+			
+			
+			
+			
+			//FIXME auf dem Handy klappt das Bewegen des Fingers auf dem gedrückten Button nicht. Es liegt wohl entweder am boundingrect oder wahrscheinlicher an einem anderen target oder falschen mouse-koordinaten
+			//IDEE wenn ich statt DIV Button nutze und ich einfach auf onclick höre, vllt. lösen sich dann alle meine Probleme in Luft auf
+			
+			document.addEventListener('pointerdown', function (event) {
+				if (!event.target.matches('.mati_button') || !event.target.id || mati.buttonMitFokus !== null) {
 					return;
 				}
 				event.target.classList.add('mati_button_focus');
-			}, false);
-			document.getElementById('mati_hauptmenue_buttons').addEventListener('touchend', function (event) {
-				if (!event.target.matches('.mati_button')) {
+				
+				mati.buttonMitFokus = event.target;
+				mati.pointerIdFuerButtonMitFokus = event.pointerId;
+			});
+			document.addEventListener('pointerup', function (event) {
+				if (event.pointerId !== mati.pointerIdFuerButtonMitFokus) {
 					return;
 				}
-				event.target.classList.remove('mati_button_focus');
 				
 				let boundingClientRect = event.target.getBoundingClientRect();
-				
-				//Testen ob der Toch auch auf dem Button beendet wurde
-				let buttonWurdeGeklickt = false;
-				for (let touch of event.changedTouches) {
-					if (touch.clientX >= boundingClientRect.left
-							&& touch.clientX <= boundingClientRect.right
-							&& touch.clientY >= boundingClientRect.top
-							&& touch.clientY <= boundingClientRect.bottom) {
-						buttonWurdeGeklickt = true;
-					}
-				}
+
+				//der Button ist eigentlich nicht rechteckig sondern hat runde Enden, aber besser gehts nicht
+				//(JS hilft bei gedrueckter Maustaste in keinster Weise mit wenn es um das Verlassen der Hit-Area geht)
+				let buttonWurdeGeklickt = event.target === mati.buttonMitFokus
+							&& event.clientX >= boundingClientRect.left
+							&& event.clientX <= boundingClientRect.right
+							&& event.clientY >= boundingClientRect.top
+							&& event.clientY <= boundingClientRect.bottom;
 				
 				if (buttonWurdeGeklickt) {
 					//Button-Effekt
-					let cloneButton = event.target.cloneNode(true);
+					let cloneButton = document.createElement("div");
+					cloneButton.classList.add('mati_button');
+					cloneButton.innerText = event.target.innerText;
 					let cloneContainer = document.createElement("div");
 					cloneContainer.classList.add('mati_buttoneffekt_container');
 					cloneContainer.style['top'] = boundingClientRect.top + 'px';
@@ -437,21 +452,47 @@
 						document.getElementById('mati_controller_alles').removeChild(cloneContainer);
 					}, 1000);
 					
+					//Aktion ausfuehren
 					switch (event.target.id) {
 						case 'mati_button_neues_spiel':
 							Tiltspot.send.msg('neuesSpiel');
 							break;
 					}
 				}
-			}, false);
-			document.getElementById('mati_hauptmenue_buttons').addEventListener('touchcancel', function (event) {
-				if (!event.target.matches('.mati_button')) {
+				
+				mati.buttonMitFokus.classList.remove('mati_button_focus');
+				mati.buttonMitFokus = null;
+				mati.pointerIdFuerButtonMitFokus = null;
+			});
+			document.addEventListener('pointermove', function (event) {
+				if (event.pointerId !== mati.pointerIdFuerButtonMitFokus) {
 					return;
 				}
-				event.target.classList.remove('mati_button_focus');
-			}, false);
+				
+				let boundingClientRect = event.target.getBoundingClientRect();
 
-			
+				//der Button ist eigentlich nicht rechteckig sondern hat runde Enden, aber besser gehts nicht
+				//(JS hilft bei gedrueckter Maustaste in keinster Weise mit wenn es um das Verlassen der Hit-Area geht)
+				let ueberButton = event.target === mati.buttonMitFokus
+							&& event.clientX >= boundingClientRect.left
+							&& event.clientX <= boundingClientRect.right
+							&& event.clientY >= boundingClientRect.top
+							&& event.clientY <= boundingClientRect.bottom;
+
+				if (!ueberButton) {
+					mati.buttonMitFokus.classList.remove('mati_button_focus');
+					mati.buttonMitFokus = null;
+					mati.pointerIdFuerButtonMitFokus = null;
+				}
+			});
+			document.addEventListener('pointercancel', function (event) {
+				if (event.pointerId !== mati.pointerIdFuerButtonMitFokus) {
+					return;
+				}
+				mati.buttonMitFokus.classList.remove('mati_button_focus');
+				mati.buttonMitFokus = null;
+				mati.pointerIdFuerButtonMitFokus = null;
+			});
 			
 			var onAenderungDerFenstergroesse = function() {
 				var allesFontSize = Math.min(window.innerWidth, window.innerHeight) / 20;
