@@ -197,6 +197,7 @@
 			Tiltspot.on.reconnect = function(controllerId) {
 				console.log('Controller ' + controllerId + ' is back!');
 				mati.knobel.spielerChanged();
+				mati.knobel.sendMsg(controllerId);
 			};
 			Tiltspot.on.msg = function (controllerId, msg, data) {
 				console.log('msg', controllerId, msg, data);
@@ -206,6 +207,10 @@
 						break;
 					case 'neuesSpiel':
 						mati.knobel.neuesSpiel(data);
+						break;
+					case 'clientReady':
+						//Client hat ggf. den letzten Befehl nicht mitbekommen
+						mati.knobel.sendMsg(controllerId);
 						break;
 				}
 			};				

@@ -19,6 +19,8 @@ mati.Spieler = class {
 		
 		this.altePunktzahl = 0;
 		this.aktuellePunktzahl = 0;
+		
+		this.lastMsg = null;
     }
 };
 
@@ -47,7 +49,7 @@ mati.knobel.setSpracheCode = function(neuerSpracheCode) {
 	//neue Sprache uebernehmen (in Queue, damit Reihenfolge stimmt falls jemand 2 mal ganz schnell die Sprache umstellt)
 	matiUtil.pushBefehl(function() {
 		mati.knobel.spracheCode = neuerSpracheCode;
-		Tiltspot.broadcast.msg('setSpracheCode', neuerSpracheCode);
+		mati.knobel.broadcast();
 		matiUtil.gotoNaechsterBefehl();
 	});
 	
@@ -123,9 +125,32 @@ mati.knobel.setSpracheCode = function(neuerSpracheCode) {
 
 
 
+mati.knobel.sendMsg = function(spieler, befehl) {
+	console.log('typeof spieler', typeof spieler);
+	if (typeof spieler !== 'object') {
+		spieler = mati.knobel.findeKnobelSpieler(spieler);
+	}
+	
+	if (!spieler) {
+		return;
+	}
+	
+	if (!befehl) {
+		befehl = spieler.lastMsg;
+	}
+	console.log('spieler.farbe', spieler.farbe);
+	Tiltspot.send.msg(spieler.id, befehl, {
+		spracheCode : mati.knobel.spracheCode,
+		farbe : spieler.farbe
+	});
+	spieler.lastMsg = befehl;
+};
 
-
-
+mati.knobel.broadcast = function(befehl) {
+	for (let spieler of mati.knobel.spielerImLaufendenSpiel) {
+		mati.knobel.sendMsg(spieler, befehl);
+	}
+};
 
 
 
@@ -133,7 +158,7 @@ mati.knobel.zeigeHauptmenue = function() {
 	//TODO mach spielerliste sichtbar
 	
 	matiUtil.pushBefehl(function() {
-		Tiltspot.broadcast.msg('zeigeHauptmenue', {spielLaeuft : mati.knobel.spielLaeuft});
+		mati.knobel.broadcast('zeigeHauptmenue');
 		matiUtil.gotoNaechsterBefehl();
 	});
 };
@@ -146,7 +171,7 @@ mati.knobel.neuesSpiel = function() {
 	matiUtil.pushBefehl(function() {
 		mati.knobel.spielLaeuft = true;
 		mati.knobel.aktuelleRubrik = null;
-		Tiltspot.broadcast.msg('zeigeWarten');
+		mati.knobel.broadcast('zeigeWarten');
 		matiUtil.gotoNaechsterBefehl();
 	});
 	
@@ -272,7 +297,6 @@ mati.knobel.spielerChanged = function() {
 		if (knobelSpieler === null) {
 			//Knobel-Spieler neu erstellen
 			knobelSpieler = new mati.Spieler(user.controllerId);
-			Tiltspot.send.msg(user.controllerId, 'setFarbe', knobelSpieler.farbe);
 			if (mati.knobel.spielLaeuft) {
 				mati.knobel.spielerAufWarteliste.push(knobelSpieler);
 			}
