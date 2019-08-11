@@ -102,6 +102,47 @@
 				z-index:3;
 			}
 			
+			@keyframes mati_animation_buttonbox_show {
+				from {
+					transform: perspective(400vw) translateZ(-50vw) rotateY(90deg) translateZ(50vw);
+				}
+				to {
+					transform: perspective(400vw) translateZ(-50vw) rotateY(0deg) translateZ(50vw);
+				}
+			}
+			@keyframes mati_animation_buttonbox_hide {
+				from {
+					transform: perspective(400vw) translateZ(-50vw) rotateY(0deg) translateZ(50vw);
+				}
+				to {
+					transform: perspective(400vw) translateZ(-50vw) rotateY(-90deg) translateZ(50vw);
+				}
+			}
+			.mati_buttonbox_hide {
+				animation-name: mati_animation_buttonbox_hide;
+				animation-duration: 1s;
+				animation-iteration-count: 1;
+				transform: perspective(400vw) translateZ(-50vw) rotateY(-90deg) translateZ(50vw);
+			}
+			.mati_buttonbox_hide_back {
+				animation-name: mati_animation_buttonbox_show;
+				animation-direction: reverse;
+				animation-duration: 1s;
+				animation-iteration-count: 1;
+				transform: perspective(400vw) translateZ(-50vw) rotateY(90deg) translateZ(50vw);
+			}
+			.mati_buttonbox_show {
+				animation-name: mati_animation_buttonbox_show;
+				animation-duration: 1s;
+				animation-iteration-count: 1;
+			}
+			.mati_buttonbox_show_back {
+				animation-name: mati_animation_buttonbox_hide;
+				animation-direction: reverse;
+				animation-duration: 1s;
+				animation-iteration-count: 1;
+			}
+			
 			.mati_spieler {
 				padding:0;
 				margin:0;
@@ -265,34 +306,16 @@
 					callback();
 					return;
 				}
-			
-				let breite = document.getElementById('mati_controller_alles').offsetWidth;
-				containerElement.style['transition-property'] = 'none';
-				containerElement.style['transition-duration'] = '0s';
 				
-				//TODO aender den code, mach stattdessen ne loesung wo du den Flush-Unsinn nicht brauchst (beim window onresize globale style anpassen)
-				
-				//Render-Flush um Animations-Abschaltung zu uebernehmen
-				containerElement.offsetHeight;
-				
-				containerElement.style['transform'] = `perspective(${breite*4}px) translateZ(${-breite/2}px) rotateY(${rueckwaerts ? -90 : 90}deg) translateZ(${breite/2}px)`;
 				containerElement.style['display'] = 'block';
-				containerElement.style['transition-property'] = 'transform';
-				containerElement.style['transition-duration'] = '1s';
+				containerElement.classList.remove('mati_buttonbox_hide');
+				containerElement.classList.remove('mati_buttonbox_hide_back');
+				containerElement.classList.add(rueckwaerts ? 'mati_buttonbox_show_back' : 'mati_buttonbox_show');
 				
 				if (mati.aktuellSichbarerContainer !== null) {
-					mati.aktuellSichbarerContainer.style['transition-property'] = 'transform';
-					mati.aktuellSichbarerContainer.style['transition-duration'] = '1s';
-					//Flush
-					mati.aktuellSichbarerContainer.offsetHeight;
-				}
-				
-				//Render-Flush um Animations-Anschaltung zu uebernehmen
-				containerElement.offsetHeight;
-				containerElement.style['transform'] = `perspective(${breite*4}px) translateZ(${-breite/2}px) rotateY(0deg) translateZ(${breite/2}px)`;
-				
-				if (mati.aktuellSichbarerContainer !== null) {
-					mati.aktuellSichbarerContainer.style['transform'] = `perspective(${breite*4}px) translateZ(${-breite/2}px) rotateY(${rueckwaerts ? 90 : -90}deg) translateZ(${breite/2}px)`;
+					mati.aktuellSichbarerContainer.classList.remove('mati_buttonbox_show');
+					mati.aktuellSichbarerContainer.classList.remove('mati_buttonbox_show_back');
+					mati.aktuellSichbarerContainer.classList.add(rueckwaerts ? 'mati_buttonbox_hide_back' : 'mati_buttonbox_hide');
 				}
 				
 				setTimeout(function () {
