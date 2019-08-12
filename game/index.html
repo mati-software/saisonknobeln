@@ -4,6 +4,27 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Saisonknobeln</title>
+		
+		<style id="mati_keyframes_3d">
+			@keyframes mati_animation_box_show {
+				from {
+					transform: perspective(400vh) translateZ(-50vh) rotateX(-90deg) translateZ(50vh);
+				}
+				to {
+					transform: perspective(400vh) translateZ(-50vh) rotateX(0deg) translateZ(50vh);
+				}
+			}
+			@keyframes mati_animation_box_hide {
+				from {
+					transform: perspective(400vh) translateZ(-50vh) rotateX(0deg) translateZ(50vh);
+				}
+				to {
+					transform: perspective(400vh) translateZ(-50vh) rotateX(90deg) translateZ(50vh);
+				}
+			}
+		</style>
+		
+		
 		<style>
 			body {
 				overflow:hidden;
@@ -18,8 +39,7 @@
 				left:0;
 				right:0;
 				bottom:0;
-				background-color:#ddd;
-				color:black;
+				background-color:black;
 				font-family: Helvetica, Arial, sans-serif;
 				
 				-webkit-user-select: none;  
@@ -155,23 +175,55 @@
 				text-overflow: ellipsis;
 			}
 			
-			#mati_movable_content_holder_1,
-			#mati_movable_content_holder_2 {
+			.mati_box {
 				position:absolute;
+				left:0;
+				top:0;
 				width:100%;
 				height:100%;
 				overflow:hidden;
+				backface-visibility: hidden;
+				display: none;
+			}
+			
+			.mati_box_hide {
+				animation-name: mati_animation_box_hide;
+				animation-duration: 1s;
+				animation-iteration-count: 1;
+				transform: perspective(400vh) translateZ(-50vh) rotateX(90deg) translateZ(50vh);
+			}
+			.mati_box_hide_back {
+				animation-name: mati_animation_box_show;
+				animation-direction: reverse;
+				animation-duration: 1s;
+				animation-iteration-count: 1;
+				transform: perspective(400vh) translateZ(-50vh) rotateX(-90deg) translateZ(50vh);
+			}
+			.mati_box_show {
+				animation-name: mati_animation_box_show;
+				animation-duration: 1s;
+				animation-iteration-count: 1;
+			}
+			.mati_box_show_back {
+				animation-name: mati_animation_box_hide;
+				animation-direction: reverse;
+				animation-duration: 1s;
+				animation-iteration-count: 1;
+			}
+			
+			#mati_spiel_lobby {
+				background-color: #ddd;
+				color: black;
 			}
 		</style>
 	</head>
 	<body>
 		<div id="mati_spiel_alles">
-			<div id="mati_movable_content_holder_1">
+			<div id="mati_spiel_lobby" class="mati_box">
 			</div>
-			<div id="mati_movable_content_holder_2">
+			<div id="mati_rubrik_intro" class="mati_box">
 			</div>
-		
-			<div id="mati_spiel_lobby">
+			<div id="mati_box_frage" class="mati_box">
 			</div>
 		</div>
 
@@ -183,34 +235,34 @@
 		<script>
 			Tiltspot.on.ready = function() {
 				console.log('ready');
-				mati.knobel.setSpracheCode('en');
-				mati.knobel.zeigeHauptmenue();
+				mati.setSpracheCode('en');
+				mati.zeigeHauptmenue();
 			};
 			Tiltspot.on.connect = function(controllerId) {
 				console.log('Connect Controller ' + controllerId);
-				mati.knobel.spielerChanged();
+				mati.spielerChanged();
 			}; 
 			Tiltspot.on.disconnect = function(controllerId) {
 				console.log('Controller ' + controllerId + ' disconnected');
-				mati.knobel.spielerChanged();
+				mati.spielerChanged();
 			};
 			Tiltspot.on.reconnect = function(controllerId) {
 				console.log('Controller ' + controllerId + ' is back!');
-				mati.knobel.spielerChanged();
-				mati.knobel.sendMsg(controllerId);
+				mati.spielerChanged();
+				mati.sendMsg(controllerId);
 			};
 			Tiltspot.on.msg = function (controllerId, msg, data) {
 				console.log('msg', controllerId, msg, data);
 				switch (msg) { 
 					case 'setSpracheCode':
-						mati.knobel.setSpracheCode(data);
+						mati.setSpracheCode(data);
 						break;
 					case 'neuesSpiel':
-						mati.knobel.neuesSpiel(data);
+						mati.neuesSpiel(data);
 						break;
 					case 'clientReady':
 						//Client hat ggf. den letzten Befehl nicht mitbekommen
-						mati.knobel.sendMsg(controllerId);
+						mati.sendMsg(controllerId);
 						break;
 				}
 			};				
@@ -218,6 +270,27 @@
 			var onAenderungDerFenstergroesse = function() {
 				var allesFontSize = Math.min(window.innerWidth, window.innerHeight) / 23;
 				document.getElementById('mati_spiel_alles').style["font-size"] = allesFontSize + "px";
+				
+				//Workaround fuer verbuggter Microsoft-Edge-Browser, der mit vh in Animationen nicht klar kommt.
+				let hoehe = document.getElementById('mati_spiel_alles').offsetHeight;
+				document.getElementById('mati_keyframes_3d').innerHTML = `
+					@keyframes mati_animation_box_show {
+						from {
+							transform: perspective(${hoehe*4}px) translateZ(${-hoehe/2}px) rotateX(-90deg) translateZ(${hoehe/2}px);
+						}
+						to {
+							transform: perspective(${hoehe*4}px) translateZ(${-hoehe/2}px) rotateX(0deg) translateZ(${hoehe/2}px);
+						}
+					}
+					@keyframes mati_animation_box_hide {
+						from {
+							transform: perspective(${hoehe*4}px) translateZ(${-hoehe/2}px) rotateX(0deg) translateZ(${hoehe/2}px);
+						}
+						to {
+							transform: perspective(${hoehe*4}px) translateZ(${-hoehe/2}px) rotateX(90deg) translateZ(${hoehe/2}px);
+						}
+					}
+				`;
 			};
 			onAenderungDerFenstergroesse();
 			window.addEventListener( 'resize', onAenderungDerFenstergroesse, false );

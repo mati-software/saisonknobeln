@@ -1,13 +1,27 @@
-var mati = {};
+var mati = {
+	aktuelleRubrik : null,
+	rubriken : [],
+	spracheCode : 'en',
+	aktuelleFrageIndizes : {
+	},
+	fragen : {
+	},
+	spielerImLaufendenSpiel : [],
+	spielerAufWarteliste : [],
+	spielerFarben : new Map(),
+	spielLaeuft : false,
+	queueEnthaeltLaufendesSpiel : false,
+	aktuellSichbarerContainer : null
+};
 
 mati.Spieler = class {
     constructor(id) {
 		this.id = id;
 		
-        this.farbe = mati.knobel.spielerFarben.get(id);
+        this.farbe = mati.spielerFarben.get(id);
 		if (this.farbe === undefined) {
 			this.farbe = matiFarbutil.getNaechsteFarbe();
-			mati.knobel.spielerFarben.set(id, this.farbe);
+			mati.spielerFarben.set(id, this.farbe);
 		}
 		
 		this.cssFarbe100 = matiFarbutil.toCssString(this.farbe);
@@ -28,47 +42,32 @@ mati.Spieler = class {
 
 
 
-mati.knobel = {
-	aktuelleRubrik : null,
-	rubriken : [],
-	spracheCode : 'en',
-	aktuelleFrageIndizes : {
-	},
-	fragen : {
-	},
-	spielerImLaufendenSpiel : [],
-	spielerAufWarteliste : [],
-	spielerFarben : new Map(),
-	spielLaeuft : false,
-	queueEnthaeltLaufendesSpiel : false
-};
-
-mati.knobel.setSpracheCode = function(neuerSpracheCode) {
+mati.setSpracheCode = function(neuerSpracheCode) {
 	//TODO sprache an clients senden
 	
 	//neue Sprache uebernehmen (in Queue, damit Reihenfolge stimmt falls jemand 2 mal ganz schnell die Sprache umstellt)
 	matiUtil.pushBefehl(function() {
-		mati.knobel.spracheCode = neuerSpracheCode;
-		mati.knobel.broadcast();
+		mati.spracheCode = neuerSpracheCode;
+		mati.broadcast();
 		matiUtil.gotoNaechsterBefehl();
 	});
 	
 	//Rubriken laden
 	matiUtil.pushBefehl(function() {
 		matiUtil.loadJson(Tiltspot.get.assetUrl("category-list.json"), function(rubriken) {
-			mati.knobel.rubriken = rubriken;
+			mati.rubriken = rubriken;
 			matiUtil.gotoNaechsterBefehl();
 		});
 	});
 	//Fragen laden
 	matiUtil.pushBefehl(function() {
 		let anzahlGeladeneRubriken = 0;
-		for (let rubrik of mati.knobel.rubriken) {
-			mati.knobel.aktuelleFrageIndizes[rubrik] = -1;
-			matiUtil.loadJson(Tiltspot.get.assetUrl("questions/" + rubrik + "_" + mati.knobel.spracheCode + ".json"), function(data) {
-				mati.knobel.fragen[rubrik] = data.questions;
+		for (let rubrik of mati.rubriken) {
+			mati.aktuelleFrageIndizes[rubrik] = -1;
+			matiUtil.loadJson(Tiltspot.get.assetUrl("questions/" + rubrik + "_" + mati.spracheCode + ".json"), function(data) {
+				mati.fragen[rubrik] = data.questions;
 				anzahlGeladeneRubriken++;
-				if (anzahlGeladeneRubriken === mati.knobel.rubriken.length) {
+				if (anzahlGeladeneRubriken === mati.rubriken.length) {
 					matiUtil.gotoNaechsterBefehl();
 				}
 			});
@@ -76,7 +75,7 @@ mati.knobel.setSpracheCode = function(neuerSpracheCode) {
 	});
 	//Gui-Texte laden
 	matiUtil.pushBefehl(function() {
-		matiUtil.loadJson(Tiltspot.get.assetUrl("gui-l10n/" + mati.knobel.spracheCode + ".json"), function(guiTexte) {
+		matiUtil.loadJson(Tiltspot.get.assetUrl("gui-l10n/" + mati.spracheCode + ".json"), function(guiTexte) {
 			matiUtil.l10nTexte = guiTexte;
 			matiUtil.gotoNaechsterBefehl();
 		});
@@ -109,7 +108,7 @@ mati.knobel.setSpracheCode = function(neuerSpracheCode) {
 			</div>
 		`;
 
-		mati.knobel.spielerChanged();
+		mati.spielerChanged();
 		
 		matiUtil.gotoNaechsterBefehl();
 	});
@@ -125,10 +124,10 @@ mati.knobel.setSpracheCode = function(neuerSpracheCode) {
 
 
 
-mati.knobel.sendMsg = function(spieler, befehl) {
+mati.sendMsg = function(spieler, befehl) {
 	console.log('typeof spieler', typeof spieler);
 	if (typeof spieler !== 'object') {
-		spieler = mati.knobel.findeKnobelSpieler(spieler);
+		spieler = mati.findeKnobelSpieler(spieler);
 	}
 	
 	if (!spieler) {
@@ -140,51 +139,82 @@ mati.knobel.sendMsg = function(spieler, befehl) {
 	}
 	console.log('spieler.farbe', spieler.farbe);
 	Tiltspot.send.msg(spieler.id, befehl, {
-		spracheCode : mati.knobel.spracheCode,
+		spracheCode : mati.spracheCode,
 		farbe : spieler.farbe
 	});
 	spieler.lastMsg = befehl;
 };
 
-mati.knobel.broadcast = function(befehl) {
-	for (let spieler of mati.knobel.spielerImLaufendenSpiel) {
-		mati.knobel.sendMsg(spieler, befehl);
+mati.broadcast = function(befehl) {
+	for (let spieler of mati.spielerImLaufendenSpiel) {
+		mati.sendMsg(spieler, befehl);
 	}
 };
 
 
 
-mati.knobel.zeigeHauptmenue = function() {
+mati.zeigeHauptmenue = function() {
 	//TODO mach spielerliste sichtbar
 	
 	matiUtil.pushBefehl(function() {
-		mati.knobel.broadcast('zeigeHauptmenue');
-		matiUtil.gotoNaechsterBefehl();
+		mati.broadcast('zeigeHauptmenue');
+		mati.zeigeContainer(document.getElementById('mati_spiel_lobby'), false, matiUtil.gotoNaechsterBefehl);
 	});
 };
 
 
+mati.zeigeContainer = function(containerElement, rueckwaerts, callback) {
+	if (containerElement === mati.aktuellSichbarerContainer) {
+		callback();
+		return;
+	}
+	
+	containerElement.style['display'] = 'block';
+	containerElement.classList.remove('mati_box_hide');
+	containerElement.classList.remove('mati_box_hide_back');
+	containerElement.classList.add(rueckwaerts ? 'mati_box_show_back' : 'mati_box_show');
+	
+	if (mati.aktuellSichbarerContainer !== null) {
+		mati.aktuellSichbarerContainer.classList.remove('mati_box_show');
+		mati.aktuellSichbarerContainer.classList.remove('mati_box_show_back');
+		mati.aktuellSichbarerContainer.classList.add(rueckwaerts ? 'mati_box_hide_back' : 'mati_box_hide');
+	}
+	
+	setTimeout(function () {
+		if (mati.aktuellSichbarerContainer !== null) {
+			mati.aktuellSichbarerContainer.style['display'] = 'none';
+		}
+		
+		mati.aktuellSichbarerContainer = containerElement;
+		if (containerElement.id !== 'mati_pausemenue') {
+			mati.aktuellerContainerLautSpielstatus = containerElement;
+		}
+		callback();
+	}, 1000);
+};
 
-mati.knobel.neuesSpiel = function() {
-	mati.knobel.queueEnthaeltLaufendesSpiel = true;
+
+
+mati.neuesSpiel = function() {
+	mati.queueEnthaeltLaufendesSpiel = true;
 	
 	matiUtil.pushBefehl(function() {
-		mati.knobel.spielLaeuft = true;
-		mati.knobel.aktuelleRubrik = null;
-		mati.knobel.broadcast('zeigeWarten');
+		mati.spielLaeuft = true;
+		mati.aktuelleRubrik = null;
+		mati.broadcast('zeigeWarten');
 		matiUtil.gotoNaechsterBefehl();
 	});
 	
-	for (let rubrik of mati.knobel.rubriken) {
+	for (let rubrik of mati.rubriken) {
 		matiUtil.pushBefehl(function() {
 			//naechste Rubrik waehlen
-			if (mati.knobel.aktuelleRubrik === null) {
-				mati.knobel.aktuelleRubrik = mati.knobel.rubriken[0];
+			if (mati.aktuelleRubrik === null) {
+				mati.aktuelleRubrik = mati.rubriken[0];
 			}
 			else {
-				var alterIndex = mati.knobel.rubriken.indexOf(mati.knobel.aktuelleRubrik);
-				var neuerIndex = (alterIndex + 1) % mati.knobel.rubriken.length;
-				mati.knobel.aktuelleRubrik = mati.knobel.rubriken[neuerIndex];
+				var alterIndex = mati.rubriken.indexOf(mati.aktuelleRubrik);
+				var neuerIndex = (alterIndex + 1) % mati.rubriken.length;
+				mati.aktuelleRubrik = mati.rubriken[neuerIndex];
 			}
 			
 			//TODO Zeige Rubrikintro
@@ -195,10 +225,10 @@ mati.knobel.neuesSpiel = function() {
 		for (let i=0; i<3; i++) {
 			matiUtil.pushBefehl(function() {
 				//naechste Frage waehlen
-				mati.knobel.aktuelleFrageIndizes[mati.knobel.aktuelleRubrik] = (mati.knobel.aktuelleFrageIndizes[mati.knobel.aktuelleRubrik] + 1) % mati.knobel.fragen[mati.knobel.aktuelleRubrik].length;
+				mati.aktuelleFrageIndizes[mati.aktuelleRubrik] = (mati.aktuelleFrageIndizes[mati.aktuelleRubrik] + 1) % mati.fragen[mati.aktuelleRubrik].length;
 				
 				//TODO zeige Frage
-				let frage = mati.knobel.fragen[mati.knobel.aktuelleRubrik][mati.knobel.aktuelleFrageIndizes[mati.knobel.aktuelleRubrik]];
+				let frage = mati.fragen[mati.aktuelleRubrik][mati.aktuelleFrageIndizes[mati.aktuelleRubrik]];
 				
 				matiUtil.gotoNaechsterBefehl();
 			});
@@ -223,8 +253,8 @@ mati.knobel.neuesSpiel = function() {
 	matiUtil.pushBefehl(function() {
 		//TODO zeige Hauptmenue
 		
-		mati.knobel.spielLaeuft = false;
-		mati.knobel.queueEnthaeltLaufendesSpiel = false;
+		mati.spielLaeuft = false;
+		mati.queueEnthaeltLaufendesSpiel = false;
 		
 		matiUtil.gotoNaechsterBefehl();
 	});
@@ -247,13 +277,13 @@ mati.knobel.neuesSpiel = function() {
 
 
 
-mati.knobel.findeKnobelSpieler = function(id) {
-	for (let knobelSpieler of mati.knobel.spielerImLaufendenSpiel) {
+mati.findeKnobelSpieler = function(id) {
+	for (let knobelSpieler of mati.spielerImLaufendenSpiel) {
 		if (knobelSpieler.id === id) {
 			return knobelSpieler;
 		}
 	}
-	for (let knobelSpieler of mati.knobel.spielerAufWarteliste) {
+	for (let knobelSpieler of mati.spielerAufWarteliste) {
 		if (knobelSpieler.id === id) {
 			return knobelSpieler;
 		}
@@ -261,47 +291,47 @@ mati.knobel.findeKnobelSpieler = function(id) {
 	return null;
 };
 	
-mati.knobel.spielerChanged = function() {
-	if (!mati.knobel.spielLaeuft) {
+mati.spielerChanged = function() {
+	if (!mati.spielLaeuft) {
 		//Alle Spieler in der Warteschlange mit ins Spiel aufnehmen
-		mati.knobel.spielerImLaufendenSpiel = mati.knobel.spielerImLaufendenSpiel.concat(mati.knobel.spielerAufWarteliste);
-		mati.knobel.spielerAufWarteliste = [];
+		mati.spielerImLaufendenSpiel = mati.spielerImLaufendenSpiel.concat(mati.spielerAufWarteliste);
+		mati.spielerAufWarteliste = [];
 	}
 	
 	//Ueberfluessige Spieler entfernen aus Liste der aktuellen Mitspieler
-	for (let i = mati.knobel.spielerImLaufendenSpiel.length - 1; i >= 0; i--) {
-		let knobelSpieler = mati.knobel.spielerImLaufendenSpiel[i];
+	for (let i = mati.spielerImLaufendenSpiel.length - 1; i >= 0; i--) {
+		let knobelSpieler = mati.spielerImLaufendenSpiel[i];
 		let user = Tiltspot.get.user(knobelSpieler.id);
 		if (user === null || user === undefined || !user.isLoggedIn) {
-			if (mati.knobel.spielLaeuft) {
+			if (mati.spielLaeuft) {
 				knobelSpieler.verbindungAbgebrochen = true;
 			}
 			else {
-				mati.knobel.spielerImLaufendenSpiel.splice(i,1);
+				mati.spielerImLaufendenSpiel.splice(i,1);
 			}
 		}
 	}
 	
 	//Ueberfluessige Spieler aus Warteliste entfernen
-	for (let i = mati.knobel.spielerAufWarteliste.length - 1; i >= 0; i--) {
-		let knobelSpieler = mati.knobel.spielerAufWarteliste[i];
+	for (let i = mati.spielerAufWarteliste.length - 1; i >= 0; i--) {
+		let knobelSpieler = mati.spielerAufWarteliste[i];
 		let user = Tiltspot.get.user(knobelSpieler.id);
 		if (user === null || !user.isLoggedIn) {
-			mati.knobel.spielerAufWarteliste.splice(i,1);
+			mati.spielerAufWarteliste.splice(i,1);
 		}
 	}
 	
 	//Neue Spieler in Liste aufnehmen
 	for (let user of Tiltspot.get.users()) {
-		let knobelSpieler = mati.knobel.findeKnobelSpieler(user.controllerId);
+		let knobelSpieler = mati.findeKnobelSpieler(user.controllerId);
 		if (knobelSpieler === null) {
 			//Knobel-Spieler neu erstellen
 			knobelSpieler = new mati.Spieler(user.controllerId);
-			if (mati.knobel.spielLaeuft) {
-				mati.knobel.spielerAufWarteliste.push(knobelSpieler);
+			if (mati.spielLaeuft) {
+				mati.spielerAufWarteliste.push(knobelSpieler);
 			}
 			else {
-				mati.knobel.spielerImLaufendenSpiel.push(knobelSpieler);
+				mati.spielerImLaufendenSpiel.push(knobelSpieler);
 			}
 		}
 		else {
@@ -309,15 +339,15 @@ mati.knobel.spielerChanged = function() {
 		}
 	}
 	
-	mati.knobel.renderLobbySpielerListe(document.getElementById('mati_spiel_spielerliste_content'), mati.knobel.spielerImLaufendenSpiel);
-	mati.knobel.renderLobbySpielerListe(document.getElementById('mati_spiel_spielerwarteliste_content'), mati.knobel.spielerAufWarteliste);
+	mati.renderLobbySpielerListe(document.getElementById('mati_spiel_spielerliste_content'), mati.spielerImLaufendenSpiel);
+	mati.renderLobbySpielerListe(document.getElementById('mati_spiel_spielerwarteliste_content'), mati.spielerAufWarteliste);
 	
 	console.log(Tiltspot.get.users());
-	console.log('mati.knobel.spielerImLaufendenSpiel', mati.knobel.spielerImLaufendenSpiel);
-	console.log('mati.knobel.spielerAufWarteliste', mati.knobel.spielerAufWarteliste);
+	console.log('mati.spielerImLaufendenSpiel', mati.spielerImLaufendenSpiel);
+	console.log('mati.spielerAufWarteliste', mati.spielerAufWarteliste);
 };
 
-mati.knobel.renderLobbySpielerListe = function(container, knobelSpielerListe) {
+mati.renderLobbySpielerListe = function(container, knobelSpielerListe) {
 	container.innerHTML = `
 		<ul>
 			${knobelSpielerListe.map(function (knobelSpieler) {
