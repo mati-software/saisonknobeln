@@ -3,35 +3,35 @@
 	"questions" : [
 		{
 			"text" : "Weißwein oder Rotwein?",
-			"antwortMoeglichkeiten" : ["Weißwein", "Rotwein"]
+			"answers" : ["Weißwein", "Rotwein"]
 		},
 		{
 			"text" : "An Halloween kostümieren oder nicht kostümieren?",
-			"antwortMoeglichkeiten" : ["kostümieren", "nicht kostümieren"]
+			"answers" : ["kostümieren", "nicht kostümieren"]
 		},
 		{
 			"text" : "Äpfel lieber süß oder sauer?",
-			"antwortMoeglichkeiten" : ["süß", "sauer"]
+			"answers" : ["süß", "sauer"]
 		},
 		{
 			"text" : "Walnüsse oder Haselnüsse?",
-			"antwortMoeglichkeiten" : ["Walnüsse", "Haselnüsse"]
+			"answers" : ["Walnüsse", "Haselnüsse"]
 		},
 		{
 			"text" : "Gehören Pilze auf eine gute Pizza?",
-			"antwortMoeglichkeiten" : ["Ja", "Nein"]
+			"answers" : ["Ja", "Nein"]
 		},
 		{
 			"text" : "Am 11.11. Karneval oder Sankt Martin?",
-			"antwortMoeglichkeiten" : ["Karneval", "Sankt Martin"]
+			"answers" : ["Karneval", "Sankt Martin"]
 		},
 		{
 			"text" : "Sind Windräder eine gute Sache?",
-			"antwortMoeglichkeiten" : ["Ja", "Nein"]
+			"answers" : ["Ja", "Nein"]
 		},
 		{
 			"text" : "Welche Filmreihe ist besser: 'Halloween' oder 'Freitag der 13.'?",
-			"antwortMoeglichkeiten" : ["Halloween", "Freitag der 13."]
+			"answers" : ["Halloween", "Freitag der 13."]
 		}
 	]
 }

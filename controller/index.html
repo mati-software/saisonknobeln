@@ -46,6 +46,8 @@
 				user-select: none;
 				
 				touch-action: none;
+				
+				font-size: 5vmin;
 			}
 			
 			#mati_content_container {
@@ -228,6 +230,124 @@
 				text-align:center;
 			}
 			
+			#mati_schaetzung_text {
+				padding:1em 1em 1em 1em;
+				text-align:center;
+			}
+			
+			#mati_schieberegler_text_a,
+			#mati_schieberegler_text_b {
+				padding:0 4em 0 4em;
+				text-align:center;
+			}
+			
+			.mati_schieberegler {
+				height: 3.5em;
+				position: relative;
+			}
+			.mati_schieberegler_minus {
+				position: absolute;
+				left:.5em;
+				top:0;
+				width: 1.5em;
+				height: 1.5em;
+				line-height: 1.5em;
+				text-align: center;
+				vertical-align: middle;
+				border-radius:.75em;
+				color:black;
+				font-size:200%;
+				box-shadow:0 0 1em black;
+			}
+			.mati_schieberegler_plus {
+				position: absolute;
+				right:.5em;
+				top:0;
+				width: 1.5em;
+				height: 1.5em;
+				line-height: 1.5em;
+				text-align: center;
+				vertical-align: middle;
+				border-radius:.75em;
+				color:black;
+				font-size:200%;
+				box-shadow:0 0 1em black;
+			}
+			.mati_schieberegler_anzeige {
+				position:absolute;
+				top:.5em;
+				left:4.5em;
+				right:4.5em;
+				height:2em;
+				background-color:black;
+				box-shadow:0 0 1em black;
+			}
+			.mati_schieberegler_anzeige_balken {
+				position:absolute;
+				top:0;
+				bottom:0;
+				left:0;
+				width:50%;
+				background-color:silver;
+			}
+			.mati_schieberegler_anzeige_zahl {
+				position:absolute;
+				top:0;
+				bottom:0;
+				left:0;
+				right:0;
+				line-height:2em;
+				text-align: center;
+				vertical-align: middle;
+				text-shadow: 0 0 .25em black;
+				font-weight:bold;
+			}
+			
+			.mati_schaetzung_flexbox {
+				display: flex;
+				flex-flow: row wrap;
+			}
+			.mati_schaetzung_flexitem {
+				flex-grow: 1;
+				flex-shrink: 1;
+				flex-basis: 100%;
+			}
+			#mati_schieberegler_container1 {
+				padding-top: 1em;
+			}
+			#mati_schieberegler_container2 {
+				padding-top: 1em;
+				padding-bottom: 1em;
+			}
+			
+			@media (min-aspect-ratio:11/16) {
+				#mati_schieberegler_container1,
+				#mati_schieberegler_container2 {
+					padding: 0;
+				}
+			}
+			@media (min-aspect-ratio:3/4) {
+				#mati_schieberegler_container2 {
+					display: none;
+				}
+				#mati_controller_alles {
+					font-size: 4.8vmin;
+				}
+			}
+			@media (min-aspect-ratio:4/3) {
+				#mati_controller_alles {
+					font-size: 5vmin;
+				}
+			}
+			@media (min-aspect-ratio:16/9) {
+				#mati_schieberegler_container1 {
+					flex-basis: 50%;
+				}
+				#mati_schieberegler_container2 {
+					flex-basis: 50%;
+					display: block;
+				}
+			}
 		</style>
 		<style id="mati_farbstyle">
 		</style>
@@ -238,21 +358,51 @@
 			</div>
 			<div id="mati_content_container">
 				<div id="mati_hauptmenue" class="mati_box">
-					<div id="mati_hauptmenue_buttons">
-						<div class="mati_button" id="mati_button_neues_spiel"></div>
-						<div class="mati_button" id="mati_button_beenden"></div>
-					</div>
+					<div class="mati_button" id="mati_button_neues_spiel"></div>
+					<div class="mati_button" id="mati_button_beenden"></div>
 					<div id="mati_flaggen_container">
 					</div>
 				</div>
 				<div id="mati_pausemenue" class="mati_box">
-					<div id="mati_pausemenue_buttons">
-						<div class="mati_button" id="mati_button_spiel_fortsetzen"></div>
-						<div class="mati_button" id="mati_button_spiel_abbrechen"></div>
-					</div>
+					<div class="mati_button" id="mati_button_spiel_fortsetzen"></div>
+					<div class="mati_button" id="mati_button_spiel_abbrechen"></div>
 				</div>
 				<div id="mati_wartebild" class="mati_box">
 					<div id="mati_warten_text">
+					</div>
+				</div>
+				<div id="mati_antwortmoeglichkeiten" class="mati_box">
+					<div class="mati_button" id="mati_antwortmoeglichkeit_a"></div>
+					<div class="mati_button" id="mati_antwortmoeglichkeit_b"></div>
+				</div>
+				<div id="mati_schaetzung" class="mati_box">
+					<div class="mati_schaetzung_flexbox">
+						<div class="mati_schaetzung_flexitem" id="mati_schaetzung_text"></div>
+						<div class="mati_schaetzung_flexitem" id="mati_schieberegler_container1">
+							<div id="mati_schieberegler_text_a"></div>
+							<div class="mati_schieberegler">
+								<div class="mati_schieberegler_anzeige">
+									<div class="mati_schieberegler_anzeige_balken" id="mati_schieberegler_anzeige_balken_a"></div>
+									<div class="mati_schieberegler_anzeige_zahl" id="mati_schieberegler_anzeige_zahl_a"></div>
+								</div>
+								<div class="mati_schieberegler_minus">&minus;</div>
+								<div class="mati_schieberegler_plus">&plus;</div>
+							</div>
+						</div>
+						<div class="mati_schaetzung_flexitem" id="mati_schieberegler_container2">
+							<div id="mati_schieberegler_text_b"></div>
+							<div class="mati_schieberegler">
+								<div class="mati_schieberegler_anzeige">
+									<div class="mati_schieberegler_anzeige_balken" id="mati_schieberegler_anzeige_balken_b"></div>
+									<div class="mati_schieberegler_anzeige_zahl" id="mati_schieberegler_anzeige_zahl_b"></div>
+								</div>
+								<div class="mati_schieberegler_minus">&minus;</div>
+								<div class="mati_schieberegler_plus">&plus;</div>
+							</div>
+						</div>
+						<div class="mati_schaetzung_flexitem">
+							<div class="mati_button" id="mati_button_schaetzung_submit"></div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -299,6 +449,24 @@
 					.mati_spieler_text {
 						color: ${hell50};
 						background: ${dunkel50} linear-gradient(135deg, ${dunkel50}, ${dunkel30});
+					}
+					
+					.mati_schieberegler_minus,
+					.mati_schieberegler_plus {
+						background-color:${hell50};
+						background:linear-gradient( 90deg, ${hell50dunkel80}, ${hell50}, ${hell50dunkel80});
+					}
+					.mati_schieberegler_minus.mati_schieberegler_button_fokus,
+					.mati_schieberegler_plus.mati_schieberegler_button_fokus {
+						background-color:${hell50dunkel80};
+						background:linear-gradient( 90deg, ${hell50}, ${hell50dunkel80}, ${hell50});
+					}
+					.mati_schieberegler_anzeige {
+						background-color:${dunkel30};
+					}
+					.mati_schieberegler_anzeige_balken {
+						background-color:${hell50};
+						background:linear-gradient( 0deg, ${hell50dunkel80}, ${hell50} );
 					}
 				`;
 			};
@@ -406,6 +574,9 @@
 								document.getElementById('mati_button_spiel_fortsetzen').innerText = matiUtil.l10n('Spiel fortsetzen');
 								document.getElementById('mati_button_spiel_abbrechen').innerText = matiUtil.l10n('Laufendes Spiel abbrechen');
 								
+								document.getElementById('mati_schaetzung_text').innerText = matiUtil.l10n('Schätze wie viele Spieler (inklusive Du selbst) für die jeweilige Antwortmöglichkeit gestimmt haben!');
+								document.getElementById('mati_button_schaetzung_submit').innerText = matiUtil.l10n('OK');
+								
 								matiUtil.gotoNaechsterBefehl();
 							});
 						}
@@ -421,6 +592,32 @@
 					case 'zeigeWarten':
 						matiUtil.pushBefehl(function() {
 							mati.zeigeContainer(document.getElementById('mati_wartebild'), false, matiUtil.gotoNaechsterBefehl);
+						});
+						break;
+					case 'zeigeAntwortmoeglichkeiten':
+						matiUtil.pushBefehl(function() {
+							document.getElementById('mati_antwortmoeglichkeit_a').innerText = data.antwortMoeglichkeiten[0];
+							document.getElementById('mati_antwortmoeglichkeit_b').innerText = data.antwortMoeglichkeiten[1];
+							
+							
+							
+							//TODO in ne Methode packen
+							document.getElementById('mati_schieberegler_anzeige_zahl_a').innerText = 2;
+							document.getElementById('mati_schieberegler_anzeige_zahl_b').innerText = 3;
+							
+							
+							
+							mati.zeigeContainer(document.getElementById('mati_antwortmoeglichkeiten'), false, function() {
+								//nichts tun
+							});
+						});
+						matiUtil.pushBefehl(function() {
+							//TODO An Anzahl Spieler anpassen usw.
+							document.getElementById('mati_schieberegler_text_a').innerText = data.antwortMoeglichkeiten[0];
+							document.getElementById('mati_schieberegler_text_b').innerText = data.antwortMoeglichkeiten[1];
+							mati.zeigeContainer(document.getElementById('mati_schaetzung'), false, function() {
+								//nichts tun
+							});
 						});
 						break;
 				}
@@ -479,6 +676,12 @@
 						case 'mati_button_neues_spiel':
 							Tiltspot.send.msg('neuesSpiel');
 							break;
+						case 'mati_antwortmoeglichkeit_a':
+							matiUtil.gotoNaechsterBefehl();
+							break;
+						case 'mati_antwortmoeglichkeit_b':
+							matiUtil.gotoNaechsterBefehl();
+							break;
 					}
 				}
 				
@@ -517,9 +720,6 @@
 			});
 			
 			var onAenderungDerFenstergroesse = function() {
-				var allesFontSize = Math.min(window.innerWidth, window.innerHeight) / 20;
-				document.getElementById('mati_controller_alles').style["font-size"] = allesFontSize + "px";
-				
 				//Workaround fuer verbuggter Microsoft-Edge-Browser, der mit vw in Animationen nicht klar kommt.
 				let breite = document.getElementById('mati_controller_alles').offsetWidth;
 				document.getElementById('mati_keyframes_3d').innerHTML = `

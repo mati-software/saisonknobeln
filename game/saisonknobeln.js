@@ -2,10 +2,6 @@ var mati = {
 	aktuelleRubrik : null,
 	rubriken : [],
 	spracheCode : 'en',
-	aktuelleFrageIndizes : {
-	},
-	fragen : {
-	},
 	spielerImLaufendenSpiel : [],
 	spielerAufWarteliste : [],
 	spielerFarben : new Map(),
@@ -33,6 +29,8 @@ mati.Spieler = class {
 		
 		this.altePunktzahl = 0;
 		this.aktuellePunktzahl = 0;
+		this.antwortAufAktuelleFrage = null;
+		this.schaetzungFuerAktuelleFrage = null;
 		
 		this.lastMsg = null;
     }
@@ -54,8 +52,10 @@ mati.setSpracheCode = function(neuerSpracheCode) {
 	
 	//Rubriken laden
 	matiUtil.pushBefehl(function() {
-		matiUtil.loadJson(Tiltspot.get.assetUrl("category-list.json"), function(rubriken) {
-			mati.rubriken = rubriken;
+		matiUtil.loadJson(Tiltspot.get.assetUrl("category-list.json"), function(rubrikKeys) {
+			mati.rubriken = rubrikKeys.map(function(rubrikKey) {
+				return {key : rubrikKey};
+			});
 			matiUtil.gotoNaechsterBefehl();
 		});
 	});
@@ -63,9 +63,10 @@ mati.setSpracheCode = function(neuerSpracheCode) {
 	matiUtil.pushBefehl(function() {
 		let anzahlGeladeneRubriken = 0;
 		for (let rubrik of mati.rubriken) {
-			mati.aktuelleFrageIndizes[rubrik] = -1;
-			matiUtil.loadJson(Tiltspot.get.assetUrl("questions/" + rubrik + "_" + mati.spracheCode + ".json"), function(data) {
-				mati.fragen[rubrik] = data.questions;
+			rubrik.aktuellerFrageIndex = -1;
+			matiUtil.loadJson(Tiltspot.get.assetUrl("questions/" + rubrik.key + "_" + mati.spracheCode + ".json"), function(data) {
+				rubrik.fragen = data.questions;
+				rubrik.name = data.name;
 				anzahlGeladeneRubriken++;
 				if (anzahlGeladeneRubriken === mati.rubriken.length) {
 					matiUtil.gotoNaechsterBefehl();
@@ -137,11 +138,17 @@ mati.sendMsg = function(spieler, befehl) {
 	if (!befehl) {
 		befehl = spieler.lastMsg;
 	}
-	console.log('spieler.farbe', spieler.farbe);
-	Tiltspot.send.msg(spieler.id, befehl, {
+	
+	let daten = {
 		spracheCode : mati.spracheCode,
 		farbe : spieler.farbe
-	});
+	};
+	
+	if (befehl === 'zeigeAntwortmoeglichkeiten') {
+		daten.antwortMoeglichkeiten = mati.aktuelleRubrik.fragen[mati.aktuelleRubrik.aktuellerFrageIndex].answers;
+	}
+	
+	Tiltspot.send.msg(spieler.id, befehl, daten);
 	spieler.lastMsg = befehl;
 };
 
@@ -217,25 +224,43 @@ mati.neuesSpiel = function() {
 				mati.aktuelleRubrik = mati.rubriken[neuerIndex];
 			}
 			
-			//TODO Zeige Rubrikintro
+			document.getElementById('mati_rubrik_intro_name').innerText = mati.aktuelleRubrik.name;
 			
-			matiUtil.gotoNaechsterBefehl();
+			mati.zeigeContainer(document.getElementById('mati_rubrik_intro'), false, matiUtil.gotoNaechsterBefehl);
+		});
+
+		matiUtil.pushBefehl(function() {
+			//TODO animation zeigen
+			setTimeout(matiUtil.gotoNaechsterBefehl, 1000);
 		});
 		
 		for (let i=0; i<3; i++) {
 			matiUtil.pushBefehl(function() {
 				//naechste Frage waehlen
-				mati.aktuelleFrageIndizes[mati.aktuelleRubrik] = (mati.aktuelleFrageIndizes[mati.aktuelleRubrik] + 1) % mati.fragen[mati.aktuelleRubrik].length;
+				mati.aktuelleRubrik.aktuellerFrageIndex = (mati.aktuelleRubrik.aktuellerFrageIndex + 1) % mati.aktuelleRubrik.fragen.length;
 				
-				//TODO zeige Frage
-				let frage = mati.fragen[mati.aktuelleRubrik][mati.aktuelleFrageIndizes[mati.aktuelleRubrik]];
+				//TODO zeige Frage (Handys auf Antwortmöglichkeiten manövrieren)
 				
-				matiUtil.gotoNaechsterBefehl();
+				let frage = mati.aktuelleRubrik.fragen[mati.aktuelleRubrik.aktuellerFrageIndex];
+				document.getElementById('mati_frage_text').innerText = frage.text;
+				
+				for (let spieler of mati.spielerImLaufendenSpiel) {
+					spieler.antwortAufAktuelleFrage = null;
+					spieler.schaetzungFuerAktuelleFrage = null;
+				}
+				
+				mati.zeigeContainer(document.getElementById('mati_frage'), false, function() {
+					mati.broadcast('zeigeAntwortmoeglichkeiten');
+				});
 			});
 			matiUtil.pushBefehl(function() {
 				//TODO zeige Frage-Ergebnis
 				
-				matiUtil.gotoNaechsterBefehl();
+				mati.zeigeContainer(document.getElementById('mati_frage_ergebnis'), false, matiUtil.gotoNaechsterBefehl());
+			});
+			matiUtil.pushBefehl(function() {
+				//TODO Ergebnis-Animation zeigen
+				setTimeout(matiUtil.gotoNaechsterBefehl, 1000);
 			});
 		}
 		

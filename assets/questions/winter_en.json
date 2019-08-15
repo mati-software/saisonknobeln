@@ -3,43 +3,43 @@
 	"questions" : [
 		{
 			"text" : "Zu Weihnachten lieber bunte Lichterketten oder einfarbige Lichterketten?",
-			"antwortMoeglichkeiten" : ["bunt", "einfarbig"]
+			"answers" : ["bunt", "einfarbig"]
 		},
 		{
 			"text" : "Ist Glüwein genießbar?",
-			"antwortMoeglichkeiten" : ["Ja", "Nein"]
+			"answers" : ["Ja", "Nein"]
 		},
 		{
 			"text" : "Welche Wintersportart ist cooler, Eishockey oder Skispringen?",
-			"antwortMoeglichkeiten" : ["Eishockey", "Skispringen"]
+			"answers" : ["Eishockey", "Skispringen"]
 		},
 		{
 			"text" : "Ski oder Snowboard?",
-			"antwortMoeglichkeiten" : ["Ski", "Snowboard"]
+			"answers" : ["Ski", "Snowboard"]
 		},
 		{
 			"text" : "Soll es im Winter schneien?",
-			"antwortMoeglichkeiten" : ["Ja", "Nein"]
+			"answers" : ["Ja", "Nein"]
 		},
 		{
 			"text" : "Kirchenbesuch an Weihnachten?",
-			"antwortMoeglichkeiten" : ["Ja", "Nein"]
+			"answers" : ["Ja", "Nein"]
 		},
 		{
 			"text" : "An Silvester selbst Knaller und Raketen abfeuern?",
-			"antwortMoeglichkeiten" : ["Ja", "Nein"]
+			"answers" : ["Ja", "Nein"]
 		},
 		{
 			"text" : "Gewürzspekulatius oder Butterspekulatius?",
-			"antwortMoeglichkeiten" : ["Gewürzspekulatius", "Butterspekulatius"]
+			"answers" : ["Gewürzspekulatius", "Butterspekulatius"]
 		},
 		{
 			"text" : "Wer bringt die Weihnachtsgeschenke?",
-			"antwortMoeglichkeiten" : ["Christkind", "Weihnachtsmann"]
+			"answers" : ["Christkind", "Weihnachtsmann"]
 		},
 		{
 			"text" : "Handschuhe bei kaltem Wetter?",
-			"antwortMoeglichkeiten" : ["Ja", "Nein"]
+			"answers" : ["Ja", "Nein"]
 		}
 	]
 }
