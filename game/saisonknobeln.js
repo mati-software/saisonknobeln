@@ -41,8 +41,6 @@ mati.Spieler = class {
 
 
 mati.setSpracheCode = function(neuerSpracheCode) {
-	//TODO sprache an clients senden
-	
 	//neue Sprache uebernehmen (in Queue, damit Reihenfolge stimmt falls jemand 2 mal ganz schnell die Sprache umstellt)
 	matiUtil.pushBefehl(function() {
 		mati.spracheCode = neuerSpracheCode;
@@ -108,8 +106,9 @@ mati.setSpracheCode = function(neuerSpracheCode) {
 				</div>
 			</div>
 		`;
-
 		mati.spielerChanged();
+		
+		document.getElementById('mati_frage_erlaeuterung').innerText = matiUtil.l10n('Wähle eine Antwort! Halte Deine Wahl vor den anderen Spielern geheim!');
 		
 		matiUtil.gotoNaechsterBefehl();
 	});
@@ -200,7 +199,35 @@ mati.zeigeContainer = function(containerElement, rueckwaerts, callback) {
 	}, 1000);
 };
 
+mati.setFrageGroesseUndPosition = function() {
+	let divText = document.getElementById('mati_frage_text');
+	let divTextContainer = document.getElementById('mati_frage_text_container');
 
+	let fontProzent = 200;
+	divText.style['font-size'] = fontProzent + '%';
+	divText.style['left'] = '0';
+	divText.style['top'] = '0';
+	let matiFragebox = document.getElementById('mati_frage');
+	let matiFrageBoxDisplayValue = matiFragebox.style['display'];
+	matiFragebox.style['display'] = 'block';
+	console.log(divTextContainer.clientWidth, divTextContainer.clientHeight);
+	console.log(divText.clientWidth, divText.clientHeight);
+	
+	if (divText.clientWidth > divTextContainer.clientWidth) {
+		fontProzent = Math.floor(fontProzent * divTextContainer.clientWidth / divText.clientWidth);
+		divText.style['font-size'] = fontProzent + '%';
+	}
+	let maximaleUebrigeAnzahlVerkleinerungsversuche = 10;
+	while (divText.clientHeight > divTextContainer.clientHeight
+			&& maximaleUebrigeAnzahlVerkleinerungsversuche > 0) {
+		fontProzent = Math.floor(fontProzent * .9);
+		divText.style['font-size'] = fontProzent + '%';
+		maximaleUebrigeAnzahlVerkleinerungsversuche--;
+	}
+	divText.style['left'] = Math.floor((divTextContainer.clientWidth - divText.clientWidth) / 2) + 'px';
+	divText.style['top'] = Math.floor((divTextContainer.clientHeight - divText.clientHeight) / 2) + 'px';
+	matiFragebox.style['display'] = matiFrageBoxDisplayValue;
+};
 
 mati.neuesSpiel = function() {
 	mati.queueEnthaeltLaufendesSpiel = true;
@@ -239,10 +266,12 @@ mati.neuesSpiel = function() {
 				//naechste Frage waehlen
 				mati.aktuelleRubrik.aktuellerFrageIndex = (mati.aktuelleRubrik.aktuellerFrageIndex + 1) % mati.aktuelleRubrik.fragen.length;
 				
-				//TODO zeige Frage (Handys auf Antwortmöglichkeiten manövrieren)
-				
 				let frage = mati.aktuelleRubrik.fragen[mati.aktuelleRubrik.aktuellerFrageIndex];
 				document.getElementById('mati_frage_text').innerText = frage.text;
+				
+				mati.setFrageGroesseUndPosition();
+				
+				//TODO bild anzeigen: sobald ich die ausmaße vom bild weiß, kann ich die diagonale (vektor) um die gwünschte anzahl grad drehen. der resultierende vektor verrät mir die hoehe und breite die das bild in gedrehter form benötigen würde. dann kann ich skalieren.
 				
 				for (let spieler of mati.spielerImLaufendenSpiel) {
 					spieler.antwortAufAktuelleFrage = null;

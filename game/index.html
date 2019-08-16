@@ -223,9 +223,67 @@
 			#mati_frage {
 				background-color: #AAA;
 			}
+			#mati_frage_erlaeuterung {
+				border-bottom-left-radius: 1em;
+				border-bottom-right-radius: 1em;
+				vertical-align:middle;
+				background-color: rgba(255, 255, 255, .7);
+				padding: .5em 1em;
+				text-align:center;
+				grid-area: mati_frage_erlaeuterung;
+			}
+			#mati_frage_text_und_bild {
+				grid-area: mati_frage_text_und_bild;
+				border-radius: 1em;
+				background-color: rgba(255, 255, 255, .7);
+				position:relative;
+			}
+			#mati_frage_bild {
+				display:table-cell;
+				position: absolute;
+				top: .5em;
+				bottom: .5em;
+				right: .5em;
+				width: 9em;
+			}
+			#mati_frage_text_container {
+				position: absolute;
+				top: .5em;
+				left: .5em;
+				bottom: .5em;
+				right: 10em;
+				text-align: center;
+				vertical-align: middle;
+			}
+			#mati_frage_text {
+				font-size: 200%;
+				height: auto;
+				width: auto;
+				position:absolute;
+			}
+			#mati_frage_spieler {
+				grid-area: mati_frage_spieler;
+			}
+			#mati_frage_grid {
+				display: grid;
+				grid-template-rows: auto 11em 1fr;
+				grid-template-areas: 
+                    "mati_frage_erlaeuterung"
+                    "mati_frage_text_und_bild"
+					"mati_frage_spieler";
+				grid-row-gap: 1em;
+				position: absolute;
+				top: 0;
+				bottom: 1em;
+				left: 1em;
+				right: 1em;
+				justify-items: stretch;
+			}
+			
 			#mati_frage_ergebnis {
 				background-color: #BBB;
 			}
+			
 		</style>
 	</head>
 	<body>
@@ -236,7 +294,16 @@
 				<div id="mati_rubrik_intro_name"></div>
 			</div>
 			<div id="mati_frage" class="mati_box">
-				<div id="mati_frage_text"></div>
+				<div id="mati_frage_grid">
+					<div id="mati_frage_erlaeuterung"></div>
+					<div id="mati_frage_text_und_bild">
+						<div id="mati_frage_text_container">
+							<div id="mati_frage_text"></div>
+						</div>
+						<div id="mati_frage_bild"></div>
+					</div>
+					<div id="mati_frage_spieler"></div>
+				</div>
 			</div>
 			<div id="mati_frage_ergebnis" class="mati_box">
 			</div>
@@ -285,6 +352,8 @@
 			var onAenderungDerFenstergroesse = function() {
 				var allesFontSize = Math.min(window.innerWidth, window.innerHeight) / 23;
 				document.getElementById('mati_spiel_alles').style["font-size"] = allesFontSize + "px";
+				
+				mati.setFrageGroesseUndPosition();
 				
 				//Workaround fuer verbuggter Microsoft-Edge-Browser, der mit vh in Animationen nicht klar kommt.
 				let hoehe = document.getElementById('mati_spiel_alles').offsetHeight;

@@ -4,5 +4,7 @@
 	"Beenden" : "Exit",
 	"Spieler" : "Players",
 	"Warteliste" : "Waitlist",
-	"Bitte warten bis die nächste Interaktion möglich ist!" : "Please wait until the next interaction is possible!"
+	"Bitte warten bis die nächste Interaktion möglich ist!" : "Please wait until the next interaction is possible!",
+	"Schätze wie viele Spieler (inklusive Du selbst) für die jeweilige Antwortmöglichkeit gestimmt haben!" : "Guess how many players (including yourself) have voted for each answer!",
+	"Wähle eine Antwort! Halte Deine Wahl vor den anderen Spielern geheim!" : "Choose an answer! Keep your choice secret from the other players!"
 }
