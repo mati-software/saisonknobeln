@@ -165,7 +165,7 @@ mati.zeigeContainer = function(containerElement, rueckwaerts, callback) {
 		return;
 	}
 	
-	containerElement.style['display'] = 'block';
+	containerElement.style['visibility'] = 'visible';
 	containerElement.classList.remove('mati_box_hide');
 	containerElement.classList.remove('mati_box_hide_back');
 	containerElement.classList.add(rueckwaerts ? 'mati_box_show_back' : 'mati_box_show');
@@ -178,7 +178,7 @@ mati.zeigeContainer = function(containerElement, rueckwaerts, callback) {
 	
 	setTimeout(function () {
 		if (mati.aktuellSichbarerContainer !== null) {
-			mati.aktuellSichbarerContainer.style['display'] = 'none';
+			mati.aktuellSichbarerContainer.style['visibility'] = 'hidden';
 		}
 		
 		mati.aktuellSichbarerContainer = containerElement;
@@ -198,10 +198,6 @@ mati.setFrageGroesseUndPosition = function() {
 	divText.style['left'] = '0';
 	divText.style['top'] = '0';
 	let matiFragebox = document.getElementById('mati_frage');
-	let matiFrageBoxDisplayValue = matiFragebox.style['display'];
-	matiFragebox.style['display'] = 'block';
-	console.log(divTextContainer.clientWidth, divTextContainer.clientHeight);
-	console.log(divText.clientWidth, divText.clientHeight);
 	
 	if (divText.clientWidth > divTextContainer.clientWidth) {
 		fontProzent = Math.floor(fontProzent * divTextContainer.clientWidth / divText.clientWidth);
@@ -216,7 +212,6 @@ mati.setFrageGroesseUndPosition = function() {
 	}
 	divText.style['left'] = Math.floor((divTextContainer.clientWidth - divText.clientWidth) / 2) + 'px';
 	divText.style['top'] = Math.floor((divTextContainer.clientHeight - divText.clientHeight) / 2) + 'px';
-	matiFragebox.style['display'] = matiFrageBoxDisplayValue;
 };
 
 mati.neuesSpiel = function() {

@@ -70,7 +70,7 @@
 				border-style:solid;
 				box-shadow: inset 0 0 1em black;
 				
-				display: none;
+				visibility: hidden;
 				
 				backface-visibility: hidden;
 			}
@@ -281,8 +281,10 @@
 				bottom:0;
 				left:0;
 				width:50%;
-				transition: width .5s;
 				background-color:silver;
+			}
+			.mati_schieberegler_anzeige_balken_transition {
+				transition: width .5s;
 			}
 			.mati_schieberegler_anzeige_zahl {
 				position:absolute;
@@ -473,7 +475,7 @@
 					return;
 				}
 				
-				containerElement.style['display'] = 'block';
+				containerElement.style['visibility'] = 'visible';
 				containerElement.classList.remove('mati_box_hide');
 				containerElement.classList.remove('mati_box_hide_back');
 				containerElement.classList.add(rueckwaerts ? 'mati_box_show_back' : 'mati_box_show');
@@ -486,7 +488,7 @@
 				
 				setTimeout(function () {
 					if (mati.aktuellSichbarerContainer !== null) {
-						mati.aktuellSichbarerContainer.style['display'] = 'none';
+						mati.aktuellSichbarerContainer.style['visibility'] = 'hidden';
 					}
 					
 					mati.aktuellSichbarerContainer = containerElement;
@@ -693,7 +695,11 @@
 								mati.schaetzungAntwortB = mati.anzahlSpieler - mati.schaetzungAntwortA;
 								mati.updateSchaetzungGui();
 								matiUtil.pushBefehl(function() {
-									mati.zeigeContainer(document.getElementById('mati_schaetzung'), false, matiUtil.gotoNaechsterBefehl);
+									mati.zeigeContainer(document.getElementById('mati_schaetzung'), false, function() {
+										document.getElementById('mati_schieberegler_anzeige_balken_a').classList.add('mati_schieberegler_anzeige_balken_transition');
+										document.getElementById('mati_schieberegler_anzeige_balken_b').classList.add('mati_schieberegler_anzeige_balken_transition');
+										matiUtil.gotoNaechsterBefehl();
+									});
 								});
 								break;
 							case 'mati_antwortmoeglichkeit_b':
@@ -702,7 +708,11 @@
 								mati.schaetzungAntwortB = mati.anzahlSpieler - mati.schaetzungAntwortA;
 								mati.updateSchaetzungGui();
 								matiUtil.pushBefehl(function() {
-									mati.zeigeContainer(document.getElementById('mati_schaetzung'), false, matiUtil.gotoNaechsterBefehl);
+									mati.zeigeContainer(document.getElementById('mati_schaetzung'), false, function() {
+										document.getElementById('mati_schieberegler_anzeige_balken_a').classList.add('mati_schieberegler_anzeige_balken_transition');
+										document.getElementById('mati_schieberegler_anzeige_balken_b').classList.add('mati_schieberegler_anzeige_balken_transition');
+										matiUtil.gotoNaechsterBefehl();
+									});
 								});
 								break;
 							case 'mati_button_schaetzung_submit':
@@ -711,6 +721,8 @@
 									schaetzungAntwortA : mati.schaetzungAntwortA,
 									schaetzungAntwortB : mati.schaetzungAntwortB
 								});
+								document.getElementById('mati_schieberegler_anzeige_balken_a').classList.remove('mati_schieberegler_anzeige_balken_transition');
+								document.getElementById('mati_schieberegler_anzeige_balken_b').classList.remove('mati_schieberegler_anzeige_balken_transition');
 								matiUtil.pushBefehl(function() {
 									mati.zeigeContainer(document.getElementById('mati_wartebild'), false, matiUtil.gotoNaechsterBefehl);
 								});
