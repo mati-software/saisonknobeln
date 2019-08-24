@@ -30,7 +30,8 @@ mati.Spieler = class {
 		this.altePunktzahl = 0;
 		this.aktuellePunktzahl = 0;
 		this.antwortAufAktuelleFrage = null;
-		this.schaetzungFuerAktuelleFrage = null;
+		this.schaetzungAFuerAktuelleFrage = null;
+		this.schaetzungBFuerAktuelleFrage = null;
 		
 		this.lastMsg = null;
     }
@@ -145,6 +146,7 @@ mati.sendMsg = function(spieler, befehl) {
 	
 	if (befehl === 'zeigeAntwortmoeglichkeiten') {
 		daten.antwortMoeglichkeiten = mati.aktuelleRubrik.fragen[mati.aktuelleRubrik.aktuellerFrageIndex].answers;
+		daten.anzahlSpieler = mati.spielerImLaufendenSpiel.length;
 	}
 	
 	Tiltspot.send.msg(spieler.id, befehl, daten);
@@ -156,18 +158,6 @@ mati.broadcast = function(befehl) {
 		mati.sendMsg(spieler, befehl);
 	}
 };
-
-
-
-mati.zeigeHauptmenue = function() {
-	//TODO mach spielerliste sichtbar
-	
-	matiUtil.pushBefehl(function() {
-		mati.broadcast('zeigeHauptmenue');
-		mati.zeigeContainer(document.getElementById('mati_spiel_lobby'), false, matiUtil.gotoNaechsterBefehl);
-	});
-};
-
 
 mati.zeigeContainer = function(containerElement, rueckwaerts, callback) {
 	if (containerElement === mati.aktuellSichbarerContainer) {
@@ -271,11 +261,12 @@ mati.neuesSpiel = function() {
 				
 				mati.setFrageGroesseUndPosition();
 				
-				//TODO bild anzeigen: sobald ich die ausmaße vom bild weiß, kann ich die diagonale (vektor) um die gwünschte anzahl grad drehen. der resultierende vektor verrät mir die hoehe und breite die das bild in gedrehter form benötigen würde. dann kann ich skalieren.
+				//TODO bild anzeigen: sobald ich die ausmaße vom bild weiß, kann ich die diagonale (vektor) um die gwünschte anzahl grad drehen. der resultierende vektor verrät mir die hoehe und breite die das bild in gedrehter form benötigen würde. dann kann ich skalieren. (ich muss das für beide diagonalen berechnen und je das maximum nehmen)
 				
 				for (let spieler of mati.spielerImLaufendenSpiel) {
 					spieler.antwortAufAktuelleFrage = null;
-					spieler.schaetzungFuerAktuelleFrage = null;
+					spieler.schaetzungAFuerAktuelleFrage = null;
+					spieler.schaetzungBFuerAktuelleFrage = null;
 				}
 				
 				mati.zeigeContainer(document.getElementById('mati_frage'), false, function() {
@@ -285,7 +276,7 @@ mati.neuesSpiel = function() {
 			matiUtil.pushBefehl(function() {
 				//TODO zeige Frage-Ergebnis
 				
-				mati.zeigeContainer(document.getElementById('mati_frage_ergebnis'), false, matiUtil.gotoNaechsterBefehl());
+				mati.zeigeContainer(document.getElementById('mati_frage_ergebnis'), false, matiUtil.gotoNaechsterBefehl);
 			});
 			matiUtil.pushBefehl(function() {
 				//TODO Ergebnis-Animation zeigen
@@ -305,12 +296,11 @@ mati.neuesSpiel = function() {
 		matiUtil.gotoNaechsterBefehl();
 	});
 	matiUtil.pushBefehl(function() {
-		//TODO zeige Hauptmenue
-		
 		mati.spielLaeuft = false;
 		mati.queueEnthaeltLaufendesSpiel = false;
 		
-		matiUtil.gotoNaechsterBefehl();
+		mati.broadcast('zeigeHauptmenue');
+		mati.zeigeContainer(document.getElementById('mati_spiel_lobby'), false, matiUtil.gotoNaechsterBefehl);
 	});
 };
 
@@ -425,3 +415,11 @@ mati.renderLobbySpielerListe = function(container, knobelSpielerListe) {
 	matiUtil.schriftgroesseAnpassenDamitHoehePasst(container, container.querySelector("ul"));
 };
 
+mati.gotoNaechsterBefehlFallsAlleAntwortenAbgegebenWurden = function() {
+	for (let spieler of mati.spielerImLaufendenSpiel) {
+		if (spieler.antwortAufAktuelleFrage === null) {
+			return;
+		}
+	}
+	matiUtil.gotoNaechsterBefehl();
+};

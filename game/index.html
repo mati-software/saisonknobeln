@@ -230,47 +230,32 @@
 				background-color: rgba(255, 255, 255, .7);
 				padding: .5em 1em;
 				text-align:center;
-				grid-area: mati_frage_erlaeuterung;
 			}
 			#mati_frage_text_und_bild {
-				grid-area: mati_frage_text_und_bild;
 				border-radius: 1em;
+				padding:.5em;
 				background-color: rgba(255, 255, 255, .7);
 				position:relative;
+				display: grid;
+				grid-template-columns: minmax(50%,1fr) minmax(0,15em);
 			}
 			#mati_frage_bild {
-				display:table-cell;
-				position: absolute;
-				top: .5em;
-				bottom: .5em;
-				right: .5em;
-				width: 9em;
 			}
 			#mati_frage_text_container {
-				position: absolute;
-				top: .5em;
-				left: .5em;
-				bottom: .5em;
-				right: 10em;
-				text-align: center;
-				vertical-align: middle;
+				position:relative;
 			}
 			#mati_frage_text {
 				font-size: 200%;
 				height: auto;
 				width: auto;
 				position:absolute;
+				text-align: center;
 			}
 			#mati_frage_spieler {
-				grid-area: mati_frage_spieler;
 			}
 			#mati_frage_grid {
 				display: grid;
 				grid-template-rows: auto 11em 1fr;
-				grid-template-areas: 
-                    "mati_frage_erlaeuterung"
-                    "mati_frage_text_und_bild"
-					"mati_frage_spieler";
 				grid-row-gap: 1em;
 				position: absolute;
 				top: 0;
@@ -306,6 +291,7 @@
 				</div>
 			</div>
 			<div id="mati_frage_ergebnis" class="mati_box">
+				TODO: Ergebnis der Frage
 			</div>
 		</div>
 
@@ -318,7 +304,10 @@
 			Tiltspot.on.ready = function() {
 				console.log('ready');
 				mati.setSpracheCode('en');
-				mati.zeigeHauptmenue();
+				matiUtil.pushBefehl(function() {
+					mati.broadcast('zeigeHauptmenue');
+					mati.zeigeContainer(document.getElementById('mati_spiel_lobby'), false, matiUtil.gotoNaechsterBefehl);
+				});
 			};
 			Tiltspot.on.connect = function(controllerId) {
 				console.log('Connect Controller ' + controllerId);
@@ -345,6 +334,16 @@
 					case 'clientReady':
 						//Client hat ggf. den letzten Befehl nicht mitbekommen
 						mati.sendMsg(controllerId);
+						break;
+					case 'antwortAbgeben':
+						//TODO bei Person speichern was seine angaben sind und gucken ob schon alle abgegeben haben
+						let spieler = mati.spielerImLaufendenSpiel[controllerId];
+						spieler.antwortAufAktuelleFrage = data.antwort;
+						spieler.schaetzungAFuerAktuelleFrage = data.schaetzungAntwortA;
+						spieler.schaetzungBFuerAktuelleFrage = data.schaetzungAntwortB;
+						mati.gotoNaechsterBefehlFallsAlleAntwortenAbgegebenWurden();
+						//Nochmal Wartebefehl senden, damit bei Smartphone-Browser-Reload keine erneute Stimmabgabe moeglich ist
+						mati.sendMsg(controllerId, 'zeigeWarten');
 						break;
 				}
 			};				

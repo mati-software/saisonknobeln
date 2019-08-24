@@ -245,10 +245,7 @@
 				height: 3.5em;
 				position: relative;
 			}
-			.mati_schieberegler_minus {
-				position: absolute;
-				left:.5em;
-				top:0;
+			.mati_kleiner_button {
 				width: 1.5em;
 				height: 1.5em;
 				line-height: 1.5em;
@@ -259,19 +256,15 @@
 				font-size:200%;
 				box-shadow:0 0 1em black;
 			}
+			.mati_schieberegler_minus {
+				position: absolute;
+				left:.5em;
+				top:0;
+			}
 			.mati_schieberegler_plus {
 				position: absolute;
 				right:.5em;
 				top:0;
-				width: 1.5em;
-				height: 1.5em;
-				line-height: 1.5em;
-				text-align: center;
-				vertical-align: middle;
-				border-radius:.75em;
-				color:black;
-				font-size:200%;
-				box-shadow:0 0 1em black;
 			}
 			.mati_schieberegler_anzeige {
 				position:absolute;
@@ -288,6 +281,7 @@
 				bottom:0;
 				left:0;
 				width:50%;
+				transition: width .5s;
 				background-color:silver;
 			}
 			.mati_schieberegler_anzeige_zahl {
@@ -385,8 +379,8 @@
 									<div class="mati_schieberegler_anzeige_balken" id="mati_schieberegler_anzeige_balken_a"></div>
 									<div class="mati_schieberegler_anzeige_zahl" id="mati_schieberegler_anzeige_zahl_a"></div>
 								</div>
-								<div class="mati_schieberegler_minus">&minus;</div>
-								<div class="mati_schieberegler_plus">&plus;</div>
+								<div id="mati_schieberegler_minus_a" class="mati_kleiner_button mati_schieberegler_minus">&minus;</div>
+								<div id="mati_schieberegler_plus_a" class="mati_kleiner_button mati_schieberegler_plus">&plus;</div>
 							</div>
 						</div>
 						<div class="mati_schaetzung_flexitem" id="mati_schieberegler_container2">
@@ -396,8 +390,8 @@
 									<div class="mati_schieberegler_anzeige_balken" id="mati_schieberegler_anzeige_balken_b"></div>
 									<div class="mati_schieberegler_anzeige_zahl" id="mati_schieberegler_anzeige_zahl_b"></div>
 								</div>
-								<div class="mati_schieberegler_minus">&minus;</div>
-								<div class="mati_schieberegler_plus">&plus;</div>
+								<div id="mati_schieberegler_minus_b" class="mati_kleiner_button mati_schieberegler_minus">&minus;</div>
+								<div id="mati_schieberegler_plus_b" class="mati_kleiner_button mati_schieberegler_plus">&plus;</div>
 							</div>
 						</div>
 						<div class="mati_schaetzung_flexitem">
@@ -419,7 +413,11 @@
 				aktuellSichbarerContainer : null,
 				aktuellerContainerLautSpielstatus : null,
 				buttonMitFokus : null,
-				pointerIdFuerButtonMitFokus : null
+				pointerIdFuerButtonMitFokus : null,
+				anzahlSpieler : 0,
+				schaetzungAntwortA : 0,
+				schaetzungAntwortB : 0,
+				gewaehlteAnwortmoeglichkeit : 0
 			};
 			
 			mati.renderFarbe = function() {
@@ -440,7 +438,7 @@
 					.mati_button {
 						background: ${hell50} radial-gradient(circle, ${hell50}, ${hell50dunkel80});
 					}
-					.mati_button_focus {
+					.mati_button.mati_button_focus {
 						background: ${hell50dunkel80} radial-gradient(circle, ${hell50dunkel80}, ${hell50});
 					}
 					.mati_spieler_img {
@@ -451,13 +449,11 @@
 						background: ${dunkel50} linear-gradient(135deg, ${dunkel50}, ${dunkel30});
 					}
 					
-					.mati_schieberegler_minus,
-					.mati_schieberegler_plus {
+					.mati_kleiner_button {
 						background-color:${hell50};
 						background:linear-gradient( 90deg, ${hell50dunkel80}, ${hell50}, ${hell50dunkel80});
 					}
-					.mati_schieberegler_minus.mati_schieberegler_button_fokus,
-					.mati_schieberegler_plus.mati_schieberegler_button_fokus {
+					.mati_kleiner_button.mati_button_focus {
 						background-color:${hell50dunkel80};
 						background:linear-gradient( 90deg, ${hell50}, ${hell50dunkel80}, ${hell50});
 					}
@@ -499,6 +495,13 @@
 					}
 					callback();
 				}, 1000);
+			};
+			
+			mati.updateSchaetzungGui = function() {
+				document.getElementById('mati_schieberegler_anzeige_zahl_a').innerText = mati.schaetzungAntwortA;
+				document.getElementById('mati_schieberegler_anzeige_zahl_b').innerText = mati.schaetzungAntwortB;
+				document.getElementById('mati_schieberegler_anzeige_balken_a').style['width'] = Math.floor(mati.schaetzungAntwortA / mati.anzahlSpieler * 100) + '%';
+				document.getElementById('mati_schieberegler_anzeige_balken_b').style['width'] = Math.floor(mati.schaetzungAntwortB / mati.anzahlSpieler * 100) + '%';
 			};
 			
 			
@@ -595,29 +598,16 @@
 						});
 						break;
 					case 'zeigeAntwortmoeglichkeiten':
+						document.getElementById('mati_antwortmoeglichkeit_a').innerText = data.antwortMoeglichkeiten[0];
+						document.getElementById('mati_antwortmoeglichkeit_b').innerText = data.antwortMoeglichkeiten[1];
+						
+						mati.anzahlSpieler = data.anzahlSpieler;
+						
+						document.getElementById('mati_schieberegler_text_a').innerText = data.antwortMoeglichkeiten[0];
+						document.getElementById('mati_schieberegler_text_b').innerText = data.antwortMoeglichkeiten[1];
+						
 						matiUtil.pushBefehl(function() {
-							document.getElementById('mati_antwortmoeglichkeit_a').innerText = data.antwortMoeglichkeiten[0];
-							document.getElementById('mati_antwortmoeglichkeit_b').innerText = data.antwortMoeglichkeiten[1];
-							
-							
-							
-							//TODO in ne Methode packen
-							document.getElementById('mati_schieberegler_anzeige_zahl_a').innerText = 2;
-							document.getElementById('mati_schieberegler_anzeige_zahl_b').innerText = 3;
-							
-							
-							
-							mati.zeigeContainer(document.getElementById('mati_antwortmoeglichkeiten'), false, function() {
-								//nichts tun
-							});
-						});
-						matiUtil.pushBefehl(function() {
-							//TODO An Anzahl Spieler anpassen usw.
-							document.getElementById('mati_schieberegler_text_a').innerText = data.antwortMoeglichkeiten[0];
-							document.getElementById('mati_schieberegler_text_b').innerText = data.antwortMoeglichkeiten[1];
-							mati.zeigeContainer(document.getElementById('mati_schaetzung'), false, function() {
-								//nichts tun
-							});
+							mati.zeigeContainer(document.getElementById('mati_antwortmoeglichkeiten'), false, matiUtil.gotoNaechsterBefehl);
 						});
 						break;
 				}
@@ -634,54 +624,98 @@
 			
 			
 			document.addEventListener('pointerdown', function (event) {
-				if (!event.target.matches('.mati_button') || !event.target.id || mati.buttonMitFokus !== null) {
-					return;
+				if (event.target.matches('.mati_button, .mati_kleiner_button') && event.target.id && mati.buttonMitFokus === null) {
+					event.target.classList.add('mati_button_focus');
+					mati.buttonMitFokus = event.target;
+					mati.pointerIdFuerButtonMitFokus = event.pointerId;
+					
+					//Kleine Buttons schon bei pointerdown ausloesen
+					if (event.target.matches('.mati_kleiner_button')) {
+						switch (event.target.id) {
+							case 'mati_schieberegler_minus_a':
+							case 'mati_schieberegler_plus_b':
+								if (mati.schaetzungAntwortA > 0) {
+									mati.schaetzungAntwortA--;
+									mati.schaetzungAntwortB = mati.anzahlSpieler - mati.schaetzungAntwortA;
+									mati.updateSchaetzungGui();
+								}
+								break;
+							case 'mati_schieberegler_minus_b':
+							case 'mati_schieberegler_plus_a':
+								if (mati.schaetzungAntwortB > 0) {
+									mati.schaetzungAntwortB--;
+									mati.schaetzungAntwortA = mati.anzahlSpieler - mati.schaetzungAntwortB;
+									mati.updateSchaetzungGui();
+								}
+								break;
+						}
+					}
 				}
-				event.target.classList.add('mati_button_focus');
-				
-				mati.buttonMitFokus = event.target;
-				mati.pointerIdFuerButtonMitFokus = event.pointerId;
 			});
 			document.addEventListener('pointerup', function (event) {
 				if (event.pointerId !== mati.pointerIdFuerButtonMitFokus) {
 					return;
 				}
 				
-				let boundingClientRect = event.target.getBoundingClientRect();
+				if (event.target.matches('.mati_button')) {
+					let boundingClientRect = event.target.getBoundingClientRect();
 
-				//der Button ist eigentlich nicht rechteckig sondern hat runde Enden, aber besser gehts nicht
-				//(JS hilft bei gedrueckter Maustaste in keinster Weise mit wenn es um das Verlassen der Hit-Area geht)
-				let buttonWurdeGeklickt = event.target === mati.buttonMitFokus
-							&& event.clientX >= boundingClientRect.left
-							&& event.clientX <= boundingClientRect.right
-							&& event.clientY >= boundingClientRect.top
-							&& event.clientY <= boundingClientRect.bottom;
-				
-				if (buttonWurdeGeklickt) {
-					//Button-Effekt
-					let cloneButton = document.createElement("div");
-					cloneButton.classList.add('mati_button');
-					cloneButton.innerText = event.target.innerText;
-					let cloneContainer = document.createElement("div");
-					cloneContainer.classList.add('mati_buttoneffekt_container');
-					cloneContainer.style['top'] = boundingClientRect.top + 'px';
-					cloneContainer.appendChild(cloneButton);
-					document.getElementById('mati_controller_alles').appendChild(cloneContainer);
-					setTimeout(function () {
-						document.getElementById('mati_controller_alles').removeChild(cloneContainer);
-					}, 1000);
+					//der Button ist eigentlich nicht rechteckig sondern hat runde Enden, aber besser gehts nicht
+					//(JS hilft bei gedrueckter Maustaste in keinster Weise mit wenn es um das Verlassen der Hit-Area geht)
+					let buttonWurdeGeklickt = event.target === mati.buttonMitFokus
+								&& event.clientX >= boundingClientRect.left
+								&& event.clientX <= boundingClientRect.right
+								&& event.clientY >= boundingClientRect.top
+								&& event.clientY <= boundingClientRect.bottom;
 					
-					//Aktion ausfuehren
-					switch (event.target.id) {
-						case 'mati_button_neues_spiel':
-							Tiltspot.send.msg('neuesSpiel');
-							break;
-						case 'mati_antwortmoeglichkeit_a':
-							matiUtil.gotoNaechsterBefehl();
-							break;
-						case 'mati_antwortmoeglichkeit_b':
-							matiUtil.gotoNaechsterBefehl();
-							break;
+					if (buttonWurdeGeklickt) {
+						//Button-Effekt
+						let cloneButton = document.createElement("div");
+						cloneButton.classList.add('mati_button');
+						cloneButton.innerText = event.target.innerText;
+						let cloneContainer = document.createElement("div");
+						cloneContainer.classList.add('mati_buttoneffekt_container');
+						cloneContainer.style['top'] = boundingClientRect.top + 'px';
+						cloneContainer.appendChild(cloneButton);
+						document.getElementById('mati_controller_alles').appendChild(cloneContainer);
+						setTimeout(function () {
+							document.getElementById('mati_controller_alles').removeChild(cloneContainer);
+						}, 1000);
+						
+						//Aktion ausfuehren
+						switch (event.target.id) {
+							case 'mati_button_neues_spiel':
+								Tiltspot.send.msg('neuesSpiel');
+								break;
+							case 'mati_antwortmoeglichkeit_a':
+								mati.gewaehlteAnwortmoeglichkeit = 0;
+								mati.schaetzungAntwortA = mati.gewaehlteAnwortmoeglichkeit === 0 ? Math.ceil(mati.anzahlSpieler / 2) : Math.floor(mati.anzahlSpieler / 2);
+								mati.schaetzungAntwortB = mati.anzahlSpieler - mati.schaetzungAntwortA;
+								mati.updateSchaetzungGui();
+								matiUtil.pushBefehl(function() {
+									mati.zeigeContainer(document.getElementById('mati_schaetzung'), false, matiUtil.gotoNaechsterBefehl);
+								});
+								break;
+							case 'mati_antwortmoeglichkeit_b':
+								mati.gewaehlteAnwortmoeglichkeit = 1;
+								mati.schaetzungAntwortA = mati.gewaehlteAnwortmoeglichkeit === 0 ? Math.ceil(mati.anzahlSpieler / 2) : Math.floor(mati.anzahlSpieler / 2);
+								mati.schaetzungAntwortB = mati.anzahlSpieler - mati.schaetzungAntwortA;
+								mati.updateSchaetzungGui();
+								matiUtil.pushBefehl(function() {
+									mati.zeigeContainer(document.getElementById('mati_schaetzung'), false, matiUtil.gotoNaechsterBefehl);
+								});
+								break;
+							case 'mati_button_schaetzung_submit':
+								Tiltspot.send.msg('antwortAbgeben', {
+									antwort: mati.gewaehlteAnwortmoeglichkeit,
+									schaetzungAntwortA : mati.schaetzungAntwortA,
+									schaetzungAntwortB : mati.schaetzungAntwortB
+								});
+								matiUtil.pushBefehl(function() {
+									mati.zeigeContainer(document.getElementById('mati_wartebild'), false, matiUtil.gotoNaechsterBefehl);
+								});
+								break;
+						}
 					}
 				}
 				

@@ -32,6 +32,11 @@
 		{
 			"text" : "Welche Filmreihe ist besser: 'Halloween' oder 'Freitag der 13.'?",
 			"answers" : ["Halloween", "Freitag der 13."]
+		},
+		
+		{
+			"text" : "Besitzt Du mehr als einen Schirm?",
+			"answers" : ["Ja", "Nein"]
 		}
 	]
 }
