@@ -234,6 +234,10 @@ mati.neuesSpiel = function() {
 		mati.spielLaeuft = true;
 		mati.aktuelleRubrik = null;
 		mati.broadcast('zeigeWarten');
+		
+		document.getElementById('mati_frage_spieler').innerHTML = mati.spielerImLaufendenSpiel.map(mati.renderSpieler).join('');
+		mati.schrittweiseResizeBisEsPasst(document.getElementById('mati_frage_spieler_container'), document.getElementById('mati_frage_spieler'));
+		
 		matiUtil.gotoNaechsterBefehl();
 	});
 	
@@ -467,26 +471,28 @@ mati.spielerChanged = function() {
 
 mati.renderLobbySpielerListe = function(container, knobelSpielerListe) {
 	container.innerHTML = `
-		<ul>
-			${knobelSpielerListe.map(function (knobelSpieler) {
-				let tiltspotUser = Tiltspot.get.user(knobelSpieler.id);
-	
-				if (tiltspotUser === null || tiltspotUser === undefined) {
-					return '<li>Verbindung abgebrochen</li>';
-				}
-	
-				return `
-					<li class="mati_spieler">
-						<span class="mati_spieler_img" style="background-color:${knobelSpieler.cssFarbeHell50}">
-							<img src="${tiltspotUser.profilePicture}" />
-						</span>
-						<span class="mati_spieler_text" style="color: ${knobelSpieler.cssFarbeHell50}; background: ${knobelSpieler.cssFarbe50} linear-gradient(135deg, ${knobelSpieler.cssFarbe50}, ${knobelSpieler.cssFarbe30});">${matiUtil.htmlEscape(tiltspotUser.nickname)}</span>
-					</li>
-				`;
-			}).join('')}
-		</ul>
+		<div class="mati_liste">
+			${knobelSpielerListe.map(mati.renderSpieler).join('')}
+		</div>
 	`;
-	matiUtil.schriftgroesseAnpassenDamitHoehePasst(container, container.querySelector("ul"));
+	matiUtil.schriftgroesseAnpassenDamitHoehePasst(container, container.querySelector(".mati_liste"));
+};
+
+mati.renderSpieler = function(knobelSpieler) {
+	let tiltspotUser = Tiltspot.get.user(knobelSpieler.id);
+	
+	if (tiltspotUser === null || tiltspotUser === undefined) {
+		return '';
+	}
+
+	return `
+		<div class="mati_spieler">
+			<span class="mati_spieler_img" style="background-color:${knobelSpieler.cssFarbeHell50}">
+				<img src="${tiltspotUser.profilePicture}" />
+			</span>
+			<span class="mati_spieler_text" style="color: ${knobelSpieler.cssFarbeHell50}; background: ${knobelSpieler.cssFarbe50} linear-gradient(135deg, ${knobelSpieler.cssFarbe50}, ${knobelSpieler.cssFarbe30});">${matiUtil.htmlEscape(tiltspotUser.nickname)}</span>
+		</div>
+	`;
 };
 
 mati.gotoNaechsterBefehlFallsAlleAntwortenAbgegebenWurden = function() {
@@ -496,4 +502,17 @@ mati.gotoNaechsterBefehlFallsAlleAntwortenAbgegebenWurden = function() {
 		}
 	}
 	matiUtil.gotoNaechsterBefehl();
+};
+
+mati.schrittweiseResizeBisEsPasst = function(container, inhalt) {
+	let fontProzent = 100;
+	inhalt.style['font-size'] = fontProzent + '%';
+	
+	let maximaleUebrigeAnzahlVerkleinerungsversuche = 20;
+	while (inhalt.clientHeight > container.clientHeight
+			&& maximaleUebrigeAnzahlVerkleinerungsversuche > 0) {
+		fontProzent = Math.floor(fontProzent * .9);
+		inhalt.style['font-size'] = fontProzent + '%';
+		maximaleUebrigeAnzahlVerkleinerungsversuche--;
+	}
 };

@@ -124,11 +124,10 @@
 				text-align:center;
 			}
 			
-			#mati_spiel_spielerliste_content ul,
-			#mati_spiel_spielerwarteliste_content ul {
+			#mati_spiel_spielerliste_content .mati_liste,
+			#mati_spiel_spielerwarteliste_content .mati_liste {
 				margin:0;
 				padding:.3em 0 .3em 0;
-				list-style-type: none;
 			}
 			.mati_spieler {
 				padding:0;
@@ -306,7 +305,18 @@
 				text-align: center;
 				padding: .5em;
 			}
+			#mati_frage_spieler_container {
+				overflow: hidden;
+			}
 			#mati_frage_spieler {
+				min-height: 100%;
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: space-around;
+				align-content: space-around;
+			}
+			#mati_frage_spieler .mati_spieler {
+				margin: .5em;
 			}
 			#mati_frage_grid {
 				display: grid;
@@ -358,7 +368,10 @@
 						</div>
 						<div id="mati_frage_bild"></div>
 					</div>
-					<div id="mati_frage_spieler"></div>
+					<div id="mati_frage_spieler_container">
+						<div id="mati_frage_spieler">
+						</div>
+					</div>
 				</div>
 			</div>
 			<div id="mati_frage_ergebnis" class="mati_box">
@@ -424,6 +437,8 @@
 				document.getElementById('mati_spiel_alles').style["font-size"] = allesFontSize + "px";
 				
 				mati.setFrageGroesseUndPosition();
+				
+				mati.schrittweiseResizeBisEsPasst(document.getElementById('mati_frage_spieler_container'), document.getElementById('mati_frage_spieler'));
 				
 				//Workaround fuer verbuggter Microsoft-Edge-Browser, der mit vh in Animationen nicht klar kommt.
 				let hoehe = document.getElementById('mati_spiel_alles').offsetHeight;
