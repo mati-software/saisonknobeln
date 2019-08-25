@@ -1,5 +1,7 @@
 # Saisonknobeln
-Simple jam game written in HTML/JS for the tiltspot.tv platform
+Simple jam game written in HTML/JS for the tiltspot.tv platform.
+
+© Copyright: Timo Scheit, Martin Dostert
 
 ## Status
 

@@ -184,6 +184,9 @@
 				overflow:hidden;
 				backface-visibility: hidden;
 				visibility: hidden;
+				background-repeat: no-repeat;
+				background-size: cover;
+                background-position: center;				 
 			}
 			
 			.mati_box_hide {
@@ -219,6 +222,51 @@
 			#mati_rubrik_intro {
 				background-color: #CCC;
 			}
+			#mati_rubrik_intro svg {
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 100%;
+				top: 50%;
+				height: 12vw;
+				margin-top: -6vw;
+			}
+			#mati_rubrik_intro_balken1 {
+				position: absolute;
+				top: 50%;
+				height: 12vw;
+				margin-top: -6vw;
+				background-color: rgba(255, 255, 255, .9);
+				left: 0;
+			}
+			#mati_rubrik_intro_balken1::before,
+			#mati_rubrik_intro_balken2::before {
+				content: ' ';
+				position: absolute;
+				top: -2vw;
+				left: 0;
+				right: 0;
+				height: 1vw;
+				background-color: rgba(255, 255, 255, .9);
+			}
+			#mati_rubrik_intro_balken1::after,
+			#mati_rubrik_intro_balken2::after {
+				content: ' ';
+				position: absolute;
+				bottom: -2vw;
+				left: 0;
+				right: 0;
+				height: 1vw;
+				background-color: rgba(255, 255, 255, .9);
+			}
+			#mati_rubrik_intro_balken2 {
+				position: absolute;
+				top: 50%;
+				height: 12vw;
+				margin-top: -6vw;
+				background-color: rgba(255, 255, 255, .9);
+				right: 0;
+			}
 			
 			#mati_frage {
 				background-color: #AAA;
@@ -227,14 +275,14 @@
 				border-bottom-left-radius: 1em;
 				border-bottom-right-radius: 1em;
 				vertical-align:middle;
-				background-color: rgba(255, 255, 255, .7);
+				background-color: rgba(255, 255, 255, .9);
 				padding: .5em 1em;
 				text-align:center;
 			}
 			#mati_frage_text_und_bild {
 				border-radius: 1em;
 				padding:.5em;
-				background-color: rgba(255, 255, 255, .7);
+				background-color: rgba(255, 255, 255, .9);
 				position:relative;
 				display: grid;
 				grid-template-columns: minmax(50%,1fr) minmax(0,15em);
@@ -276,7 +324,23 @@
 			<div id="mati_spiel_lobby" class="mati_box">
 			</div>
 			<div id="mati_rubrik_intro" class="mati_box">
-				<div id="mati_rubrik_intro_name"></div>
+				<div id="mati_rubrik_intro_balken1"></div>
+				<div id="mati_rubrik_intro_balken2"></div>
+				<svg viewbox="0 0 1000 150">
+					<defs>
+						<filter id="mati_rubrik_text_shadow" filterUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">
+							<feGaussianBlur result="blurOut" in="SourceAlpha" stdDeviation="5" />
+							<feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+						</filter>				
+						<linearGradient id="mati_rubrik_text_verlauf" x1="0" y1="0" x2="0" y2="1">
+							<stop offset="0" stop-color="#eeeeee" />
+							<stop offset="1" stop-color="#bbbbbb" />
+						</linearGradient>
+					</defs>
+					<text font-size="100" filter="url(#mati_rubrik_text_shadow)" stroke="url(#mati_rubrik_text_verlauf)" fill="none" stroke-width="3" font-weight="800" text-anchor="middle" id="mati_rubrik_intro_name" x="50%" y="110">
+						Hallo Welt
+					</text>
+				</svg>
 			</div>
 			<div id="mati_frage" class="mati_box">
 				<div id="mati_frage_grid">

@@ -53,7 +53,9 @@ mati.setSpracheCode = function(neuerSpracheCode) {
 	matiUtil.pushBefehl(function() {
 		matiUtil.loadJson(Tiltspot.get.assetUrl("category-list.json"), function(rubrikKeys) {
 			mati.rubriken = rubrikKeys.map(function(rubrikKey) {
-				return {key : rubrikKey};
+				let img = document.createElement("IMG");
+				img.src = Tiltspot.get.assetUrl(rubrikKey + '.jpg');
+				return {key : rubrikKey, img : img};
 			});
 			matiUtil.gotoNaechsterBefehl();
 		});
@@ -236,14 +238,61 @@ mati.neuesSpiel = function() {
 				mati.aktuelleRubrik = mati.rubriken[neuerIndex];
 			}
 			
-			document.getElementById('mati_rubrik_intro_name').innerText = mati.aktuelleRubrik.name;
+			document.getElementById('mati_rubrik_intro_name').setAttribute('stroke-dasharray', '0 100');
+			document.getElementById('mati_rubrik_intro_name').setAttribute('fill', 'none');
+			document.getElementById('mati_rubrik_intro_balken1').style['width'] = '0';
+			document.getElementById('mati_rubrik_intro_balken2').style['width'] = '0';
+			
+			document.getElementById('mati_rubrik_intro_name').textContent = mati.aktuelleRubrik.name;
+			document.getElementById('mati_rubrik_intro').style['background-image'] = `url(${mati.aktuelleRubrik.img.src})`;
 			
 			mati.zeigeContainer(document.getElementById('mati_rubrik_intro'), false, matiUtil.gotoNaechsterBefehl);
 		});
 
 		matiUtil.pushBefehl(function() {
-			//TODO animation zeigen
-			setTimeout(matiUtil.gotoNaechsterBefehl, 1000);
+			let balken1 = document.getElementById('mati_rubrik_intro_balken1');
+			let balken2 = document.getElementById('mati_rubrik_intro_balken2');
+			
+			let rubrikIntroAnimationStartzeit;
+			let textElement = document.getElementById('mati_rubrik_intro_name');
+			
+			
+			function rubrikIntroAnimation(timestamp) {
+				if (!rubrikIntroAnimationStartzeit) {
+					rubrikIntroAnimationStartzeit = timestamp;
+				}
+				var progress = timestamp - rubrikIntroAnimationStartzeit;
+				
+				
+				if (progress < 1000) {
+					balken1.style['width'] = (progress / 20) + '%';
+					balken2.style['width'] = (progress / 20) + '%';
+					window.requestAnimationFrame(rubrikIntroAnimation);
+				}
+				else if (progress < 3000) {
+					balken1.style['width'] = '100%';
+					balken2.style['width'] = '0%';
+					let dashLaenge = Math.floor((progress-1000) / 20);
+					textElement.setAttribute('stroke-dasharray', dashLaenge+' '+(100-dashLaenge));
+					window.requestAnimationFrame(rubrikIntroAnimation);
+				}
+				else if (progress < 5000) {
+					balken1.style['width'] = '100%';
+					balken2.style['width'] = '0%';
+					textElement.removeAttribute('stroke-dasharray');
+					textElement.setAttribute('fill', `rgba(0, 0, 0, ${(progress - 3000)/2000})`);
+					window.requestAnimationFrame(rubrikIntroAnimation);
+				}
+				else {
+					balken1.style['width'] = '100%';
+					balken2.style['width'] = '0%';
+					textElement.removeAttribute('stroke-dasharray');
+					textElement.setAttribute('fill', `rgba(0, 0, 0, 1)`);
+					matiUtil.gotoNaechsterBefehl();
+				}
+			}
+
+			window.requestAnimationFrame(rubrikIntroAnimation);
 		});
 		
 		for (let i=0; i<3; i++) {
@@ -253,6 +302,7 @@ mati.neuesSpiel = function() {
 				
 				let frage = mati.aktuelleRubrik.fragen[mati.aktuelleRubrik.aktuellerFrageIndex];
 				document.getElementById('mati_frage_text').innerText = frage.text;
+				document.getElementById('mati_frage').style['background-image'] = `url(${mati.aktuelleRubrik.img.src})`;
 				
 				mati.setFrageGroesseUndPosition();
 				
@@ -270,6 +320,7 @@ mati.neuesSpiel = function() {
 			});
 			matiUtil.pushBefehl(function() {
 				//TODO zeige Frage-Ergebnis
+				document.getElementById('mati_frage_ergebnis').style['background-image'] = `url(${mati.aktuelleRubrik.img.src})`;
 				
 				mati.zeigeContainer(document.getElementById('mati_frage_ergebnis'), false, matiUtil.gotoNaechsterBefehl);
 			});
