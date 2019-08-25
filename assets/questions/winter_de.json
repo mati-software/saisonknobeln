@@ -3,7 +3,8 @@
 	"questions" : [
 		{
 			"text" : "Zu Weihnachten lieber bunte Lichterketten oder einfarbige Lichterketten?",
-			"answers" : ["bunt", "einfarbig"]
+			"answers" : ["bunt", "einfarbig"],
+			"img" : "bunte_weihnachtsbeleuchtung.jpg"
 		},
 		{
 			"text" : "Ist Glüwein genießbar?",
@@ -23,11 +24,13 @@
 		},
 		{
 			"text" : "Kirchenbesuch an Weihnachten?",
-			"answers" : ["Ja", "Nein"]
+			"answers" : ["Ja", "Nein"],
+			"img" : "kirche.jpg"
 		},
 		{
 			"text" : "An Silvester selbst Knaller und Raketen abfeuern?",
-			"answers" : ["Ja", "Nein"]
+			"answers" : ["Ja", "Nein"],
+			"img" : "feuerwerk.jpg"
 		},
 		{
 			"text" : "Gewürzspekulatius oder Butterspekulatius?",

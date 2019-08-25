@@ -66,7 +66,18 @@ mati.setSpracheCode = function(neuerSpracheCode) {
 		for (let rubrik of mati.rubriken) {
 			rubrik.aktuellerFrageIndex = -1;
 			matiUtil.loadJson(Tiltspot.get.assetUrl("questions/" + rubrik.key + "_" + mati.spracheCode + ".json"), function(data) {
-				rubrik.fragen = data.questions;
+				rubrik.fragen = data.questions.map(function(frage) {
+					let frageMitImgObj = {
+						"text" : frage.text,
+						"answers" : frage.answers
+					};
+					if (frage.img) {
+						let img = document.createElement("IMG");
+						img.src = Tiltspot.get.assetUrl('questions/' + frage.img);
+						frageMitImgObj.img = img;
+					}
+					return frageMitImgObj;
+				});
 				rubrik.name = data.name;
 				anzahlGeladeneRubriken++;
 				if (anzahlGeladeneRubriken === mati.rubriken.length) {
@@ -303,6 +314,23 @@ mati.neuesSpiel = function() {
 				let frage = mati.aktuelleRubrik.fragen[mati.aktuelleRubrik.aktuellerFrageIndex];
 				document.getElementById('mati_frage_text').innerText = frage.text;
 				document.getElementById('mati_frage').style['background-image'] = `url(${mati.aktuelleRubrik.img.src})`;
+				
+				
+				
+				document.getElementById('mati_frage_bild').innerHTML = '';
+				if (frage.img) {
+					let seitenverhaeltnis = frage.img.naturalWidth / frage.img.naturalHeight;
+					document.getElementById('mati_frage_bild').appendChild(frage.img);
+					frage.img.style['width'] = (8*seitenverhaeltnis)+'em';
+					frage.img.style['height'] = 8+'em';
+					document.getElementById('mati_frage_text_und_bild').style['grid-template-columns'] = `minmax(50%,1fr) minmax(0,${8*seitenverhaeltnis + 2}em)`;
+				}
+				else {
+					document.getElementById('mati_frage_text_und_bild').style['grid-template-columns'] = `minmax(50%,1fr) minmax(0,0)`;
+				}
+				
+				
+				
 				
 				mati.setFrageGroesseUndPosition();
 				

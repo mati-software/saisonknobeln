@@ -3,7 +3,8 @@
 	"questions" : [
 		{
 			"text" : "Tulpen oder Rosen?",
-			"answers" : ["Tulpen", "Rosen"]
+			"answers" : ["Tulpen", "Rosen"],
+			"img" : "rose.jpg"
 		},
 		{
 			"text" : "Ist die Zeitumstellung auf Sommerzeit eine gute Sache?",
@@ -27,7 +28,8 @@
 		},
 		{
 			"text" : "Kirchenbesuch an Ostern?",
-			"answers" : ["Ja", "Nein"]
+			"answers" : ["Ja", "Nein"],
+			"img" : "kriche.jpg"
 		},
 		{
 			"text" : "'Berlinale' oder 'Filmfestspiele von Cannes'?",

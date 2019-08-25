@@ -7,15 +7,18 @@
 		},
 		{
 			"text" : "Badebekleidung für Frauen: Badeanzug oder Bikini?",
-			"answers" : ["Badeanzug", "Bikini"]
+			"answers" : ["Badeanzug", "Bikini"],
+			"img" : "pool.jpg"
 		},
 		{
 			"text" : "Schwimmbad oder Badesee?",
-			"answers" : ["Schwimmbad", "Badesee"]
+			"answers" : ["Schwimmbad", "Badesee"],
+			"img" : "pool.jpg"
 		},
 		{
 			"text" : "Strandurlaub oder Urlaub in den Bergen?",
-			"answers" : ["Strandurlaub", "Urlaub in den Bergen"]
+			"answers" : ["Strandurlaub", "Urlaub in den Bergen"],
+			"img" : "meer.jpg"
 		},
 		{
 			"text" : "Als Mann bei heißem Wetter oberkörperfrei draußen rum rennen?",
@@ -27,11 +30,13 @@
 		},
 		{
 			"text" : "Lieber Tageshöchsttemperatur von 25°C oder von 35°C?",
-			"answers" : ["25°C", "35°C"]
+			"answers" : ["25°C", "35°C"],
+			"img" : "pool.jpg"
 		},
 		{
 			"text" : "Im Schwimmbad die meiste Zeit im Wasser verbringen oder die meiste Zeit in der Sonne liegen?",
-			"answers" : ["Zeit im Wasser verbringen", "In der Sonne liegen"]
+			"answers" : ["Zeit im Wasser verbringen", "In der Sonne liegen"],
+			"img" : "pool.jpg"
 		},
 		{
 			"text" : "Zitronenlimonade oder Orangenlimonade?",

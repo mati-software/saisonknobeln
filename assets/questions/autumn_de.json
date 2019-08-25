@@ -11,7 +11,8 @@
 		},
 		{
 			"text" : "Äpfel lieber süß oder sauer?",
-			"answers" : ["süß", "sauer"]
+			"answers" : ["süß", "sauer"],
+			"img" : "aepfel.jpg"
 		},
 		{
 			"text" : "Walnüsse oder Haselnüsse?",
@@ -27,7 +28,8 @@
 		},
 		{
 			"text" : "Sind Windräder eine gute Sache?",
-			"answers" : ["Ja", "Nein"]
+			"answers" : ["Ja", "Nein"],
+			"img" : "windraeder.jpg"
 		},
 		{
 			"text" : "Welche Filmreihe ist besser: 'Halloween' oder 'Freitag der 13.'?",
@@ -36,7 +38,8 @@
 		
 		{
 			"text" : "Besitzt Du mehr als einen Schirm?",
-			"answers" : ["Ja", "Nein"]
+			"answers" : ["Ja", "Nein"],
+			"img" : "schirme.jpg"
 		}
 	]
 }
