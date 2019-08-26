@@ -319,8 +319,6 @@ mati.neuesSpiel = function() {
 				document.getElementById('mati_frage_text').innerText = frage.text;
 				document.getElementById('mati_frage').style['background-image'] = `url(${mati.aktuelleRubrik.img.src})`;
 				
-				
-				
 				document.getElementById('mati_frage_bild').innerHTML = '';
 				if (frage.img) {
 					let seitenverhaeltnis = frage.img.naturalWidth / frage.img.naturalHeight;
@@ -333,17 +331,18 @@ mati.neuesSpiel = function() {
 					document.getElementById('mati_frage_text_und_bild').style['grid-template-columns'] = `minmax(50%,1fr) minmax(0,0)`;
 				}
 				
-				
-				
-				
 				mati.setFrageGroesseUndPosition();
 				
-				//TODO bild anzeigen: sobald ich die ausmaße vom bild weiß, kann ich die diagonale (vektor) um die gwünschte anzahl grad drehen. der resultierende vektor verrät mir die hoehe und breite die das bild in gedrehter form benötigen würde. dann kann ich skalieren. (ich muss das für beide diagonalen berechnen und je das maximum nehmen)
+				//FIXME bild ist ggf noch nicht geladen
 				
 				for (let spieler of mati.spielerImLaufendenSpiel) {
 					spieler.antwortAufAktuelleFrage = null;
 					spieler.schaetzungAFuerAktuelleFrage = null;
 					spieler.schaetzungBFuerAktuelleFrage = null;
+				}
+				for (let spielerElement of document.getElementById('mati_frage_spieler').getElementsByClassName('mati_spieler')) {
+					spielerElement.classList.remove('mati_spieler_fertig');
+					spielerElement.classList.add('mati_wackelnd');
 				}
 				
 				mati.zeigeContainer(document.getElementById('mati_frage'), false, function() {
@@ -486,7 +485,7 @@ mati.renderSpieler = function(knobelSpieler) {
 	}
 
 	return `
-		<div class="mati_spieler">
+		<div class="mati_spieler mati_spieler_id_${knobelSpieler.id}">
 			<span class="mati_spieler_img" style="background-color:${knobelSpieler.cssFarbeHell50}">
 				<img src="${tiltspotUser.profilePicture}" />
 			</span>
@@ -501,7 +500,8 @@ mati.gotoNaechsterBefehlFallsAlleAntwortenAbgegebenWurden = function() {
 			return;
 		}
 	}
-	matiUtil.gotoNaechsterBefehl();
+	//Zeit fuer letzte Spieler-Animation lassen
+	setTimeout(matiUtil.gotoNaechsterBefehl, 800);
 };
 
 mati.schrittweiseResizeBisEsPasst = function(container, inhalt) {

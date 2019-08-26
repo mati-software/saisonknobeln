@@ -41,6 +41,12 @@
 		{
 			"text" : "Zitronenlimonade oder Orangenlimonade?",
 			"answers" : ["Zitronenlimonade", "Orangenlimonade"]
+		},
+		
+		{
+			"text" : "Hast du in den letzten 12 Monaten an einem Picknick teilgenommen?",
+			"answers" : ["Ja", "Nein"]
 		}
+		
 	]
 }
