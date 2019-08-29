@@ -29,7 +29,7 @@
 		{
 			"text" : "Kirchenbesuch an Ostern?",
 			"answers" : ["Ja", "Nein"],
-			"img" : "kriche.jpg"
+			"img" : "kirche.jpg"
 		},
 		{
 			"text" : "'Berlinale' oder 'Filmfestspiele von Cannes'?",

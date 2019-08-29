@@ -7,7 +7,8 @@
 		},
 		{
 			"text" : "An Halloween kostümieren oder nicht kostümieren?",
-			"answers" : ["kostümieren", "nicht kostümieren"]
+			"answers" : ["kostümieren", "nicht kostümieren"],
+			"img" : "jack-o-lantern.jpg"
 		},
 		{
 			"text" : "Äpfel lieber süß oder sauer?",

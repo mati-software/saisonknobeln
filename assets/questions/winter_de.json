@@ -43,6 +43,11 @@
 		{
 			"text" : "Handschuhe bei kaltem Wetter?",
 			"answers" : ["Ja", "Nein"]
+		},
+		
+		{
+			"text" : "Hast du schon mal beim Bau eines Iglos mitgewirkt?",
+			"answers" : ["Ja", "Nein"]
 		}
 	]
 }

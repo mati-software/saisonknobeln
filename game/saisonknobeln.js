@@ -7,7 +7,9 @@ var mati = {
 	spielerFarben : new Map(),
 	spielLaeuft : false,
 	queueEnthaeltLaufendesSpiel : false,
-	aktuellSichbarerContainer : null
+	aktuellSichbarerContainer : null,
+	tatsaechlicheAnzahlStimmenFuerA : null,
+	tatsaechlicheAnzahlStimmenFuerB : null
 };
 
 mati.Spieler = class {
@@ -123,6 +125,8 @@ mati.setSpracheCode = function(neuerSpracheCode) {
 		mati.spielerChanged();
 		
 		document.getElementById('mati_frage_erlaeuterung').innerText = matiUtil.l10n('Wähle eine Antwort! Halte Deine Wahl vor den anderen Spielern geheim!');
+		
+		document.getElementById('mati_frage_ergebnis_tatsaechlich_label').innerText = matiUtil.l10n('Tatsächliche Aufteilung');
 		
 		matiUtil.gotoNaechsterBefehl();
 	});
@@ -350,14 +354,73 @@ mati.neuesSpiel = function() {
 				});
 			});
 			matiUtil.pushBefehl(function() {
+				mati.tatsaechlicheAnzahlStimmenFuerA = 0;
+				mati.tatsaechlicheAnzahlStimmenFuerB = 0;
+				for (let spieler of mati.spielerImLaufendenSpiel) {
+					if (spieler.antwortAufAktuelleFrage === 0) {
+						mati.tatsaechlicheAnzahlStimmenFuerA++;
+					}
+					if (spieler.antwortAufAktuelleFrage === 1) {
+						mati.tatsaechlicheAnzahlStimmenFuerB++;
+					}
+				}
+				
 				//TODO zeige Frage-Ergebnis
 				document.getElementById('mati_frage_ergebnis').style['background-image'] = `url(${mati.aktuelleRubrik.img.src})`;
 				
+				//TODO richtigen Wert einfuegen (zumindest wenn er nicht 100% richtig geraten wurde) und beim berechnen vom platzbedarf auch mit beachten
+				let sortierteSpieler = mati.spielerImLaufendenSpiel.slice().sort(function(spieler1, spieler2) {
+					return spieler2.schaetzungAFuerAktuelleFrage - spieler1.schaetzungAFuerAktuelleFrage;
+				});
+				document.getElementById('mati_frage_ergebnis_schaetzungen').innerHTML = `
+					<div id="mati_frage_ergebnis_antwortmoeglichkeiten">
+						<div id="mati_frage_ergebnis_antwortmoeglichkeitA">${matiUtil.htmlEscape(mati.aktuelleRubrik.fragen[mati.aktuelleRubrik.aktuellerFrageIndex].answers[0])}</div>
+						<div id="mati_frage_ergebnis_antwortmoeglichkeitB">${matiUtil.htmlEscape(mati.aktuelleRubrik.fragen[mati.aktuelleRubrik.aktuellerFrageIndex].answers[1])}</div>
+					</div>
+					${sortierteSpieler.map(function(knobelSpieler) {
+						return `
+							<div class="mati_frage_ergebnis_zeile" id="mati_frage_ergebnis_zeile_id_${knobelSpieler.id}">
+								${mati.renderSpieler(knobelSpieler)}
+								<div class="mati_frage_ergebnis_balken_container" style="background: ${knobelSpieler.cssFarbe50} linear-gradient(0deg, ${knobelSpieler.cssFarbe50}, ${knobelSpieler.cssFarbe30});">
+									<div class="mati_frage_ergebnis_balken" style="background: ${knobelSpieler.cssFarbeHell50} linear-gradient(0deg, ${knobelSpieler.cssFarbe100}, ${knobelSpieler.cssFarbeHell50}); width: ${knobelSpieler.schaetzungAFuerAktuelleFrage / (knobelSpieler.schaetzungAFuerAktuelleFrage + knobelSpieler.schaetzungBFuerAktuelleFrage) * 100}%">
+									</div>
+									<div class="mati_frage_ergebnis_balken_zahlA">
+										${knobelSpieler.schaetzungAFuerAktuelleFrage}
+									</div>
+									<div class="mati_frage_ergebnis_balken_zahlB">
+										${knobelSpieler.schaetzungBFuerAktuelleFrage}
+									</div>
+								</div>
+							</div>
+						`;
+					}).join('')}
+					<div class="mati_frage_ergebnis_platzhalter"></div>
+				`;
+				
+				document.getElementById('mati_frage_ergebnis_tatsaechlich_a').innerText = mati.tatsaechlicheAnzahlStimmenFuerA;
+				document.getElementById('mati_frage_ergebnis_tatsaechlich_b').innerText = mati.tatsaechlicheAnzahlStimmenFuerB;
+				
+				document.getElementById('mati_frage_ergebnis_tatsaechlich').style['width'] = (mati.tatsaechlicheAnzahlStimmenFuerA / (mati.tatsaechlicheAnzahlStimmenFuerA + mati.tatsaechlicheAnzahlStimmenFuerB) * 100) + '%';
+				
+				//TODO bei vielen spielern skalieren
+				
 				mati.zeigeContainer(document.getElementById('mati_frage_ergebnis'), false, matiUtil.gotoNaechsterBefehl);
 			});
+			for (let i=0; i<mati.spielerImLaufendenSpiel.length; i++) {
+				matiUtil.pushBefehl(function() {
+					document.getElementById('mati_frage_ergebnis_schaetzungen').getElementsByClassName('mati_frage_ergebnis_zeile')[i].classList.add('mati_eingeblendet');
+					setTimeout(matiUtil.gotoNaechsterBefehl, 500);
+				});
+			}
+			
+			
 			matiUtil.pushBefehl(function() {
-				//TODO Ergebnis-Animation zeigen
-				setTimeout(matiUtil.gotoNaechsterBefehl, 1000);
+				setTimeout(function() {
+					document.getElementById('mati_frage_ergebnis_tatsaechlich').classList.add('mati_eingeblendet');
+					
+					//TODO Ergebnis-Animation zeigen (Blinken bei allen die am naechsten dran waren, bei Volltreffer zusätzlich das Wort "Volltreffer" animieren)
+					setTimeout(matiUtil.gotoNaechsterBefehl, 4000);
+				}, 500);
 			});
 		}
 		
