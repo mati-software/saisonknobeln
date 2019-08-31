@@ -386,7 +386,7 @@
 			#mati_frage_ergebnis {
 				background-color: #BBB;
 			}
-			#mati_frage_ergebnis_schaetzungen_container {
+			#mati_frage_ergebnis_schaetzungen_container_container {
 				position: absolute;
 				top: 1em;
 				left: 1em;
@@ -395,6 +395,11 @@
 				border-radius: 1em;
 				padding: 1em .5em;
 				background-color: rgba(255, 255, 255, .9);
+			}
+			#mati_frage_ergebnis_schaetzungen_container {
+				position: relative;
+				width: 100%;
+				height: 100%;
 			}
 			#mati_frage_ergebnis_schaetzungen {
 				min-height: 100%;
@@ -406,6 +411,20 @@
 				display: flex;
 				align-items: center;
 				opacity: 0;
+				position: relative;
+			}
+			.mati_frage_ergebnis_zeile_gut_geraten {
+				position:absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+				bottom: 0;
+				opacity: 0;
+				animation-name: mati_animation_einblenden;
+				animation-duration: .5s;
+				animation-iteration-count: 6;
+				animation-direction: alternate;
+				animation-timing-function: ease-in-out;
 			}
 			.mati_frage_ergebnis_balken_container {
 				flex-grow: 1;
@@ -456,10 +475,10 @@
 			}
 			#mati_frage_ergebnis_tatsaechlich_container {
 				position: absolute;
-				top: 2.4em;
-				left: 11em;
-				right: 1em;
-				bottom: 1em;
+				top: 1.4em;
+				left: 10.5em;
+				right: .5em;
+				bottom: 0;
 			}
 			#mati_frage_ergebnis_tatsaechlich {
 				height: 100%;
@@ -560,21 +579,23 @@
 				</div>
 			</div>
 			<div id="mati_frage_ergebnis" class="mati_box">
-				<div id="mati_frage_ergebnis_schaetzungen_container">
-					<div id="mati_frage_ergebnis_tatsaechlich_container">
-						<div id="mati_frage_ergebnis_tatsaechlich">
-							<div id="mati_frage_ergebnis_strich">
-							</div>
-							<div id="mati_frage_ergebnis_tatsaechlich_label"></div>
-							<div id="mati_frage_ergebnis_tatsaechlich_box">
-								<div id="mati_frage_ergebnis_tatsaechlich_a"></div>
-								<div id="mati_frage_ergebnis_tatsaechlich_doppelpunkt">:</div>
-								<div id="mati_frage_ergebnis_tatsaechlich_b"></div>
+				<div id="mati_frage_ergebnis_schaetzungen_container_container">
+					<div id="mati_frage_ergebnis_schaetzungen_container">
+						<div id="mati_frage_ergebnis_tatsaechlich_container">
+							<div id="mati_frage_ergebnis_tatsaechlich">
+								<div id="mati_frage_ergebnis_strich">
+								</div>
+								<div id="mati_frage_ergebnis_tatsaechlich_label"></div>
+								<div id="mati_frage_ergebnis_tatsaechlich_box">
+									<div id="mati_frage_ergebnis_tatsaechlich_a"></div>
+									<div id="mati_frage_ergebnis_tatsaechlich_doppelpunkt">:</div>
+									<div id="mati_frage_ergebnis_tatsaechlich_b"></div>
+								</div>
 							</div>
 						</div>
-					</div>
 				
-					<div id="mati_frage_ergebnis_schaetzungen">
+						<div id="mati_frage_ergebnis_schaetzungen">
+						</div>
 					</div>
 				</div>
 			</div>

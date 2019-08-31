@@ -394,7 +394,7 @@ mati.neuesSpiel = function() {
 							</div>
 						`;
 					}).join('')}
-					<div class="mati_frage_ergebnis_platzhalter"></div>
+					<div id="mati_frage_ergebnis_platzhalter"></div>
 				`;
 				
 				document.getElementById('mati_frage_ergebnis_tatsaechlich_a').innerText = mati.tatsaechlicheAnzahlStimmenFuerA;
@@ -402,7 +402,10 @@ mati.neuesSpiel = function() {
 				
 				document.getElementById('mati_frage_ergebnis_tatsaechlich').style['width'] = (mati.tatsaechlicheAnzahlStimmenFuerA / (mati.tatsaechlicheAnzahlStimmenFuerA + mati.tatsaechlicheAnzahlStimmenFuerB) * 100) + '%';
 				
-				//TODO bei vielen spielern skalieren
+				document.getElementById('mati_frage_ergebnis_tatsaechlich').classList.remove('mati_eingeblendet');
+				
+				//bei vielen Spielern skalieren
+				matiUtil.schriftgroesseAnpassenDamitHoehePasst(document.getElementById("mati_frage_ergebnis_schaetzungen_container"), document.getElementById("mati_frage_ergebnis_schaetzungen"), true);
 				
 				mati.zeigeContainer(document.getElementById('mati_frage_ergebnis'), false, matiUtil.gotoNaechsterBefehl);
 			});
@@ -418,9 +421,39 @@ mati.neuesSpiel = function() {
 				setTimeout(function() {
 					document.getElementById('mati_frage_ergebnis_tatsaechlich').classList.add('mati_eingeblendet');
 					
-					//TODO Ergebnis-Animation zeigen (Blinken bei allen die am naechsten dran waren, bei Volltreffer zusätzlich das Wort "Volltreffer" animieren)
-					setTimeout(matiUtil.gotoNaechsterBefehl, 4000);
+					setTimeout(matiUtil.gotoNaechsterBefehl, 1000);
 				}, 500);
+			});
+			matiUtil.pushBefehl(function() {
+				let minimalerAbstand = mati.spielerImLaufendenSpiel.length;
+				for (let spieler of mati.spielerImLaufendenSpiel) {
+					let abstandBeiDiesemSpieler = Math.abs(spieler.schaetzungAFuerAktuelleFrage - mati.tatsaechlicheAnzahlStimmenFuerA);
+					if (abstandBeiDiesemSpieler < minimalerAbstand) {
+						minimalerAbstand = abstandBeiDiesemSpieler;
+					}
+				}
+				
+				let maximalMoeglicherAbstand = Math.max(mati.tatsaechlicheAnzahlStimmenFuerA, mati.tatsaechlicheAnzahlStimmenFuerB);
+				
+				//Punkte verteilen und die Spieler die am naechsten dran sind markieren
+				for (let spieler of mati.spielerImLaufendenSpiel) {
+					let abstandBeiDiesemSpieler = Math.abs(spieler.schaetzungAFuerAktuelleFrage - mati.tatsaechlicheAnzahlStimmenFuerA);
+					if (abstandBeiDiesemSpieler === minimalerAbstand) {
+						spieler.aktuellePunktzahl += mati.spielerImLaufendenSpiel.length;
+						if (abstandBeiDiesemSpieler === 0) {
+							spieler.aktuellePunktzahl += mati.spielerImLaufendenSpiel.length;
+						}
+						let spielerZeileElement = document.getElementById('mati_frage_ergebnis_zeile_id_' + spieler.id);
+						var gutGeratenElement = document.createElement("div");
+						gutGeratenElement.classList.add('mati_frage_ergebnis_zeile_gut_geraten');
+						gutGeratenElement.style['background-color'] = spieler.cssFarbe100;
+						spielerZeileElement.insertBefore(gutGeratenElement, spielerZeileElement.firstChild);
+					}
+					spieler.aktuellePunktzahl += maximalMoeglicherAbstand - abstandBeiDiesemSpieler;
+				}
+				
+				
+				setTimeout(matiUtil.gotoNaechsterBefehl, 3000);
 			});
 		}
 		

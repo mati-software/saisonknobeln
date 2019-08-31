@@ -78,14 +78,16 @@ matiUtil.htmlEscape = function(str) {
               .replace(/`/g, '&#96;');
 };
 
-matiUtil.schriftgroesseAnpassenDamitHoehePasst = function(container, content) {
-	content.style["font-size"] = '100%';
+matiUtil.schriftgroesseAnpassenDamitHoehePasst = function(container, content, isResizeParent) {
+	let resizeElement = isResizeParent ? container : content;
+	
+	resizeElement.style["font-size"] = '100%';
 	if (container.offsetHeight < content.offsetHeight) {
 		var neueSchriftgroesse = Math.floor(container.offsetHeight * 100 / content.offsetHeight);
 		if (neueSchriftgroesse < 1) {
 			neueSchriftgroesse = 1;
 		}
-		content.style["font-size"] = neueSchriftgroesse + '%';
+		resizeElement.style["font-size"] = neueSchriftgroesse + '%';
 	}
 };
 
