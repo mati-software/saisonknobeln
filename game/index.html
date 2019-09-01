@@ -386,7 +386,8 @@
 			#mati_frage_ergebnis {
 				background-color: #BBB;
 			}
-			#mati_frage_ergebnis_schaetzungen_container_container {
+			#mati_frage_ergebnis_schaetzungen_container_container,
+            #mati_punktestand_spielerliste_container_container {
 				position: absolute;
 				top: 1em;
 				left: 1em;
@@ -396,7 +397,8 @@
 				padding: 1em .5em;
 				background-color: rgba(255, 255, 255, .9);
 			}
-			#mati_frage_ergebnis_schaetzungen_container {
+			#mati_frage_ergebnis_schaetzungen_container,
+            #mati_punktestand_spielerliste_container {
 				position: relative;
 				width: 100%;
 				height: 100%;
@@ -407,11 +409,20 @@
 				flex-direction: column;
 				justify-content: space-between;
 			}
-			.mati_frage_ergebnis_zeile {
+			#mati_punktestand_spielerliste {
+				min-height: 100%;
+				display: flex;
+				flex-direction: column;
+				justify-content: space-evenly;
+			}
+			.mati_frage_ergebnis_zeile,
+            .mati_punktestand_zeile {
 				display: flex;
 				align-items: center;
-				opacity: 0;
 				position: relative;
+			}
+			.mati_frage_ergebnis_zeile {
+				opacity: 0;
 			}
 			.mati_frage_ergebnis_zeile_gut_geraten {
 				position:absolute;
@@ -426,7 +437,32 @@
 				animation-direction: alternate;
 				animation-timing-function: ease-in-out;
 			}
-			.mati_frage_ergebnis_balken_container {
+			@keyframes mati_animation_punkte_markierung {
+				from {
+					opacity: 0;
+					left: 5em;
+				}
+				to {
+					opacity: 1;
+					left: 9em;
+				}
+			}
+			.mati_frage_ergebnis_zeile .mati_neue_punkte_markierung {
+				position:absolute;
+				opacity: 0;
+				top: .1em;
+				left: 8em;
+				width:6em;
+				height:2em;
+				animation-name: mati_animation_punkte_markierung;
+				animation-duration: 2s;
+				animation-iteration-count: 1;
+				animation-fill-mode: forwards;
+				animation-delay: 3s;
+				z-index: 3;
+			}
+			.mati_frage_ergebnis_balken_container,
+			.mati_punktestand_balken_container {
 				flex-grow: 1;
 				height: 1.4em;
 				margin-left: .5em;
@@ -434,7 +470,8 @@
 				box-shadow: 0 0 .2em black;
 				position: relative;
 			}
-			.mati_frage_ergebnis_balken_zahlA {
+			.mati_frage_ergebnis_balken_zahlA,
+			.mati_punktestand_balken_zahl {
 				position:absolute;
 				left: .25em;
 				top: 0;
@@ -595,6 +632,14 @@
 						</div>
 				
 						<div id="mati_frage_ergebnis_schaetzungen">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="mati_punktestand" class="mati_box">
+				<div id="mati_punktestand_spielerliste_container_container">
+					<div id="mati_punktestand_spielerliste_container">
+						<div id="mati_punktestand_spielerliste">
 						</div>
 					</div>
 				</div>

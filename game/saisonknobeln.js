@@ -437,30 +437,79 @@ mati.neuesSpiel = function() {
 				
 				//Punkte verteilen und die Spieler die am naechsten dran sind markieren
 				for (let spieler of mati.spielerImLaufendenSpiel) {
+					let neuePunkte = 0;
+					let spielerZeileElement = document.getElementById('mati_frage_ergebnis_zeile_id_' + spieler.id);
 					let abstandBeiDiesemSpieler = Math.abs(spieler.schaetzungAFuerAktuelleFrage - mati.tatsaechlicheAnzahlStimmenFuerA);
 					if (abstandBeiDiesemSpieler === minimalerAbstand) {
-						spieler.aktuellePunktzahl += mati.spielerImLaufendenSpiel.length;
+						neuePunkte += mati.spielerImLaufendenSpiel.length;
 						if (abstandBeiDiesemSpieler === 0) {
-							spieler.aktuellePunktzahl += mati.spielerImLaufendenSpiel.length;
+							neuePunkte += mati.spielerImLaufendenSpiel.length;
 						}
-						let spielerZeileElement = document.getElementById('mati_frage_ergebnis_zeile_id_' + spieler.id);
-						var gutGeratenElement = document.createElement("div");
+						
+						//Blinken wenn nah dran
+						let gutGeratenElement = document.createElement("div");
 						gutGeratenElement.classList.add('mati_frage_ergebnis_zeile_gut_geraten');
 						gutGeratenElement.style['background-color'] = spieler.cssFarbe100;
 						spielerZeileElement.insertBefore(gutGeratenElement, spielerZeileElement.firstChild);
 					}
-					spieler.aktuellePunktzahl += maximalMoeglicherAbstand - abstandBeiDiesemSpieler;
+					neuePunkte += maximalMoeglicherAbstand - abstandBeiDiesemSpieler;
+					
+					spieler.aktuellePunktzahl += neuePunkte;
+					
+					//Neue Punkte in Markierung anzeigen
+					let neuePunkteMarkierung = document.createElement("div");
+					neuePunkteMarkierung.classList.add('mati_neue_punkte_markierung');
+					neuePunkteMarkierung.innerHTML = `
+						<svg viewbox="0 0 300 100">
+							<path d="M5 50 Q50 5 100 5 L250 5 Q295 5 295 50 Q295 95 250 95 L100 95 Q50 95 5 50 z" stroke-linejoin="round" fill="black" stroke="white" stroke-width="5" />
+							<text font-size="75px" x="175" y="75" fill="white" text-anchor="middle">+${neuePunkte}</text>
+						</svg>
+					`;
+					spielerZeileElement.appendChild(neuePunkteMarkierung);
+					
 				}
 				
-				
-				setTimeout(matiUtil.gotoNaechsterBefehl, 3000);
+				setTimeout(matiUtil.gotoNaechsterBefehl, 6000);
 			});
 		}
 		
+		//Punktestand anzeigen
+		matiUtil.pushBefehl(function() {
+			let maximaleNeuePunktzahl = 0;
+			for (let spieler of mati.spielerImLaufendenSpiel) {
+				if (spieler.aktuellePunktzahl > maximaleNeuePunktzahl) {
+					maximaleNeuePunktzahl = spieler.aktuellePunktzahl;
+				}
+			}
+			let sortierteSpieler = mati.spielerImLaufendenSpiel.slice().sort(function(spieler1, spieler2) {
+				return spieler2.schaetzungAFuerAktuelleFrage - spieler1.schaetzungAFuerAktuelleFrage;
+			});
+			document.getElementById('mati_punktestand_spielerliste').innerHTML = sortierteSpieler.map(function(knobelSpieler) {
+				return `
+					<div class="mati_punktestand_zeile" id="mati_punktestand_zeile_id_${knobelSpieler.id}">
+						${mati.renderSpieler(knobelSpieler)}
+						<div class="mati_punktestand_balken_container" style="background: ${knobelSpieler.cssFarbe50} linear-gradient(0deg, ${knobelSpieler.cssFarbe50}, ${knobelSpieler.cssFarbe30});">
+							<div class="mati_punktestand_balken" style="background: ${knobelSpieler.cssFarbeHell50} linear-gradient(0deg, ${knobelSpieler.cssFarbe100}, ${knobelSpieler.cssFarbeHell50}); width: ${knobelSpieler.altePunktzahl / maximaleNeuePunktzahl * 100}%">
+							</div>
+							<div class="mati_punktestand_balken_zahl">
+								${knobelSpieler.altePunktzahl}
+							</div>
+						</div>
+					</div>
+				`;
+			}).join('');
+			document.getElementById('mati_punktestand').style['background-image'] = `url(${mati.aktuelleRubrik.img.src})`;
+			mati.zeigeContainer(document.getElementById('mati_punktestand'), false, matiUtil.gotoNaechsterBefehl);
+		});
 		matiUtil.pushBefehl(function() {
 			//TODO zeige Zwischenstand (bei der Letzten Kategorie Endresultat)
+
+			//TODO mit animation-Frame langsam hochzaehlen
+			for (let spieler of mati.spielerImLaufendenSpiel) {
+				spieler.altePunktzahl = spieler.aktuellePunktzahl;
+			}
 			
-			matiUtil.gotoNaechsterBefehl();
+			setTimeout(matiUtil.gotoNaechsterBefehl, 6000);
 		});
 	}
 	matiUtil.pushBefehl(function() {
