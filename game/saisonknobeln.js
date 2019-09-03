@@ -9,7 +9,9 @@ var mati = {
 	queueEnthaeltLaufendesSpiel : false,
 	aktuellSichbarerContainer : null,
 	tatsaechlicheAnzahlStimmenFuerA : null,
-	tatsaechlicheAnzahlStimmenFuerB : null
+	tatsaechlicheAnzahlStimmenFuerB : null,
+	maximalePunktzahl : 0,
+	platzwechselVorhanden : false
 };
 
 mati.Spieler = class {
@@ -475,41 +477,103 @@ mati.neuesSpiel = function() {
 		
 		//Punktestand anzeigen
 		matiUtil.pushBefehl(function() {
-			let maximaleNeuePunktzahl = 0;
+			mati.maximalePunktzahl = 0;
 			for (let spieler of mati.spielerImLaufendenSpiel) {
-				if (spieler.aktuellePunktzahl > maximaleNeuePunktzahl) {
-					maximaleNeuePunktzahl = spieler.aktuellePunktzahl;
+				if (spieler.aktuellePunktzahl > mati.maximalePunktzahl) {
+					mati.maximalePunktzahl = spieler.aktuellePunktzahl;
 				}
 			}
+			let alteSortierungSpieler = mati.spielerImLaufendenSpiel.slice().sort(function(spieler1, spieler2) {
+				return spieler2.altePunktzahl - spieler1.altePunktzahl;
+			});
 			let sortierteSpieler = mati.spielerImLaufendenSpiel.slice().sort(function(spieler1, spieler2) {
-				return spieler2.schaetzungAFuerAktuelleFrage - spieler1.schaetzungAFuerAktuelleFrage;
+				return spieler2.aktuellePunktzahl - spieler1.aktuellePunktzahl;
 			});
 			document.getElementById('mati_punktestand_spielerliste').innerHTML = sortierteSpieler.map(function(knobelSpieler) {
 				return `
 					<div class="mati_punktestand_zeile" id="mati_punktestand_zeile_id_${knobelSpieler.id}">
 						${mati.renderSpieler(knobelSpieler)}
 						<div class="mati_punktestand_balken_container" style="background: ${knobelSpieler.cssFarbe50} linear-gradient(0deg, ${knobelSpieler.cssFarbe50}, ${knobelSpieler.cssFarbe30});">
-							<div class="mati_punktestand_balken" style="background: ${knobelSpieler.cssFarbeHell50} linear-gradient(0deg, ${knobelSpieler.cssFarbe100}, ${knobelSpieler.cssFarbeHell50}); width: ${knobelSpieler.altePunktzahl / maximaleNeuePunktzahl * 100}%">
+							<div class="mati_punktestand_balken" style="background: ${knobelSpieler.cssFarbeHell50} linear-gradient(0deg, ${knobelSpieler.cssFarbe100}, ${knobelSpieler.cssFarbeHell50}); width: ${knobelSpieler.altePunktzahl / mati.maximalePunktzahl * 100}%">
 							</div>
 							<div class="mati_punktestand_balken_zahl">
-								${knobelSpieler.altePunktzahl}
+								<span class="mati_punktestand_balken_zahl_wert">${knobelSpieler.altePunktzahl}</span> ${matiUtil.l10nHtml('Punkte')}
 							</div>
 						</div>
 					</div>
 				`;
 			}).join('');
 			document.getElementById('mati_punktestand').style['background-image'] = `url(${mati.aktuelleRubrik.img.src})`;
+			//TODO zoomen bevor ich positionen aendere
+			let domZeilenElemente = document.getElementById('mati_punktestand_spielerliste').getElementsByClassName('mati_punktestand_zeile');
+			mati.platzwechselVorhanden = false;
+			for (let neuePosition=0; neuePosition<sortierteSpieler.length; neuePosition++) {
+				let spieler = sortierteSpieler[neuePosition];
+				let altePosition = alteSortierungSpieler.indexOf(spieler);
+				if (altePosition !== neuePosition) {
+					mati.platzwechselVorhanden = true;
+				}
+				let topNeu = domZeilenElemente[neuePosition].offsetTop;
+				let topAlt = domZeilenElemente[altePosition].offsetTop;
+				domZeilenElemente[neuePosition].style['transform'] = `translateY(${topAlt - topNeu}px)`;
+			}
 			mati.zeigeContainer(document.getElementById('mati_punktestand'), false, matiUtil.gotoNaechsterBefehl);
 		});
 		matiUtil.pushBefehl(function() {
-			//TODO zeige Zwischenstand (bei der Letzten Kategorie Endresultat)
-
-			//TODO mit animation-Frame langsam hochzaehlen
-			for (let spieler of mati.spielerImLaufendenSpiel) {
-				spieler.altePunktzahl = spieler.aktuellePunktzahl;
+			//Umsortierungsanimaton vorbereiten
+			for (let domZeilenElement of document.getElementById('mati_punktestand_spielerliste').getElementsByClassName('mati_punktestand_zeile')) {
+				domZeilenElement.style['transition'] = 'transform 1s';
 			}
 			
-			setTimeout(matiUtil.gotoNaechsterBefehl, 6000);
+			//Punktzahl und Balken animieren
+			let punkteAnimationStartzeit;
+			function punkteAnimation(timestamp) {
+				if (!punkteAnimationStartzeit) {
+					punkteAnimationStartzeit = timestamp;
+				}
+				var progress = timestamp - punkteAnimationStartzeit;
+				
+				for (let spieler of mati.spielerImLaufendenSpiel) {
+					let darzustellendePunktzahl;
+					if (progress < 3000) {
+						darzustellendePunktzahl = spieler.altePunktzahl + ((spieler.aktuellePunktzahl - spieler.altePunktzahl) * progress / 3000);
+					}
+					else {
+						spieler.altePunktzahl = spieler.aktuellePunktzahl;
+						darzustellendePunktzahl = spieler.aktuellePunktzahl;
+					}
+					
+					let spielerZeileDomElement = document.getElementById('mati_punktestand_zeile_id_' + spieler.id);
+					spielerZeileDomElement.getElementsByClassName('mati_punktestand_balken')[0].style['width'] = darzustellendePunktzahl / mati.maximalePunktzahl * 100 + '%';
+					spielerZeileDomElement.getElementsByClassName('mati_punktestand_balken_zahl_wert')[0].innerText = Math.floor(darzustellendePunktzahl);
+				}
+				
+				if (progress < 3000) {
+					window.requestAnimationFrame(punkteAnimation);
+				}
+				else {
+					matiUtil.gotoNaechsterBefehl();
+				}
+			}
+
+			window.requestAnimationFrame(punkteAnimation);			
+		});
+		
+		matiUtil.pushBefehl(function() {
+			if (mati.platzwechselVorhanden) {
+				//umsortieren
+				for (let domZeilenElement of document.getElementById('mati_punktestand_spielerliste').getElementsByClassName('mati_punktestand_zeile')) {
+					domZeilenElement.style['transform'] = 'translateY(0px)';
+				}
+			
+				setTimeout(matiUtil.gotoNaechsterBefehl, 1000);
+			}
+			else {
+				matiUtil.gotoNaechsterBefehl();
+			}
+		});
+		matiUtil.pushBefehl(function() {
+			setTimeout(matiUtil.gotoNaechsterBefehl, 3000);
 		});
 	}
 	matiUtil.pushBefehl(function() {
@@ -607,10 +671,6 @@ mati.spielerChanged = function() {
 	
 	mati.renderLobbySpielerListe(document.getElementById('mati_spiel_spielerliste_content'), mati.spielerImLaufendenSpiel);
 	mati.renderLobbySpielerListe(document.getElementById('mati_spiel_spielerwarteliste_content'), mati.spielerAufWarteliste);
-	
-	console.log(Tiltspot.get.users());
-	console.log('mati.spielerImLaufendenSpiel', mati.spielerImLaufendenSpiel);
-	console.log('mati.spielerAufWarteliste', mati.spielerAufWarteliste);
 };
 
 mati.renderLobbySpielerListe = function(container, knobelSpielerListe) {
