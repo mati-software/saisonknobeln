@@ -239,6 +239,16 @@ mati.neuesSpiel = function() {
 	matiUtil.pushBefehl(function() {
 		mati.spielLaeuft = true;
 		mati.aktuelleRubrik = null;
+		
+		for (let spieler of mati.spielerImLaufendenSpiel) {
+			spieler.altePunktzahl = 0;
+			spieler.aktuellePunktzahl = 0;
+			spieler.antwortAufAktuelleFrage = null;
+			spieler.schaetzungAFuerAktuelleFrage = null;
+			spieler.schaetzungBFuerAktuelleFrage = null;
+			spieler.lastMsg = null;
+		}
+		
 		mati.broadcast('zeigeWarten');
 		
 		document.getElementById('mati_frage_spieler').innerHTML = mati.spielerImLaufendenSpiel.map(mati.renderSpieler).join('');
@@ -367,10 +377,8 @@ mati.neuesSpiel = function() {
 					}
 				}
 				
-				//TODO zeige Frage-Ergebnis
 				document.getElementById('mati_frage_ergebnis').style['background-image'] = `url(${mati.aktuelleRubrik.img.src})`;
 				
-				//TODO richtigen Wert einfuegen (zumindest wenn er nicht 100% richtig geraten wurde) und beim berechnen vom platzbedarf auch mit beachten
 				let sortierteSpieler = mati.spielerImLaufendenSpiel.slice().sort(function(spieler1, spieler2) {
 					return spieler2.schaetzungAFuerAktuelleFrage - spieler1.schaetzungAFuerAktuelleFrage;
 				});
@@ -486,9 +494,18 @@ mati.neuesSpiel = function() {
 			let alteSortierungSpieler = mati.spielerImLaufendenSpiel.slice().sort(function(spieler1, spieler2) {
 				return spieler2.altePunktzahl - spieler1.altePunktzahl;
 			});
+			//FIXME: ich will nicht, dass der bei Punktgleichstand nach der Spielernummer sortiert... stattdessen sollte die alte Reihenfolge beibehalten werden
+			//       idee: im spieler-objekt die position speichern und die "alte" position mit als zweitrangiges sortierkriterium aufnehmen
+			//       alternative: die spieler im spiel tatsaechlich umsortieren (haette auswirkung auf status bei frage-anzeige usw.)
+			//       alternative: ne 2. liste im mati-objekt, dann muesste ich auch seltener clonen
 			let sortierteSpieler = mati.spielerImLaufendenSpiel.slice().sort(function(spieler1, spieler2) {
 				return spieler2.aktuellePunktzahl - spieler1.aktuellePunktzahl;
 			});
+			
+			document.getElementById('mati_punktestand_spielerliste_container_container').classList.remove('mati_punktestand_endresultat');
+			
+			document.getElementById('mati_punktestand_ueberschrift').innerText = matiUtil.l10n(mati.aktuelleRubrik === mati.rubriken[mati.rubriken.length - 1] ? 'Endresultat' : 'Zwischenstand');
+			
 			document.getElementById('mati_punktestand_spielerliste').innerHTML = sortierteSpieler.map(function(knobelSpieler) {
 				return `
 					<div class="mati_punktestand_zeile" id="mati_punktestand_zeile_id_${knobelSpieler.id}">
@@ -504,7 +521,11 @@ mati.neuesSpiel = function() {
 				`;
 			}).join('');
 			document.getElementById('mati_punktestand').style['background-image'] = `url(${mati.aktuelleRubrik.img.src})`;
-			//TODO zoomen bevor ich positionen aendere
+			
+			//bei vielen Spielern skalieren
+			matiUtil.schriftgroesseAnpassenDamitHoehePasst(document.getElementById("mati_punktestand_spielerliste_container"), document.getElementById("mati_punktestand_spielerliste"));
+			
+			//Spieler zunachst an alte Position umpositionieren
 			let domZeilenElemente = document.getElementById('mati_punktestand_spielerliste').getElementsByClassName('mati_punktestand_zeile');
 			mati.platzwechselVorhanden = false;
 			for (let neuePosition=0; neuePosition<sortierteSpieler.length; neuePosition++) {
@@ -572,15 +593,21 @@ mati.neuesSpiel = function() {
 				matiUtil.gotoNaechsterBefehl();
 			}
 		});
-		matiUtil.pushBefehl(function() {
-			setTimeout(matiUtil.gotoNaechsterBefehl, 3000);
-		});
+		if (rubrik === mati.rubriken[mati.rubriken.length - 1]) {
+			matiUtil.pushBefehl(function() {
+				document.getElementById('mati_punktestand_spielerliste_container_container').classList.add('mati_punktestand_endresultat');
+				//TODO smartphne-weiterutton zeigen
+				mati.broadcast('zeigeSpielAbschliessen');
+				//matiUtil.gotoNaechsterBefehl();
+			});
+		}
+		else {
+			//ist nur Zwischenstand, nach kurzer Wartezeit geht es daher automatisch weiter
+			matiUtil.pushBefehl(function() {
+				setTimeout(matiUtil.gotoNaechsterBefehl, 4000);
+			});
+		}
 	}
-	matiUtil.pushBefehl(function() {
-		//TODO zeige Sieger
-		
-		matiUtil.gotoNaechsterBefehl();
-	});
 	matiUtil.pushBefehl(function() {
 		mati.spielLaeuft = false;
 		mati.queueEnthaeltLaufendesSpiel = false;

@@ -387,7 +387,7 @@
 				background-color: #BBB;
 			}
 			#mati_frage_ergebnis_schaetzungen_container_container,
-            #mati_punktestand_spielerliste_container_container {
+			#mati_punktestand_spielerliste_container_container {
 				position: absolute;
 				top: 1em;
 				left: 1em;
@@ -397,11 +397,58 @@
 				padding: 1em .5em;
 				background-color: rgba(255, 255, 255, .9);
 			}
-			#mati_frage_ergebnis_schaetzungen_container,
-            #mati_punktestand_spielerliste_container {
+			@keyframes mati_animation_endresultat {
+				0% {
+					border-color: #FF0000;
+				}
+				16.66% {
+					border-color: #FFFF00;
+				}
+				33.33% {
+					border-color: #00FF00;
+				}
+				50% {
+					border-color: #00FFFF;
+				}
+				66.66% {
+					border-color: #0000FF;
+				}
+				83.33% {
+					border-color: #FF00FF;
+				}
+				100% {
+					border-color: #FF0000;
+				}
+			}
+			#mati_punktestand_spielerliste_container_container.mati_punktestand_endresultat {
+				top: .5em;
+				left: .5em;
+				right: .5em;
+				bottom: .5em;
+				border-radius: 1.5em;
+				border-width: .5em;
+				border-style: solid;
+				animation-name: mati_animation_endresultat;
+				animation-duration: 6s;
+				animation-iteration-count: infinite;
+				animation-timing-function: linear;
+			}
+			#mati_punktestand_ueberschrift {
+				font-size: 200%;
+				line-height: 1.5em;
+				vertical-align: middle;
+				text-align: center;
+				font-weight: bold;
+			}
+			#mati_frage_ergebnis_schaetzungen_container {
 				position: relative;
 				width: 100%;
 				height: 100%;
+			}
+            #mati_punktestand_spielerliste_container {
+				position: relative;
+				width: 100%;
+				height: calc(100% - 3em);
 			}
 			#mati_frage_ergebnis_schaetzungen {
 				min-height: 100%;
@@ -639,6 +686,8 @@
 			</div>
 			<div id="mati_punktestand" class="mati_box">
 				<div id="mati_punktestand_spielerliste_container_container">
+					<div id="mati_punktestand_ueberschrift">
+					</div>
 					<div id="mati_punktestand_spielerliste_container">
 						<div id="mati_punktestand_spielerliste">
 						</div>
@@ -653,6 +702,9 @@
 		<script src="https://tiltspot.tv/api/game/game-1.0.0.js" rel="script" type="application/javascript"></script>
 		<script src="saisonknobeln.js" rel="script" type="application/javascript"></script>
 		<script>
+			//TODO pausemenue implementieren
+			//TODO booleanparameter aus zeigeContainer-Methode ist ueberfluessig
+		
 			Tiltspot.on.ready = function() {
 				console.log('ready');
 				mati.setSpracheCode('en');
@@ -698,6 +750,9 @@
 						mati.gotoNaechsterBefehlFallsAlleAntwortenAbgegebenWurden();
 						//Nochmal Wartebefehl senden, damit bei Smartphone-Browser-Reload keine erneute Stimmabgabe moeglich ist
 						mati.sendMsg(controllerId, 'zeigeWarten');
+						break;
+					case 'spielAbschliessen':
+						matiUtil.gotoNaechsterBefehl();
 						break;
 				}
 			};				

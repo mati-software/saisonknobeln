@@ -8,5 +8,8 @@
 	"Schätze wie viele Spieler (inklusive Du selbst) für die jeweilige Antwortmöglichkeit gestimmt haben!" : "Guess how many players (including yourself) have voted for each answer!",
 	"Wähle eine Antwort! Halte Deine Wahl vor den anderen Spielern geheim!" : "Choose an answer! Keep your choice secret from the other players!",
 	"Tatsächliche Aufteilung" : "Actual distribution",
-	"Punkte" : "points"
+	"Punkte" : "points",
+	"Endresultat" : "Final result",
+	"Zwischenstand" : "Score so far",
+	"Spiel abschließen" : "End game"
 }

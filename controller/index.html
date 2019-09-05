@@ -359,6 +359,9 @@
 					<div id="mati_flaggen_container">
 					</div>
 				</div>
+				<div id="mati_spiel_abschliessen" class="mati_box">
+					<div class="mati_button" id="mati_button_spiel_abschliessen"></div>
+				</div>
 				<div id="mati_pausemenue" class="mati_box">
 					<div class="mati_button" id="mati_button_spiel_fortsetzen"></div>
 					<div class="mati_button" id="mati_button_spiel_abbrechen"></div>
@@ -408,6 +411,10 @@
 		<script src="matiFarbutil.js" rel="script" type="application/javascript"></script>
 		<script src='https://tiltspot.tv/api/controller/controller-1.0.0.js' rel='script' type='application/javascript'></script>
 		<script>
+			//TODO ich koennte versuchen einzelne boxen komplett auszublenden damit es nicht mehr so ruckelt
+			//TODO schieberegler auch bei touch/wischen auf Regler veraendern
+			
+			
 			var mati = {
 				farbe : matiFarbutil.WEISS,
 				spracheCode : null,
@@ -579,6 +586,8 @@
 								document.getElementById('mati_button_spiel_fortsetzen').innerText = matiUtil.l10n('Spiel fortsetzen');
 								document.getElementById('mati_button_spiel_abbrechen').innerText = matiUtil.l10n('Laufendes Spiel abbrechen');
 								
+								document.getElementById('mati_button_spiel_abschliessen').innerText = matiUtil.l10n('Spiel abschließen');
+								
 								document.getElementById('mati_schaetzung_text').innerText = matiUtil.l10n('Schätze wie viele Spieler (inklusive Du selbst) für die jeweilige Antwortmöglichkeit gestimmt haben!');
 								document.getElementById('mati_button_schaetzung_submit').innerText = matiUtil.l10n('OK');
 								
@@ -610,6 +619,11 @@
 						
 						matiUtil.pushBefehl(function() {
 							mati.zeigeContainer(document.getElementById('mati_antwortmoeglichkeiten'), false, matiUtil.gotoNaechsterBefehl);
+						});
+						break;
+					case 'zeigeSpielAbschliessen':
+						matiUtil.pushBefehl(function() {
+							mati.zeigeContainer(document.getElementById('mati_spiel_abschliessen'), false, matiUtil.gotoNaechsterBefehl);
 						});
 						break;
 				}
@@ -726,6 +740,9 @@
 								matiUtil.pushBefehl(function() {
 									mati.zeigeContainer(document.getElementById('mati_wartebild'), false, matiUtil.gotoNaechsterBefehl);
 								});
+								break;
+							case 'mati_button_spiel_abschliessen':
+								Tiltspot.send.msg('spielAbschliessen');
 								break;
 						}
 					}
