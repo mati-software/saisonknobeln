@@ -20,7 +20,7 @@
 			"answers" : ["Walnüsse", "Haselnüsse"]
 		},
 		{
-			"text" : "Gehören Pilze auf eine gute Pizza?",
+			"text" : "Isst du gerne Pilze?",
 			"answers" : ["Ja", "Nein"]
 		},
 		{
@@ -34,13 +34,31 @@
 		},
 		{
 			"text" : "Welche Filmreihe ist besser: 'Halloween' oder 'Freitag der 13.'?",
-			"answers" : ["Halloween", "Freitag der 13."]
+			"answers" : ["Halloween", "Freitag der 13."],
+			"img" : "jack-o-lantern.jpg"
 		},
 		
 		{
 			"text" : "Besitzt Du mehr als einen Schirm?",
 			"answers" : ["Ja", "Nein"],
 			"img" : "schirme.jpg"
+		},
+		{
+			"text" : "Hast du in den letzten 12 Monaten selbst gepfücktes Obst gegessen?",
+			"answers" : ["Ja", "Nein"],
+			"img" : "aepfel.jpg"
+		},
+		{
+			"text" : "Hast du in den letzten 12 Monaten Kastanien gegessen?",
+			"answers" : ["Ja", "Nein"]
+		},
+		{
+			"text" : "Hast du schon mal ein Vogelhäuschen gebaut?",
+			"answers" : ["Ja", "Nein"]
+		},
+		{
+			"text" : "Bist du gegen irgend eine Nuss-Sorte allergisch?",
+			"answers" : ["Ja", "Nein"]
 		}
 	]
 }

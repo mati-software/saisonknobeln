@@ -8,10 +8,11 @@
 		},
 		{
 			"text" : "Ist die Zeitumstellung auf Sommerzeit eine gute Sache?",
-			"answers" : ["Ja", "Nein"]
+			"answers" : ["Ja", "Nein"],
+			"img" : "uhr.jpg"
 		},
 		{
-			"text" : "Kräuter aus dem eigenen Kräuter-Garten?",
+			"text" : "Hast du schon mal Kräuter aus deinem eigenen Kräuter-Garten gegessen?",
 			"answers" : ["Ja", "Nein"]
 		},
 		{
@@ -34,6 +35,32 @@
 		{
 			"text" : "'Berlinale' oder 'Filmfestspiele von Cannes'?",
 			"answers" : ["Berlinale", "Filmfestspiele von Cannes"]
+		},
+		
+		{
+			"text" : "Hast du in den letzten 12 Monaten selbst Blumen gepflückt?",
+			"answers" : ["Ja", "Nein"],
+			"img" : "rose.jpg"
+		},
+		{
+			"text" : "Hast du schon mal selbst Ostereier bemalt?",
+			"answers" : ["Ja", "Nein"]
+		},
+		{
+			"text" : "Bist du gegen Pollen allergisch?",
+			"answers" : ["Ja", "Nein"]
+		},
+		{
+			"text" : "Isst du gerne Spargel?",
+			"answers" : ["Ja", "Nein"]
+		},
+		{
+			"text" : "Hast du in den letzten 12 Monaten Rhabarber gegessen?",
+			"answers" : ["Ja", "Nein"]
+		},
+		{
+			"text" : "Hast du, als zuletzt 1. April war, einen Aprilscherz gemacht?",
+			"answers" : ["Ja", "Nein"]
 		}
 	]
 }

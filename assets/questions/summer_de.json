@@ -51,7 +51,22 @@
 			"text" : "Bei Städtetripps lieber Sightseeing oder shoppen gehen?",
 			"answers" : ["Sightseeing", "Shoppen"],
 			"img" : "brandenburger_tor.jpg"
+		},
+		{
+			"text" : "Hast du schon mal beim Bau eines Baumhauses mitgewirkt?",
+			"answers" : ["Ja", "Nein"]
+		},
+		{
+			"text" : "Besitzt du eine Sonnenbrille?",
+			"answers" : ["Ja", "Nein"]
+		},
+		{
+			"text" : "Besitzt du Flipflops?",
+			"answers" : ["Ja", "Nein"]
+		},
+		{
+			"text" : "Wurdest du schon mal im Urlaub bestohlen?",
+			"answers" : ["Ja", "Nein"]
 		}
-		
 	]
 }

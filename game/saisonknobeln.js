@@ -82,6 +82,7 @@ mati.setSpracheCode = function(neuerSpracheCode) {
 					}
 					return frageMitImgObj;
 				});
+				matiUtil.shuffleArray(rubrik.fragen);
 				rubrik.name = data.name;
 				anzahlGeladeneRubriken++;
 				if (anzahlGeladeneRubriken === mati.rubriken.length) {

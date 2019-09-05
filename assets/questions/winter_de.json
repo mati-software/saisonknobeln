@@ -7,7 +7,7 @@
 			"img" : "bunte_weihnachtsbeleuchtung.jpg"
 		},
 		{
-			"text" : "Ist Glüwein genießbar?",
+			"text" : "Trinkst du gerne Glüwein?",
 			"answers" : ["Ja", "Nein"]
 		},
 		{
@@ -47,6 +47,14 @@
 		
 		{
 			"text" : "Hast du schon mal beim Bau eines Iglos mitgewirkt?",
+			"answers" : ["Ja", "Nein"]
+		},
+		{
+			"text" : "Hattest du dir zum Jahreswechsel einen Vorsatz für das aktuell laufende Jahr vorgenommen?",
+			"answers" : ["Ja", "Nein"]
+		},
+		{
+			"text" : "Bist du schon mal Ski gefahren?",
 			"answers" : ["Ja", "Nein"]
 		}
 	]
