@@ -6,8 +6,8 @@
             "answers": ["white wine", "red wine"]
         },
         {
-            "text": "Costuming on Halloween or not costuming?",
-            "answers": ["costume", "not costuming"],
+            "text": "Dress up for Halloween?",
+            "answers": ["yes", "no"],
             "img": "jack-o-lantern.jpg"
         },
         {
