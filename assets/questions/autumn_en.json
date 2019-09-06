@@ -1,37 +1,76 @@
 {
-	"name" : "Herbst",
-	"questions" : [
-		{
-			"text" : "Weißwein oder Rotwein?",
-			"answers" : ["Weißwein", "Rotwein"]
-		},
-		{
-			"text" : "An Halloween kostümieren oder nicht kostümieren?",
-			"answers" : ["kostümieren", "nicht kostümieren"]
-		},
-		{
-			"text" : "Äpfel lieber süß oder sauer?",
-			"answers" : ["süß", "sauer"]
-		},
-		{
-			"text" : "Walnüsse oder Haselnüsse?",
-			"answers" : ["Walnüsse", "Haselnüsse"]
-		},
-		{
-			"text" : "Gehören Pilze auf eine gute Pizza?",
-			"answers" : ["Ja", "Nein"]
-		},
-		{
-			"text" : "Am 11.11. Karneval oder Sankt Martin?",
-			"answers" : ["Karneval", "Sankt Martin"]
-		},
-		{
-			"text" : "Sind Windräder eine gute Sache?",
-			"answers" : ["Ja", "Nein"]
-		},
-		{
-			"text" : "Welche Filmreihe ist besser: 'Halloween' oder 'Freitag der 13.'?",
-			"answers" : ["Halloween", "Freitag der 13."]
-		}
-	]
+    "name": "autumn",
+    "questions":[
+        {
+            "text": "White wine or red wine?",
+            "answers": ["white wine", "red wine"]
+        },
+        {
+            "text": "Costuming on Halloween or not costuming?",
+            "answers": ["costume", "not costuming"],
+            "img": "jack-o-lantern.jpg"
+        },
+        {
+            "text": "Apples sweet or sour?",
+            "answers": ["sweet", "sour"],
+            "img": "aepfel.jpg"
+        },
+        {
+            "text": "Walnuts or hazelnuts?",
+            "answers": ["walnuts", "hazelnuts"]
+        },
+        {
+            "text": "Do you like mushrooms?",
+            "answers": ["yes", "no"]
+        },
+        {
+            "text": "On November 11 carnival or St. Martin's day?",
+            "answers": ["Carnival", "St. Martin's day?"]
+        },
+        {
+            "text": "Are wind turbines a good thing?",
+            "answers": ["yes", "no"],
+            "img": "windraeder.jpg"
+        },
+        {
+            "text": "Which film series is better: 'Halloween' or 'Friday the 13th'?",
+            "answers": ["Halloween", "Friday the 13th"],
+            "img": "jack-o-lantern.jpg"
+        },
+
+        {
+            "text": "Do you have more than one umbrella?",
+            "answers": ["yes", "no"],
+            "img": "schirme.jpg"
+        },
+        {
+            "text": "Did you eat self-picked fruit in the last 12 months?",
+            "answers": ["yes", "no"],
+            "img": "aepfel.jpg"
+        },
+        {
+            "text": "Did you eat chestnuts in the last 12 months?",
+            "answers": ["yes", "no"]
+        },
+        {
+            "text": "Have you ever built a birdhouse?",
+            "answers": ["yes", "no"]
+        },
+        {
+            "text": "Are you allergic to any kind of nuts?",
+            "answers": ["yes", "no"]
+        },
+        {
+            "text": "Have you ever carved a pumpkin for decoration?",
+            "answers": ["yes", "no"]
+        },
+        {
+            "text": "Do you own rubber boots?",
+            "answers": ["yes", "no"]
+        },
+        {
+            "text": "Have you ever cooked jam yourself?",
+            "answers": ["yes", "no"]
+        }
+    ]
 }
