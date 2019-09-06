@@ -59,6 +59,18 @@
 		{
 			"text" : "Bist du gegen irgend eine Nuss-Sorte allergisch?",
 			"answers" : ["Ja", "Nein"]
+		},
+		{
+			"text" : "Hast du schon mal an einem Kürbis zu Dekorationszwecken geschnitzt?",
+			"answers" : ["Ja", "Nein"]
+		},
+		{
+			"text" : "Besitzt du Gummistiefel?",
+			"answers" : ["Ja", "Nein"]
+		},
+		{
+			"text" : "Hast du schon mal selbst Marmelade eingekocht?",
+			"answers" : ["Ja", "Nein"]
 		}
 	]
 }
