@@ -1,37 +1,66 @@
 {
-	"name" : "Frühling",
-	"questions" : [
-		{
-			"text" : "Tulpen oder Rosen?",
-			"answers" : ["Tulpen", "Rosen"]
-		},
-		{
-			"text" : "Ist die Zeitumstellung auf Sommerzeit eine gute Sache?",
-			"answers" : ["Ja", "Nein"]
-		},
-		{
-			"text" : "Kräuter aus dem eigenen Kräuter-Garten?",
-			"answers" : ["Ja", "Nein"]
-		},
-		{
-			"text" : "Fasten in der Fastenzeit?",
-			"answers" : ["Ja", "Nein"]
-		},
-		{
-			"text" : "Zum Karneval kostümieren oder nicht kostümieren?",
-			"answers" : ["kostümieren", "nicht kostümieren"]
-		},
-		{
-			"text" : "Welche Liebeskomödie ist besser, 'Harry und Sally' oder 'Tatsächlich Liebe'?",
-			"answers" : ["Harry und Sally", "Tatsächlich Liebe"]
-		},
-		{
-			"text" : "Kirchenbesuch an Ostern?",
-			"answers" : ["Ja", "Nein"]
-		},
-		{
-			"text" : "'Berlinale' oder 'Filmfestspiele von Cannes'?",
-			"answers" : ["Berlinale", "Filmfestspiele von Cannes"]
-		}
-	]
+    "name": "spring",
+    "questions" : [
+        {
+            "text": "Tulips or roses?",
+            "answers": ["tulips", "roses"],
+            "img": "rose.jpg"
+        },
+        {
+            "text": "Is the daylight-saving time good thing?",
+            "answers": ["yes", "no"],
+            "img": "uhr.jpg"
+        },
+        {
+            "text": "Have you ever had herbs from your own herb garden?",
+            "answers": ["yes", "no"]
+        },
+        {
+            "text": "Fasting in Lent?",
+            "answers": ["yes", "no"]
+        },
+        {
+            "text": "Dress up for carnival?",
+            "answers": ["yes", "no"]
+        },
+        {
+            "text": "Which romantic comedy is better, 'When Harry Met Sally' or 'Love Actually'?",
+            "answers": ["When Harry Met Sally", "Love Actually"]
+        },
+        {
+            "text": "Church attendance at Easter?",
+            "answers": ["yes", "no"],
+            "img": "kirche.jpg"
+        },
+        {
+            "text": "'Berlinale' or 'Cannes Film Festival'?",
+            "answers": ["Berlinale", "Cannes Film Festival"]
+        },
+
+        {
+            "text": "Did you pick flowers yourself in the last 12 months?",
+            "answers": ["yes", "no"],
+            "img": "rose.jpg"
+        },
+        {
+            "text": "Have you ever painted Easter eggs yourself?",
+            "answers": ["yes", "no"]
+        },
+        {
+            "text": "Are you allergic to pollen?",
+            "answers": ["yes", "no"]
+        },
+        {
+            "text": "Do you like asparagus?",
+            "answers": ["yes", "no"]
+        },
+        {
+            "text": "Did you eat rhubarb in the last 12 months?",
+            "answers": ["yes", "no"]
+        },
+        {
+            "text": "On last April 1st, did you do an April Fool's joke?",
+            "answers": ["yes", "no"]
+        }
+    ]
 }
