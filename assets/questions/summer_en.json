@@ -1,41 +1,72 @@
 {
-	"name" : "Sommer",
-	"questions" : [
+	"name": "summer",
+	"questions": [
 		{
-			"text" : "Schokoeis oder Vanilleeis?",
-			"answers" : ["Schokoeis", "Vanilleeis"]
+			"text": "Chocolate ice cream or vanilla ice cream?",
+			"answers": ["chocolate", "vanilla"]
 		},
 		{
-			"text" : "Badebekleidung für Frauen: Badeanzug oder Bikini?",
-			"answers" : ["Badeanzug", "Bikini"]
+			"text": "Swimwear for women: swimsuit or bikini?",
+			"answers": ["swimsuit", "bikini"],
+			"img": "pool.jpg"
 		},
 		{
-			"text" : "Schwimmbad oder Badesee?",
-			"answers" : ["Schwimmbad", "Badesee"]
+			"text": "Swimming in a pool or in a lake?",
+			"answers": ["pool", "lake"],
+			"img": "pool.jpg"
 		},
 		{
-			"text" : "Strandurlaub oder Urlaub in den Bergen?",
-			"answers" : ["Strandurlaub", "Urlaub in den Bergen"]
+			"text": "Beach holiday or vacation in the mountains?",
+			"answers": ["beach holiday", "vacation in the mountains"],
+			"img": "meer.jpg"
 		},
 		{
-			"text" : "Als Mann bei heißem Wetter oberkörperfrei draußen rum rennen?",
-			"answers" : ["Ja", "Nein"]
+			"text": "Is it OK for a man to be shirtless in pubilc during hot weather?",
+			"answers": ["yes", "no"]
 		},
 		{
-			"text" : "Olympische Sommerspiele oder Fußball-WM?",
-			"answers" : ["Olympische Sommerspiele", "Fußball-WM"]
+			"text": "Summer Olympics or World Cup?",
+			"answers": ["Summer Olympics", "World Cup"]
 		},
 		{
-			"text" : "Lieber Tageshöchsttemperatur von 25°C oder von 35°C?",
-			"answers" : ["25°C", "35°C"]
+			"text": "Do you prefer a daily maximum temperature of 25 ° C or 35 ° C?",
+			"answers": ["25 ° C", "35 ° C"],
+			"img": "pool.jpg"
 		},
 		{
-			"text" : "Im Schwimmbad die meiste Zeit im Wasser verbringen oder die meiste Zeit in der Sonne liegen?",
-			"answers" : ["Zeit im Wasser verbringen", "In der Sonne liegen"]
+			"text": "Visiting a lido: spend most of the time in the water or most of the time lying in the sun?",
+			"answers": ["in the water", "lying in the sun"],
+			"img": "pool.jpg"
 		},
 		{
-			"text" : "Zitronenlimonade oder Orangenlimonade?",
-			"answers" : ["Zitronenlimonade", "Orangenlimonade"]
+			"text": "Lemonade or orange soda?",
+			"answers": ["lemonade", "orange soda"]
+		},
+
+		{
+			"text": "Did you attend a picnic in the last 12 months?",
+			"answers": ["yes", "no"]
+		},
+		{
+			"text": "If you are on a city trip, do you prefer sightseeing or shopping?",
+			"answers": ["sightseeing", "shopping"],
+			"img": "brandenburger_tor.jpg"
+		},
+		{
+			"text": "Have you ever worked on the construction of a tree house?",
+			"answers": ["yes", "no"]
+		},
+		{
+			"text": "Do you own sunglasses?",
+			"answers": ["yes", "no"]
+		},
+		{
+			"text": "Do you own flip flops?",
+			"answers": ["yes", "no"]
+		},
+		{
+			"text": "Have you ever been robbed on vacation?",
+			"answers": ["yes", "no"]
 		}
 	]
 }
