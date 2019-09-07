@@ -100,11 +100,9 @@ mati.setSpracheCode = function(neuerSpracheCode) {
 	});
 	//HTML rendern
 	matiUtil.pushBefehl(function() {
-		document.getElementById('mati_spiel_lobby').innerHTML = `
-			<h1>Saisonknobeln</h1>
-			
-			<div id="mati_spiel_joincode_container">${matiUtil.l10nHtml('Join-Code')}: <span id="mati_spiel_joincode">${matiUtil.htmlEscape(Tiltspot.get.entryCode())}</span></div>
-			
+		//TODO joincode erstmal weggelassen
+		//<div id="mati_spiel_joincode_container">${matiUtil.l10nHtml('Join-Code')}: <span id="mati_spiel_joincode">${matiUtil.htmlEscape(Tiltspot.get.entryCode())}</span></div>
+		document.getElementById('mati_spiel_lobby_content').innerHTML = `
 			<div id="mati_spiel_spielerliste_container">
 				<div id="mati_spiel_spielerliste">
 					<div id="mati_spiel_spielerliste_caption">
@@ -188,9 +186,10 @@ mati.zeigeContainer = function(containerElement, rueckwaerts, callback) {
 	containerElement.style['visibility'] = 'visible';
 	containerElement.classList.remove('mati_box_hide');
 	containerElement.classList.remove('mati_box_hide_back');
-	containerElement.classList.add(rueckwaerts ? 'mati_box_show_back' : 'mati_box_show');
-	
+
 	if (mati.aktuellSichbarerContainer !== null) {
+		containerElement.classList.add(rueckwaerts ? 'mati_box_show_back' : 'mati_box_show');
+	
 		mati.aktuellSichbarerContainer.classList.remove('mati_box_show');
 		mati.aktuellSichbarerContainer.classList.remove('mati_box_show_back');
 		mati.aktuellSichbarerContainer.classList.add(rueckwaerts ? 'mati_box_hide_back' : 'mati_box_hide');

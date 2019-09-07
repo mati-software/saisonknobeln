@@ -756,8 +756,10 @@
 					}
 				}
 				
-				mati.buttonMitFokus.classList.remove('mati_button_focus');
-				mati.buttonMitFokus = null;
+				if (mati.buttonMitFokus) {
+					mati.buttonMitFokus.classList.remove('mati_button_focus');
+					mati.buttonMitFokus = null;
+				}
 				
 			});
 			document.addEventListener('touchmove', function (event) {
@@ -773,7 +775,7 @@
 							&& event.changedTouches[0].clientY >= boundingClientRect.top
 							&& event.changedTouches[0].clientY <= boundingClientRect.bottom;
 
-				if (!ueberButton) {
+				if (!ueberButton && mati.buttonMitFokus) {
 					mati.buttonMitFokus.classList.remove('mati_button_focus');
 					mati.buttonMitFokus = null;
 					
@@ -781,8 +783,10 @@
 			});
 			document.addEventListener('pointercancel', function (event) {
 				
-				mati.buttonMitFokus.classList.remove('mati_button_focus');
-				mati.buttonMitFokus = null;
+				if (mati.buttonMitFokus) {
+					mati.buttonMitFokus.classList.remove('mati_button_focus');
+					mati.buttonMitFokus = null;
+				}
 				
 			});
 			
