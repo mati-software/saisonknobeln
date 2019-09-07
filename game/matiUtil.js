@@ -101,4 +101,37 @@ matiUtil.loadJson = function(dateipfad, callback) {
     });
     request.open('GET', dateipfad, true);
     request.send();  
- };
+};
+
+
+matiUtil.fadeOut = function(audioelement, millisekunden) {
+    let fadeoutStartzeit = Date.now();
+
+    var fadeAudio = setInterval(function () {
+		let neueLautstaerke = 1 - Math.min((Date.now() - fadeoutStartzeit) / millisekunden, 1);
+
+		audioelement.volume = neueLautstaerke;
+
+        if (neueLautstaerke === 0) {
+			audioelement.pause();
+            clearInterval(fadeAudio);
+        }
+    }, 200);
+};
+
+matiUtil.fadeIn = function(audioelement, millisekunden) {
+    let fadeoutStartzeit = Date.now();
+	
+	audioelement.volume = 0;
+	audioelement.play();
+
+    var fadeAudio = setInterval(function () {
+		let neueLautstaerke = Math.min((Date.now() - fadeoutStartzeit) / millisekunden, 1);
+
+		audioelement.volume = neueLautstaerke;
+
+        if (neueLautstaerke === 1) {
+            clearInterval(fadeAudio);
+        }
+    }, 200);
+};
