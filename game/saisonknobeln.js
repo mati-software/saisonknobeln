@@ -282,7 +282,7 @@ mati.neuesSpiel = function() {
 		});
 
 		matiUtil.pushBefehl(function() {
-			document.getElementById("mati_rubrikintro_musik").play();
+			matiUtil.play(document.getElementById("mati_rubrikintro_musik"));
 
 			let balken1 = document.getElementById('mati_rubrik_intro_balken1');
 			let balken2 = document.getElementById('mati_rubrik_intro_balken2');
@@ -323,7 +323,7 @@ mati.neuesSpiel = function() {
 					textElement.removeAttribute('stroke-dasharray');
 					textElement.setAttribute('fill', `rgba(0, 0, 0, 1)`);
 					
-					matiUtil.fadeIn(document.getElementById("mati_hauptmusik"), 1000);
+					matiUtil.fadeIn(document.getElementById("mati_hauptmusik"), 2000);
 					
 					matiUtil.gotoNaechsterBefehl();
 				}

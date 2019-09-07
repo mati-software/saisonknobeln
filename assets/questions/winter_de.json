@@ -51,7 +51,8 @@
 		},
 		{
 			"text" : "Hattest du dir zum Jahreswechsel einen Vorsatz für das aktuell laufende Jahr vorgenommen?",
-			"answers" : ["Ja", "Nein"]
+			"answers" : ["Ja", "Nein"],
+			"img" : "feuerwerk.jpg"
 		},
 		{
 			"text" : "Bist du schon mal Ski gefahren?",

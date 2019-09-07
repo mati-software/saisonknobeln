@@ -70,7 +70,7 @@
 				bottom:1em;
 				right:.5em;
 				width:12em;
-				background-color:#666;
+				background-color:rgba(0,0,0,.6);
 				border-radius:1em;
 			}
 			#mati_spiel_spielerwarteliste {
@@ -79,7 +79,7 @@
 				left:.5em;
 				bottom:1em;
 				width:12em;
-				background-color:#666;
+				background-color:rgba(0,0,0,.6);
 				border-radius:1em;
 			}
 			#mati_spiel_spielerliste_content,
@@ -90,7 +90,7 @@
 				right:.2em;
 				bottom:.2em;
 				overflow:hidden;
-				background-color:silver;
+				background-color:rgba(255,255,255,.6);
 				border-bottom-left-radius:.8em;
 				border-bottom-right-radius:.8em;
 				padding-left:.6em;
@@ -246,6 +246,7 @@
 			#mati_spiel_lobby {
 				background-color: #ddd;
 				color: black;
+				background-image: url(game/lobby.jpg);
 			}
 			@keyframes mati_animation_intro_hintergrundfarbe {
 				0% {
@@ -673,6 +674,23 @@
 				background-color: black;
 				border-radius: .1em;
 			}
+			
+			#mati_hauptmusik_start {
+				z-index: 2;
+				position: absolute;
+				width: 4em;
+				height: 4em;
+				left: .5em;
+				bottom: .5em;
+			}
+			#mati_hauptmusik_stop {
+				z-index: 2;
+				position: absolute;
+				width: 4em;
+				height: 4em;
+				left: 5em;
+				bottom: .5em;
+			}
 		</style>
 	</head>
 	<body>
@@ -1001,6 +1019,9 @@
 				}
 				else {
 					if (!mati_schriftzug_schreibanimation_fertig) {
+						let overlay = document.getElementById('mati_intro_overlay');
+						overlay.parentNode.removeChild(overlay);
+					
 						mati_svg_saisonknobeln.removeAttribute('stroke-dashoffset');
 						mati_svg_saisonknobeln_ipunkt.removeAttribute('stroke-dashoffset');
 						mati_svg_saisonknobeln.removeAttribute('stroke-dasharray');
@@ -1030,12 +1051,10 @@
 			window.requestAnimationFrame(introAnimation);
 
 			document.getElementById("mati_hauptmusik_start").addEventListener("click",function() {
-				document.getElementById("mati_hauptmusik").play();
-				console.log("HalloWelt");
+				matiUtil.musikEinschalten(document.getElementById("mati_hauptmusik"));
 			});
 			document.getElementById("mati_hauptmusik_stop").addEventListener("click",function() {
-				document.getElementById("mati_hauptmusik").pause();
-				console.log("HalloWelt");
+				matiUtil.musikAusschalten(document.getElementById("mati_hauptmusik"));
 			});			
 		</script>
 

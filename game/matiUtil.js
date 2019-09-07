@@ -1,7 +1,8 @@
 var matiUtil = {
 	befehlsQueue : [],
 	befehlsQueueWirdAbgearbeitet : false,
-	l10nTexte : {}
+	l10nTexte : {},
+	musikIstEingeschaltet : true
 };
 
 
@@ -105,33 +106,56 @@ matiUtil.loadJson = function(dateipfad, callback) {
 
 
 matiUtil.fadeOut = function(audioelement, millisekunden) {
-    let fadeoutStartzeit = Date.now();
+	if (matiUtil.musikIstEingeschaltet) {
+		let fadeoutStartzeit = Date.now();
 
-    var fadeAudio = setInterval(function () {
-		let neueLautstaerke = 1 - Math.min((Date.now() - fadeoutStartzeit) / millisekunden, 1);
+		var fadeAudio = setInterval(function () {
+			let neueLautstaerke = 1 - Math.min((Date.now() - fadeoutStartzeit) / millisekunden, 1);
 
-		audioelement.volume = neueLautstaerke;
+			audioelement.volume = neueLautstaerke;
 
-        if (neueLautstaerke === 0) {
-			audioelement.pause();
-            clearInterval(fadeAudio);
-        }
-    }, 200);
+			if (neueLautstaerke === 0) {
+				audioelement.pause();
+				clearInterval(fadeAudio);
+			}
+		}, 200);
+	}
 };
 
 matiUtil.fadeIn = function(audioelement, millisekunden) {
-    let fadeoutStartzeit = Date.now();
-	
-	audioelement.volume = 0;
+	if (matiUtil.musikIstEingeschaltet) {
+		let fadeoutStartzeit = Date.now();
+		
+		audioelement.volume = 0;
+		audioelement.play();
+
+		var fadeAudio = setInterval(function () {
+			let neueLautstaerke = Math.min((Date.now() - fadeoutStartzeit) / millisekunden, 1);
+
+			audioelement.volume = neueLautstaerke;
+
+			if (neueLautstaerke === 1) {
+				clearInterval(fadeAudio);
+			}
+		}, 200);
+	}
+};
+
+matiUtil.play = function(audioelement) {
+	if (matiUtil.musikIstEingeschaltet) {
+		audioelement.currentTime = 0;
+		audioelement.volume = 1;
+		audioelement.play();
+	}
+};
+
+matiUtil.musikEinschalten = function(audioelement) {
+	matiUtil.musikIstEingeschaltet = true;
+	audioelement.volume = 1;
 	audioelement.play();
+};
 
-    var fadeAudio = setInterval(function () {
-		let neueLautstaerke = Math.min((Date.now() - fadeoutStartzeit) / millisekunden, 1);
-
-		audioelement.volume = neueLautstaerke;
-
-        if (neueLautstaerke === 1) {
-            clearInterval(fadeAudio);
-        }
-    }, 200);
+matiUtil.musikAusschalten = function(audioelement) {
+	matiUtil.musikIstEingeschaltet = false;
+	audioelement.pause();
 };
