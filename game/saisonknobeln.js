@@ -278,9 +278,12 @@ mati.neuesSpiel = function() {
 			document.getElementById('mati_rubrik_intro').style['background-image'] = `url(${mati.aktuelleRubrik.img.src})`;
 			
 			mati.zeigeContainer(document.getElementById('mati_rubrik_intro'), false, matiUtil.gotoNaechsterBefehl);
+			document.getElementById("mati_hauptmusik").pause();
 		});
 
 		matiUtil.pushBefehl(function() {
+			document.getElementById("mati_rubrikintro_musik").play();
+
 			let balken1 = document.getElementById('mati_rubrik_intro_balken1');
 			let balken2 = document.getElementById('mati_rubrik_intro_balken2');
 			
@@ -319,6 +322,9 @@ mati.neuesSpiel = function() {
 					balken2.style['width'] = '0%';
 					textElement.removeAttribute('stroke-dasharray');
 					textElement.setAttribute('fill', `rgba(0, 0, 0, 1)`);
+					
+					document.getElementById("mati_hauptmusik").play();
+					
 					matiUtil.gotoNaechsterBefehl();
 				}
 			}
