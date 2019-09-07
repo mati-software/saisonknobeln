@@ -784,6 +784,16 @@
 				</div>
 				<div id="mati_spiel_lobby_content">
 				</div>
+				<audio autoplay loop id="mati_hauptmusik">
+					<source src="hauptmusik.ogg" type="audio/ogg"-->
+					<source src="hauptmusik.mp3" type="audio/mpeg">
+				</audio> 
+				<audio id="mati_rubrikintro_musik">
+					<source src="rubrikintro.ogg" type="audio/ogg">
+					<source src="rubrikintro.mp3" type="audio/mpeg">
+				</audio> 
+				<button id="mati_hauptmusik_start">Musik starten</button>
+				<button id="mati_hauptmusik_stop">Musik stoppen</button>
 			</div>
 			<div id="mati_rubrik_intro" class="mati_box">
 				<div id="mati_rubrik_intro_balken1"></div>
@@ -1017,7 +1027,16 @@
 				}
 			}
 
-			window.requestAnimationFrame(introAnimation);			
+			window.requestAnimationFrame(introAnimation);
+
+			document.getElementById("mati_hauptmusik_start").addEventListener("click",function() {
+				document.getElementById("mati_hauptmusik").play();
+				console.log("HalloWelt");
+			});
+			document.getElementById("mati_hauptmusik_stop").addEventListener("click",function() {
+				document.getElementById("mati_hauptmusik").pause();
+				console.log("HalloWelt");
+			});			
 		</script>
 
 	</body>
