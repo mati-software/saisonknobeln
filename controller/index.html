@@ -423,7 +423,7 @@
 				aktuellSichbarerContainer : null,
 				aktuellerContainerLautSpielstatus : null,
 				buttonMitFokus : null,
-				pointerIdFuerButtonMitFokus : null,
+
 				anzahlSpieler : 0,
 				schaetzungAntwortA : 0,
 				schaetzungAntwortB : 0,
@@ -640,13 +640,13 @@
 			
 			
 			
-			document.addEventListener('pointerdown', function (event) {
+			document.addEventListener('touchstart', function (event) {
 				if (event.target.matches('.mati_button, .mati_kleiner_button') && event.target.id && mati.buttonMitFokus === null) {
 					event.target.classList.add('mati_button_focus');
 					mati.buttonMitFokus = event.target;
-					mati.pointerIdFuerButtonMitFokus = event.pointerId;
 					
-					//Kleine Buttons schon bei pointerdown ausloesen
+					
+					//Kleine Buttons schon bei touchstart ausloesen
 					if (event.target.matches('.mati_kleiner_button')) {
 						switch (event.target.id) {
 							case 'mati_schieberegler_minus_a':
@@ -669,23 +669,27 @@
 					}
 				}
 			});
-			document.addEventListener('pointerup', function (event) {
-				if (event.pointerId !== mati.pointerIdFuerButtonMitFokus) {
-					return;
-				}
+			document.addEventListener('touchend', function (event) {
 				
+				console.log("touchend1");
 				if (event.target.matches('.mati_button')) {
 					let boundingClientRect = event.target.getBoundingClientRect();
+					console.log("touchend2");
 
 					//der Button ist eigentlich nicht rechteckig sondern hat runde Enden, aber besser gehts nicht
 					//(JS hilft bei gedrueckter Maustaste in keinster Weise mit wenn es um das Verlassen der Hit-Area geht)
 					let buttonWurdeGeklickt = event.target === mati.buttonMitFokus
-								&& event.clientX >= boundingClientRect.left
-								&& event.clientX <= boundingClientRect.right
-								&& event.clientY >= boundingClientRect.top
-								&& event.clientY <= boundingClientRect.bottom;
+								&& event.changedTouches[0].clientX >= boundingClientRect.left
+								&& event.changedTouches[0].clientX <= boundingClientRect.right
+								&& event.changedTouches[0].clientY >= boundingClientRect.top
+								&& event.changedTouches[0].clientY <= boundingClientRect.bottom;
 					
+					console.log(boundingClientRect);
+					console.log(event);
+					console.log(mati.buttonMitFokus);
 					if (buttonWurdeGeklickt) {
+						console.log("touchend3");
+					
 						//Button-Effekt
 						let cloneButton = document.createElement("div");
 						cloneButton.classList.add('mati_button');
@@ -754,36 +758,32 @@
 				
 				mati.buttonMitFokus.classList.remove('mati_button_focus');
 				mati.buttonMitFokus = null;
-				mati.pointerIdFuerButtonMitFokus = null;
+				
 			});
-			document.addEventListener('pointermove', function (event) {
-				if (event.pointerId !== mati.pointerIdFuerButtonMitFokus) {
-					return;
-				}
+			document.addEventListener('touchmove', function (event) {
+				
 				
 				let boundingClientRect = event.target.getBoundingClientRect();
 
 				//der Button ist eigentlich nicht rechteckig sondern hat runde Enden, aber besser gehts nicht
 				//(JS hilft bei gedrueckter Maustaste in keinster Weise mit wenn es um das Verlassen der Hit-Area geht)
 				let ueberButton = event.target === mati.buttonMitFokus
-							&& event.clientX >= boundingClientRect.left
-							&& event.clientX <= boundingClientRect.right
-							&& event.clientY >= boundingClientRect.top
-							&& event.clientY <= boundingClientRect.bottom;
+							&& event.changedTouches[0].clientX >= boundingClientRect.left
+							&& event.changedTouches[0].clientX <= boundingClientRect.right
+							&& event.changedTouches[0].clientY >= boundingClientRect.top
+							&& event.changedTouches[0].clientY <= boundingClientRect.bottom;
 
 				if (!ueberButton) {
 					mati.buttonMitFokus.classList.remove('mati_button_focus');
 					mati.buttonMitFokus = null;
-					mati.pointerIdFuerButtonMitFokus = null;
+					
 				}
 			});
 			document.addEventListener('pointercancel', function (event) {
-				if (event.pointerId !== mati.pointerIdFuerButtonMitFokus) {
-					return;
-				}
+				
 				mati.buttonMitFokus.classList.remove('mati_button_focus');
 				mati.buttonMitFokus = null;
-				mati.pointerIdFuerButtonMitFokus = null;
+				
 			});
 			
 			var onAenderungDerFenstergroesse = function() {
