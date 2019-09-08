@@ -704,12 +704,14 @@ mati.spielerChanged = function() {
 };
 
 mati.renderLobbySpielerListe = function(container, knobelSpielerListe) {
-	container.innerHTML = `
-		<div class="mati_liste">
-			${knobelSpielerListe.map(mati.renderSpieler).join('')}
-		</div>
-	`;
-	matiUtil.schriftgroesseAnpassenDamitHoehePasst(container, container.querySelector(".mati_liste"));
+	if (container) {
+		container.innerHTML = `
+			<div class="mati_liste">
+				${knobelSpielerListe.map(mati.renderSpieler).join('')}
+			</div>
+		`;
+		matiUtil.schriftgroesseAnpassenDamitHoehePasst(container, container.querySelector(".mati_liste"));
+	}
 };
 
 mati.renderSpieler = function(knobelSpieler) {
