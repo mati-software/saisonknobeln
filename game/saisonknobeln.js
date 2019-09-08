@@ -221,7 +221,7 @@ mati.setFrageGroesseUndPosition = function() {
 		divText.style['font-size'] = fontProzent + '%';
 	}
 	let maximaleUebrigeAnzahlVerkleinerungsversuche = 10;
-	while (divText.clientHeight > divTextContainer.clientHeight
+	while (divText.clientHeight - 1 > divTextContainer.clientHeight
 			&& maximaleUebrigeAnzahlVerkleinerungsversuche > 0) {
 		fontProzent = Math.floor(fontProzent * .9);
 		divText.style['font-size'] = fontProzent + '%';
@@ -745,7 +745,7 @@ mati.schrittweiseResizeBisEsPasst = function(container, inhalt) {
 	inhalt.style['font-size'] = fontProzent + '%';
 	
 	let maximaleUebrigeAnzahlVerkleinerungsversuche = 20;
-	while (inhalt.clientHeight > container.clientHeight
+	while (inhalt.clientHeight - 1 > container.clientHeight
 			&& maximaleUebrigeAnzahlVerkleinerungsversuche > 0) {
 		fontProzent = Math.floor(fontProzent * .9);
 		inhalt.style['font-size'] = fontProzent + '%';
