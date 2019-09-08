@@ -42,7 +42,8 @@
 		},
 		{
 			"text" : "Handschuhe bei kaltem Wetter?",
-			"answers" : ["Ja", "Nein"]
+			"answers" : ["Ja", "Nein"],
+			"img": "handschuhe.jpg"
 		},
 		
 		{

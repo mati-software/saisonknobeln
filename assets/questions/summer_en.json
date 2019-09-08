@@ -58,7 +58,8 @@
 		},
 		{
 			"text": "Do you own sunglasses?",
-			"answers": ["yes", "no"]
+			"answers": ["yes", "no"],
+			"img": "sonnenbrille.jpg"
 		},
 		{
 			"text": "Do you own flip flops?",

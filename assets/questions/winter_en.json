@@ -42,7 +42,8 @@
 		},
 		{
 			"text": "Gloves in cold weather?",
-			"answers": ["yes", "no"]
+			"answers": ["yes", "no"],
+			"img": "handschuhe.jpg"
 		},
 
 		{

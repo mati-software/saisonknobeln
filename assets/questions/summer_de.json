@@ -58,7 +58,8 @@
 		},
 		{
 			"text" : "Besitzt du eine Sonnenbrille?",
-			"answers" : ["Ja", "Nein"]
+			"answers" : ["Ja", "Nein"],
+			"img": "sonnenbrille.jpg"
 		},
 		{
 			"text" : "Besitzt du Flipflops?",
