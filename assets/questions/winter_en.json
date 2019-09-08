@@ -20,7 +20,8 @@
 		},
 		{
 			"text": "Should it snow in winter?",
-			"answers": ["yes", "no"]
+			"answers": ["yes", "no"],
+			"img" : "schnee.jpg"
 		},
 		{
 			"text": "Church attendance at Christmas?",

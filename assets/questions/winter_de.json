@@ -20,7 +20,8 @@
 		},
 		{
 			"text" : "Soll es im Winter schneien?",
-			"answers" : ["Ja", "Nein"]
+			"answers" : ["Ja", "Nein"],
+			"img" : "schnee.jpg"
 		},
 		{
 			"text" : "Kirchenbesuch an Weihnachten?",
