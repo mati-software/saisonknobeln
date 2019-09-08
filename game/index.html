@@ -875,7 +875,6 @@
 			//TODO das Hintergrundbild hat derzeit eine seltsame Pfadangabe... versuch CSS auszulagern und dann den Pfad weg zu lassen, oder nutze Assets-Ordner
 		
 			Tiltspot.on.ready = function() {
-				console.log('ready');
 				mati.setSpracheCode('en');
 				matiUtil.pushBefehl(function() {
 					mati.broadcast('zeigeHauptmenue');
@@ -883,20 +882,16 @@
 				});
 			};
 			Tiltspot.on.connect = function(controllerId) {
-				console.log('Connect Controller ' + controllerId);
 				mati.spielerChanged();
 			}; 
 			Tiltspot.on.disconnect = function(controllerId) {
-				console.log('Controller ' + controllerId + ' disconnected');
 				mati.spielerChanged();
 			};
 			Tiltspot.on.reconnect = function(controllerId) {
-				console.log('Controller ' + controllerId + ' is back!');
 				mati.spielerChanged();
 				mati.sendMsg(controllerId);
 			};
 			Tiltspot.on.msg = function (controllerId, msg, data) {
-				console.log('msg', controllerId, msg, data);
 				switch (msg) { 
 					case 'setSpracheCode':
 						mati.setSpracheCode(data);

@@ -601,6 +601,9 @@
 								matiUtil.gotoNaechsterBefehl();
 							});
 						}
+						else {
+							matiUtil.gotoNaechsterBefehl();
+						}
 					});
 				}
 			
@@ -609,8 +612,8 @@
 						if (data.farbe !== mati.farbe) {
 							mati.farbe = data.farbe;
 							mati.renderFarbe();
-							matiUtil.gotoNaechsterBefehl();
 						}
+						matiUtil.gotoNaechsterBefehl();
 					});
 				}
 				
@@ -641,6 +644,9 @@
 								
 								matiUtil.gotoNaechsterBefehl();
 							});
+						}
+						else {
+							matiUtil.gotoNaechsterBefehl();
 						}
 					});
 				}
@@ -727,11 +733,8 @@
 				}
 			});
 			document.addEventListener('touchend', function (event) {
-				
-				console.log("touchend1");
 				if (event.target.matches('.mati_button')) {
 					let boundingClientRect = event.target.getBoundingClientRect();
-					console.log("touchend2");
 
 					//der Button ist eigentlich nicht rechteckig sondern hat runde Enden, aber besser gehts nicht
 					//(JS hilft bei gedrueckter Maustaste in keinster Weise mit wenn es um das Verlassen der Hit-Area geht)
@@ -741,12 +744,7 @@
 								&& event.changedTouches[0].clientY >= boundingClientRect.top
 								&& event.changedTouches[0].clientY <= boundingClientRect.bottom;
 					
-					console.log(boundingClientRect);
-					console.log(event);
-					console.log(mati.buttonMitFokus);
 					if (buttonWurdeGeklickt) {
-						console.log("touchend3");
-					
 						//Button-Effekt
 						let cloneButton = document.createElement("div");
 						cloneButton.classList.add('mati_button');

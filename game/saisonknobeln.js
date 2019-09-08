@@ -141,7 +141,6 @@ mati.setSpracheCode = function(neuerSpracheCode) {
 
 
 mati.sendMsg = function(spieler, befehl) {
-	console.log('typeof spieler', typeof spieler);
 	if (typeof spieler !== 'object') {
 		spieler = mati.findeKnobelSpieler(spieler);
 	}
