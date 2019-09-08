@@ -103,23 +103,18 @@ mati.setSpracheCode = function(neuerSpracheCode) {
 		//TODO joincode erstmal weggelassen
 		//<div id="mati_spiel_joincode_container">${matiUtil.l10nHtml('Join-Code')}: <span id="mati_spiel_joincode">${matiUtil.htmlEscape(Tiltspot.get.entryCode())}</span></div>
 		document.getElementById('mati_spiel_lobby_content').innerHTML = `
-			<div id="mati_spiel_spielerliste_container">
-				<div id="mati_spiel_spielerliste">
-					<div id="mati_spiel_spielerliste_caption">
-						${matiUtil.l10nHtml('Spieler')}
-					</div>
-					<div id="mati_spiel_spielerliste_content">
-					</div>
+			<div id="mati_spiel_spielerliste">
+				<div id="mati_spiel_spielerliste_caption">
+					${matiUtil.l10nHtml('Spieler')}
+				</div>
+				<div id="mati_spiel_spielerliste_content">
 				</div>
 			</div>
-			
-			<div id="mati_spiel_spielerwarteliste_container">
-				<div id="mati_spiel_spielerwarteliste">
-					<div id="mati_spiel_spielerwarteliste_caption">
-						${matiUtil.l10nHtml('Warteliste')}
-					</div>
-					<div id="mati_spiel_spielerwarteliste_content">
-					</div>
+			<div id="mati_spiel_spielerwarteliste" style="display:none">
+				<div id="mati_spiel_spielerwarteliste_caption">
+					${matiUtil.l10nHtml('Warteliste')}
+				</div>
+				<div id="mati_spiel_spielerwarteliste_content">
 				</div>
 			</div>
 		`;
