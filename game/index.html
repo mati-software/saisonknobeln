@@ -665,21 +665,16 @@
 				border-radius: .1em;
 			}
 			
-			#mati_hauptmusik_start {
+			#mati_hauptmusik_button {
 				z-index: 2;
 				position: absolute;
-				width: 4em;
-				height: 4em;
+				width: 2em;
+				height: 1.2em;
 				left: .5em;
 				bottom: .5em;
 			}
-			#mati_hauptmusik_stop {
-				z-index: 2;
-				position: absolute;
-				width: 4em;
-				height: 4em;
-				left: 5em;
-				bottom: .5em;
+			#mati_hauptmusik_button_x {
+				visibility: hidden;
 			}
 		</style>
 	</head>
@@ -771,8 +766,36 @@
 					<source src="rubrikintro.ogg" type="audio/ogg">
 					<source src="rubrikintro.mp3" type="audio/mpeg">
 				</audio> 
-				<button id="mati_hauptmusik_start">Musik starten</button>
-				<button id="mati_hauptmusik_stop">Musik stoppen</button>
+				
+				<svg id="mati_hauptmusik_button" viewbox="0 0 200 120">
+					<path d="M5 105 q0 -15 25 -15 q15 0 15 10 q0 15 -25 15 q-15 0 -15 -10 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+					<path d="M75 95 q0 -15 25 -15 q15 0 15 10 q0 15 -25 15 q-15 0 -15 -10 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+					<path d="M45 100 l0 -85 l-5 0 l0 85 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+					<path d="M115 90 l0 -85 l-5 5 l0 80 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+					<path d="M40 15 l75 -10 l0 20 l-75 10 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+					
+					<path d="M5 105 q0 -15 25 -15 q15 0 15 10 q0 15 -25 15 q-15 0 -15 -10 z" fill="white" />
+					<path d="M75 95 q0 -15 25 -15 q15 0 15 10 q0 15 -25 15 q-15 0 -15 -10 z" fill="white" />
+					<path d="M45 100 l0 -85 l-5 0 l0 85 z" fill="white" />
+					<path d="M115 90 l0 -85 l-5 5 l0 80 z" fill="white" />
+					<path d="M40 15 l75 -10 l0 20 l-75 10 z" fill="white" />
+					
+					<path d="M115 60 m60 -45 a75 75 0 0 1 0 90" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+					<path d="M115 60 m40 -30 a50 50 0 0 1 0 60" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+					<path d="M115 60 m20 -15 a25 25 0 0 1 0 30" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+					
+					<path d="M115 60 m60 -45 a75 75 0 0 1 0 90" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+					<path d="M115 60 m40 -30 a50 50 0 0 1 0 60" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+					<path d="M115 60 m20 -15 a25 25 0 0 1 0 30" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+					
+					<g id="mati_hauptmusik_button_x">
+						<path d="M10 10 L190 110" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+						<path d="M10 110 L190 10" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+						
+						<path d="M10 10 L190 110" stroke="#ff1111" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+						<path d="M10 110 L190 10" stroke="#ff1111" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+					</g>
+				</svg>
 			</div>
 			<div id="mati_rubrik_intro" class="mati_box">
 				<div id="mati_rubrik_intro_balken1"></div>
@@ -1004,12 +1027,16 @@
 
 			window.requestAnimationFrame(introAnimation);
 
-			document.getElementById("mati_hauptmusik_start").addEventListener("click",function() {
-				matiUtil.musikEinschalten(document.getElementById("mati_hauptmusik"));
+			document.getElementById("mati_hauptmusik_button").addEventListener("click",function() {
+				if (matiUtil.musikIstEingeschaltet) {
+					matiUtil.musikAusschalten(document.getElementById("mati_hauptmusik"));
+					document.getElementById("mati_hauptmusik_button_x").style['visibility'] = 'visible';
+				}
+				else {
+					matiUtil.musikEinschalten(document.getElementById("mati_hauptmusik"));
+					document.getElementById("mati_hauptmusik_button_x").style['visibility'] = 'hidden';
+				}
 			});
-			document.getElementById("mati_hauptmusik_stop").addEventListener("click",function() {
-				matiUtil.musikAusschalten(document.getElementById("mati_hauptmusik"));
-			});			
 		</script>
 
 	</body>
