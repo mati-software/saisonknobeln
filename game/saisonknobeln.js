@@ -124,6 +124,8 @@ mati.setSpracheCode = function(neuerSpracheCode) {
 		
 		document.getElementById('mati_frage_ergebnis_tatsaechlich_label').innerText = matiUtil.l10n('Tatsächliche Aufteilung');
 		
+		document.getElementById('mati_spiel_lobby_credits').innerText = matiUtil.l10n('Ein Spiel von Timo Scheit und Martin Dostert');
+		
 		matiUtil.gotoNaechsterBefehl();
 	});
 	
