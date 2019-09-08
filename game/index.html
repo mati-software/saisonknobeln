@@ -923,6 +923,17 @@
 					case 'spielAbschliessen':
 						matiUtil.gotoNaechsterBefehl();
 						break;
+					case 'setSound':
+						if (data) {
+							matiUtil.musikEinschalten(document.getElementById("mati_hauptmusik"));
+							document.getElementById("mati_hauptmusik_button_x").style['visibility'] = 'hidden';
+						}
+						else {
+							matiUtil.musikAusschalten(document.getElementById("mati_hauptmusik"));
+							document.getElementById("mati_hauptmusik_button_x").style['visibility'] = 'visible';
+						}
+						mati.broadcast('setSound');
+						break;
 				}
 			};				
 		

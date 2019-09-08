@@ -3,7 +3,8 @@
 	"questions" : [
 		{
 			"text" : "Weißwein oder Rotwein?",
-			"answers" : ["Weißwein", "Rotwein"]
+			"answers" : ["Weißwein", "Rotwein"],
+			"img" : "wein.jpg"
 		},
 		{
 			"text" : "An Halloween kostümieren oder nicht kostümieren?",
@@ -58,7 +59,8 @@
 		},
 		{
 			"text" : "Bist du gegen irgend eine Nuss-Sorte allergisch?",
-			"answers" : ["Ja", "Nein"]
+			"answers" : ["Ja", "Nein"],
+			"img": "nuesse.jpg"
 		},
 		{
 			"text" : "Hast du schon mal an einem Kürbis zu Dekorationszwecken geschnitzt?",

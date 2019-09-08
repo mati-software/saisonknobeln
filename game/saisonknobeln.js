@@ -156,7 +156,8 @@ mati.sendMsg = function(spieler, befehl) {
 	
 	let daten = {
 		spracheCode : mati.spracheCode,
-		farbe : spieler.farbe
+		farbe : spieler.farbe,
+		sound : matiUtil.musikIstEingeschaltet
 	};
 	
 	if (befehl === 'zeigeAntwortmoeglichkeiten') {

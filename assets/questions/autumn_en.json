@@ -3,7 +3,8 @@
     "questions":[
         {
             "text": "White wine or red wine?",
-            "answers": ["white wine", "red wine"]
+            "answers": ["white wine", "red wine"],
+			"img" : "wein.jpg"
         },
         {
             "text": "Dress up for Halloween?",
@@ -58,7 +59,8 @@
         },
         {
             "text": "Are you allergic to any kind of nuts?",
-            "answers": ["yes", "no"]
+            "answers": ["yes", "no"],
+			"img": "nuesse.jpg"
         },
         {
             "text": "Have you ever carved a pumpkin for decoration?",

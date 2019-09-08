@@ -17,7 +17,8 @@
         },
         {
             "text": "Fasting in Lent?",
-            "answers": ["yes", "no"]
+            "answers": ["yes", "no"],
+			"img": "riesenburger.jpg"
         },
         {
             "text": "Dress up for carnival?",

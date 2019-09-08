@@ -17,7 +17,8 @@
 		},
 		{
 			"text" : "Fasten in der Fastenzeit?",
-			"answers" : ["Ja", "Nein"]
+			"answers" : ["Ja", "Nein"],
+			"img": "riesenburger.jpg"
 		},
 		{
 			"text" : "Zum Karneval kostümieren oder nicht kostümieren?",

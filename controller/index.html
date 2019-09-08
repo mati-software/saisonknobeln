@@ -208,6 +208,7 @@
 				height:3em;
 				width:auto;
 				border:.5em solid transparent; 
+				vertical-align: middle;
 			}
 			@keyframes mati_animation_flagge_aktiv {
 				from {
@@ -223,6 +224,16 @@
 				animation-duration: 2s;
 				animation-iteration-count: infinite;
 				animation-direction: alternate;
+			}
+			
+			#mati_hauptmusik_button {
+				height:auto;
+				width:3em;
+				border:.5em solid transparent; 
+				vertical-align: middle;
+			}
+			#mati_hauptmusik_button_x {
+				visibility: hidden;
 			}
 			
 			#mati_warten_text {
@@ -427,7 +438,9 @@
 				anzahlSpieler : 0,
 				schaetzungAntwortA : 0,
 				schaetzungAntwortB : 0,
-				gewaehlteAnwortmoeglichkeit : 0
+				gewaehlteAnwortmoeglichkeit : 0,
+				
+				musikIstEingeschaltet : true
 			};
 			
 			mati.renderFarbe = function() {
@@ -542,7 +555,37 @@
 									return `
 										<img id="mati_flagge_code_${sprache.code}" class="${sprache.code === mati.spracheCode ? 'mati_flagge mati_flagge_aktiv' : 'mati_flagge'}" src="${Tiltspot.get.assetUrl(`gui-l10n/${sprache.code}.svg`)}" alt="${Tiltspot.get.assetUrl(`gui-l10n/${sprache.name}.svg`)}" />
 									`;
-								}).join('');
+								}).join('') + `
+									<svg id="mati_hauptmusik_button" viewbox="0 0 200 120">
+										<path d="M5 105 q0 -15 25 -15 q15 0 15 10 q0 15 -25 15 q-15 0 -15 -10 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+										<path d="M75 95 q0 -15 25 -15 q15 0 15 10 q0 15 -25 15 q-15 0 -15 -10 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+										<path d="M45 100 l0 -85 l-5 0 l0 85 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+										<path d="M115 90 l0 -85 l-5 5 l0 80 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+										<path d="M40 15 l75 -10 l0 20 l-75 10 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+										
+										<path d="M5 105 q0 -15 25 -15 q15 0 15 10 q0 15 -25 15 q-15 0 -15 -10 z" fill="white" />
+										<path d="M75 95 q0 -15 25 -15 q15 0 15 10 q0 15 -25 15 q-15 0 -15 -10 z" fill="white" />
+										<path d="M45 100 l0 -85 l-5 0 l0 85 z" fill="white" />
+										<path d="M115 90 l0 -85 l-5 5 l0 80 z" fill="white" />
+										<path d="M40 15 l75 -10 l0 20 l-75 10 z" fill="white" />
+										
+										<path d="M115 60 m60 -45 a75 75 0 0 1 0 90" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+										<path d="M115 60 m40 -30 a50 50 0 0 1 0 60" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+										<path d="M115 60 m20 -15 a25 25 0 0 1 0 30" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+										
+										<path d="M115 60 m60 -45 a75 75 0 0 1 0 90" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+										<path d="M115 60 m40 -30 a50 50 0 0 1 0 60" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+										<path d="M115 60 m20 -15 a25 25 0 0 1 0 30" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+										
+										<g id="mati_hauptmusik_button_x">
+											<path d="M10 10 L190 110" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+											<path d="M10 110 L190 10" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+											
+											<path d="M10 10 L190 110" stroke="#ff1111" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+											<path d="M10 110 L190 10" stroke="#ff1111" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+										</g>
+									</svg>
+								`;
 								
 								for (let sprache of mati.sprachen) {
 									let spracheCode = sprache.code;
@@ -550,6 +593,10 @@
 										Tiltspot.send.msg('setSpracheCode', spracheCode);
 									});
 								}
+								
+								document.getElementById('mati_hauptmusik_button').addEventListener('click', function() {
+									Tiltspot.send.msg('setSound', !mati.musikIstEingeschaltet);
+								});
 								
 								matiUtil.gotoNaechsterBefehl();
 							});
@@ -596,6 +643,16 @@
 							});
 						}
 					});
+				}
+				
+				if (data.sound !== mati.musikIstEingeschaltet) {
+					mati.musikIstEingeschaltet = data.sound;
+					if (mati.musikIstEingeschaltet) {
+						document.getElementById("mati_hauptmusik_button_x").style['visibility'] = 'hidden';
+					}
+					else {
+						document.getElementById("mati_hauptmusik_button_x").style['visibility'] = 'visible';
+					}
 				}
 			
 				switch (msg) { 
