@@ -232,7 +232,7 @@
 				border:.5em solid transparent; 
 				vertical-align: middle;
 			}
-			#mati_hauptmusik_button_x {
+			.mati_hauptmusik_button_x {
 				visibility: hidden;
 			}
 			
@@ -577,7 +577,7 @@
 										<path d="M115 60 m40 -30 a50 50 0 0 1 0 60" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
 										<path d="M115 60 m20 -15 a25 25 0 0 1 0 30" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
 										
-										<g id="mati_hauptmusik_button_x">
+										<g class="mati_hauptmusik_button_x">
 											<path d="M10 10 L190 110" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
 											<path d="M10 110 L190 10" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
 											
@@ -653,11 +653,13 @@
 				
 				if (data.sound !== mati.musikIstEingeschaltet) {
 					mati.musikIstEingeschaltet = data.sound;
-					if (mati.musikIstEingeschaltet) {
-						document.getElementById("mati_hauptmusik_button_x").style['visibility'] = 'hidden';
-					}
-					else {
-						document.getElementById("mati_hauptmusik_button_x").style['visibility'] = 'visible';
+					for (let musikXIcon of document.getElementsByClassName("mati_hauptmusik_button_x")) {
+						if (mati.musikIstEingeschaltet) {
+							musikXIcon.style['visibility'] = 'hidden';
+						}
+						else {
+							musikXIcon.style['visibility'] = 'visible';
+						}
 					}
 				}
 			

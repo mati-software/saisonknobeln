@@ -100,25 +100,8 @@ mati.setSpracheCode = function(neuerSpracheCode) {
 	});
 	//HTML rendern
 	matiUtil.pushBefehl(function() {
-		//TODO joincode erstmal weggelassen
-		//<div id="mati_spiel_joincode_container">${matiUtil.l10nHtml('Join-Code')}: <span id="mati_spiel_joincode">${matiUtil.htmlEscape(Tiltspot.get.entryCode())}</span></div>
-		document.getElementById('mati_spiel_lobby_content').innerHTML = `
-			<div id="mati_spiel_spielerliste">
-				<div id="mati_spiel_spielerliste_caption">
-					${matiUtil.l10nHtml('Spieler')}
-				</div>
-				<div id="mati_spiel_spielerliste_content">
-				</div>
-			</div>
-			<div id="mati_spiel_spielerwarteliste" style="display:none">
-				<div id="mati_spiel_spielerwarteliste_caption">
-					${matiUtil.l10nHtml('Warteliste')}
-				</div>
-				<div id="mati_spiel_spielerwarteliste_content">
-				</div>
-			</div>
-		`;
-		mati.spielerChanged();
+		document.getElementById('mati_spiel_spielerliste_caption').innerText = matiUtil.l10n('Spieler');
+		document.getElementById('mati_spiel_spielerwarteliste_caption').innerText = matiUtil.l10n('Warteliste');
 		
 		document.getElementById('mati_frage_erlaeuterung').innerText = matiUtil.l10n('Wähle eine Antwort! Halte Deine Wahl vor den anderen Spielern geheim!');
 		
@@ -174,27 +157,25 @@ mati.broadcast = function(befehl) {
 	}
 };
 
-mati.zeigeContainer = function(containerElement, rueckwaerts, callback) {
+mati.zeigeContainer = function(containerElement, callback) {
 	if (containerElement === mati.aktuellSichbarerContainer) {
 		callback();
 		return;
 	}
 	
-	containerElement.style['visibility'] = 'visible';
-	containerElement.classList.remove('mati_box_hide');
-	containerElement.classList.remove('mati_box_hide_back');
+	containerElement.style['display'] = 'block';
 
 	if (mati.aktuellSichbarerContainer !== null) {
-		containerElement.classList.add(rueckwaerts ? 'mati_box_show_back' : 'mati_box_show');
+		containerElement.classList.add('mati_box_show');
 	
 		mati.aktuellSichbarerContainer.classList.remove('mati_box_show');
-		mati.aktuellSichbarerContainer.classList.remove('mati_box_show_back');
-		mati.aktuellSichbarerContainer.classList.add(rueckwaerts ? 'mati_box_hide_back' : 'mati_box_hide');
+		mati.aktuellSichbarerContainer.classList.add('mati_box_hide');
 	}
 	
 	setTimeout(function () {
 		if (mati.aktuellSichbarerContainer !== null) {
-			mati.aktuellSichbarerContainer.style['visibility'] = 'hidden';
+			mati.aktuellSichbarerContainer.style['display'] = 'none';
+			containerElement.classList.remove('mati_box_hide');
 		}
 		
 		mati.aktuellSichbarerContainer = containerElement;
@@ -249,7 +230,9 @@ mati.neuesSpiel = function() {
 		mati.broadcast('zeigeWarten');
 		
 		document.getElementById('mati_frage_spieler').innerHTML = mati.spielerImLaufendenSpiel.map(mati.renderSpieler).join('');
+		document.getElementById('mati_frage').style['display'] = 'block';
 		mati.schrittweiseResizeBisEsPasst(document.getElementById('mati_frage_spieler_container'), document.getElementById('mati_frage_spieler'));
+		document.getElementById('mati_frage').style['display'] = 'none';
 		
 		matiUtil.gotoNaechsterBefehl();
 	});
@@ -274,7 +257,7 @@ mati.neuesSpiel = function() {
 			document.getElementById('mati_rubrik_intro_name').textContent = mati.aktuelleRubrik.name;
 			document.getElementById('mati_rubrik_intro').style['background-image'] = `url(${mati.aktuelleRubrik.img.src})`;
 			
-			mati.zeigeContainer(document.getElementById('mati_rubrik_intro'), false, matiUtil.gotoNaechsterBefehl);
+			mati.zeigeContainer(document.getElementById('mati_rubrik_intro'), matiUtil.gotoNaechsterBefehl);
 			matiUtil.fadeOut(document.getElementById("mati_hauptmusik"), 1000);
 		});
 
@@ -350,6 +333,7 @@ mati.neuesSpiel = function() {
 					document.getElementById('mati_frage_text_und_bild').style['grid-template-columns'] = `minmax(50%,1fr) minmax(0,0)`;
 				}
 				
+				document.getElementById('mati_frage').style['display'] = 'block';
 				mati.setFrageGroesseUndPosition();
 				
 				//FIXME bild ist ggf noch nicht geladen
@@ -364,7 +348,7 @@ mati.neuesSpiel = function() {
 					spielerElement.classList.add('mati_wackelnd');
 				}
 				
-				mati.zeigeContainer(document.getElementById('mati_frage'), false, function() {
+				mati.zeigeContainer(document.getElementById('mati_frage'), function() {
 					mati.broadcast('zeigeAntwortmoeglichkeiten');
 				});
 			});
@@ -418,9 +402,10 @@ mati.neuesSpiel = function() {
 				document.getElementById('mati_frage_ergebnis_tatsaechlich').classList.remove('mati_eingeblendet');
 				
 				//bei vielen Spielern skalieren
+				document.getElementById('mati_frage_ergebnis').style['display'] = 'block';
 				matiUtil.schriftgroesseAnpassenDamitHoehePasst(document.getElementById("mati_frage_ergebnis_schaetzungen_container"), document.getElementById("mati_frage_ergebnis_schaetzungen"), true);
 				
-				mati.zeigeContainer(document.getElementById('mati_frage_ergebnis'), false, matiUtil.gotoNaechsterBefehl);
+				mati.zeigeContainer(document.getElementById('mati_frage_ergebnis'), matiUtil.gotoNaechsterBefehl);
 			});
 			for (let i=0; i<mati.spielerImLaufendenSpiel.length; i++) {
 				matiUtil.pushBefehl(function() {
@@ -526,6 +511,7 @@ mati.neuesSpiel = function() {
 			document.getElementById('mati_punktestand').style['background-image'] = `url(${mati.aktuelleRubrik.img.src})`;
 			
 			//bei vielen Spielern skalieren
+			document.getElementById('mati_punktestand').style['display'] = 'block';
 			matiUtil.schriftgroesseAnpassenDamitHoehePasst(document.getElementById("mati_punktestand_spielerliste_container"), document.getElementById("mati_punktestand_spielerliste"));
 			
 			//Spieler zunachst an alte Position umpositionieren
@@ -541,7 +527,7 @@ mati.neuesSpiel = function() {
 				let topAlt = domZeilenElemente[altePosition].offsetTop;
 				domZeilenElemente[neuePosition].style['transform'] = `translateY(${topAlt - topNeu}px)`;
 			}
-			mati.zeigeContainer(document.getElementById('mati_punktestand'), false, matiUtil.gotoNaechsterBefehl);
+			mati.zeigeContainer(document.getElementById('mati_punktestand'), matiUtil.gotoNaechsterBefehl);
 		});
 		matiUtil.pushBefehl(function() {
 			//Umsortierungsanimaton vorbereiten
@@ -616,7 +602,7 @@ mati.neuesSpiel = function() {
 		mati.queueEnthaeltLaufendesSpiel = false;
 		
 		mati.broadcast('zeigeHauptmenue');
-		mati.zeigeContainer(document.getElementById('mati_spiel_lobby'), false, matiUtil.gotoNaechsterBefehl);
+		mati.zeigeContainer(document.getElementById('mati_spiel_lobby'), matiUtil.gotoNaechsterBefehl);
 	});
 };
 
@@ -699,19 +685,20 @@ mati.spielerChanged = function() {
 		}
 	}
 	
+	let oldMatiLobbyDisplay = document.getElementById('mati_spiel_lobby').style['display'];
+	document.getElementById('mati_spiel_lobby').style['display'] = 'block';
 	mati.renderLobbySpielerListe(document.getElementById('mati_spiel_spielerliste_content'), mati.spielerImLaufendenSpiel);
 	mati.renderLobbySpielerListe(document.getElementById('mati_spiel_spielerwarteliste_content'), mati.spielerAufWarteliste);
+	document.getElementById('mati_spiel_lobby').style['display'] = oldMatiLobbyDisplay;
 };
 
 mati.renderLobbySpielerListe = function(container, knobelSpielerListe) {
-	if (container) {
-		container.innerHTML = `
-			<div class="mati_liste">
-				${knobelSpielerListe.map(mati.renderSpieler).join('')}
-			</div>
-		`;
-		matiUtil.schriftgroesseAnpassenDamitHoehePasst(container, container.querySelector(".mati_liste"));
-	}
+	container.innerHTML = `
+		<div class="mati_liste">
+			${knobelSpielerListe.map(mati.renderSpieler).join('')}
+		</div>
+	`;
+	matiUtil.schriftgroesseAnpassenDamitHoehePasst(container, container.querySelector(".mati_liste"));
 };
 
 mati.renderSpieler = function(knobelSpieler) {

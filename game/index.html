@@ -199,7 +199,7 @@
 				height:100%;
 				overflow:hidden;
 				backface-visibility: hidden;
-				visibility: hidden;
+				display:none;
 				background-repeat: no-repeat;
 				background-size: cover;
                 background-position: center;				 
@@ -211,21 +211,8 @@
 				animation-iteration-count: 1;
 				transform: perspective(400vh) translateZ(-50vh) rotateX(90deg) translateZ(50vh);
 			}
-			.mati_box_hide_back {
-				animation-name: mati_animation_box_show;
-				animation-direction: reverse;
-				animation-duration: 1s;
-				animation-iteration-count: 1;
-				transform: perspective(400vh) translateZ(-50vh) rotateX(-90deg) translateZ(50vh);
-			}
 			.mati_box_show {
 				animation-name: mati_animation_box_show;
-				animation-duration: 1s;
-				animation-iteration-count: 1;
-			}
-			.mati_box_show_back {
-				animation-name: mati_animation_box_hide;
-				animation-direction: reverse;
 				animation-duration: 1s;
 				animation-iteration-count: 1;
 			}
@@ -673,7 +660,7 @@
 				left: .5em;
 				bottom: .5em;
 			}
-			#mati_hauptmusik_button_x {
+			.mati_hauptmusik_button_x {
 				visibility: hidden;
 			}
 		</style>
@@ -757,6 +744,18 @@
 				</div>
 				<div id="mati_spiel_lobby_credits"></div>
 				<div id="mati_spiel_lobby_content">
+					<div id="mati_spiel_spielerliste">
+						<div id="mati_spiel_spielerliste_caption">
+						</div>
+						<div id="mati_spiel_spielerliste_content">
+						</div>
+					</div>
+					<div id="mati_spiel_spielerwarteliste" style="display:none">
+						<div id="mati_spiel_spielerwarteliste_caption">
+						</div>
+						<div id="mati_spiel_spielerwarteliste_content">
+						</div>
+					</div>
 				</div>
 				<audio autoplay loop id="mati_hauptmusik">
 					<source src="hauptmusik.ogg" type="audio/ogg"-->
@@ -788,7 +787,7 @@
 					<path d="M115 60 m40 -30 a50 50 0 0 1 0 60" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
 					<path d="M115 60 m20 -15 a25 25 0 0 1 0 30" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
 					
-					<g id="mati_hauptmusik_button_x">
+					<g class="mati_hauptmusik_button_x">
 						<path d="M10 10 L190 110" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
 						<path d="M10 110 L190 10" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
 						
@@ -876,9 +875,108 @@
 		
 			Tiltspot.on.ready = function() {
 				mati.setSpracheCode('en');
+				mati.spielerChanged();
 				matiUtil.pushBefehl(function() {
 					mati.broadcast('zeigeHauptmenue');
-					mati.zeigeContainer(document.getElementById('mati_spiel_lobby'), false, matiUtil.gotoNaechsterBefehl);
+					mati.zeigeContainer(document.getElementById('mati_spiel_lobby'), matiUtil.gotoNaechsterBefehl);
+					
+					
+					
+					
+					
+					
+					
+					var introAnimationStartzeit = null;
+					var mati_titel = document.getElementById('mati_titel');
+					var mati_svg_saisonknobeln = document.getElementById('mati_svg_saisonknobeln');
+					var mati_svg_saisonknobeln_ipunkt = document.getElementById('mati_svg_saisonknobeln_ipunkt');
+
+
+					var mati_schriftzug_saisonknobeln_length = document.getElementById('mati_schriftzug_saisonknobeln').getTotalLength();
+					var mati_schriftzug_ipunkt_length = document.getElementById('mati_schriftzug_ipunkt').getTotalLength();
+					var mati_schriftzug_stiftlaenge = 10;
+
+					var mati_titel_zoom_animationslaenge = 1000;
+					var mati_titel_introAnimationStartzeithoehe = window.innerWidth / 5;
+					var mati_titel_ziehlhoehe = document.getElementById('mati_titel_container').offsetHeight;
+					var mati_titel_introAnimationStartzeittop = window.innerHeight / 2 - window.innerWidth / 10;
+
+					var mati_schriftzug_schreibanimation_fertig = false;
+
+					mati_svg_saisonknobeln.setAttribute('stroke-dasharray', (mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length) + ' ' + mati_schriftzug_saisonknobeln_length);
+					mati_svg_saisonknobeln_ipunkt.setAttribute('stroke-dasharray', mati_schriftzug_ipunkt_length + ' ' + (mati_schriftzug_saisonknobeln_length * 2));
+
+					mati_svg_saisonknobeln.setAttribute('stroke-dashoffset', mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length + mati_schriftzug_stiftlaenge);
+					mati_svg_saisonknobeln_ipunkt.setAttribute('stroke-dashoffset', mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length + mati_schriftzug_stiftlaenge);
+
+					document.getElementById('mati_titel_container').style['visibility'] = 'visible';
+
+					function introAnimation(timestamp) {
+						if (!introAnimationStartzeit) {
+							introAnimationStartzeit = timestamp;
+						}
+						var progress = (timestamp - introAnimationStartzeit) / 2;
+
+						if (progress < mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length + mati_schriftzug_stiftlaenge) {
+							mati_svg_saisonknobeln.setAttribute('stroke-dashoffset', mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length + mati_schriftzug_stiftlaenge - progress);
+							mati_svg_saisonknobeln_ipunkt.setAttribute('stroke-dashoffset', mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length + mati_schriftzug_stiftlaenge - progress);
+						}
+						else {
+							if (!mati_schriftzug_schreibanimation_fertig) {
+								let overlay = document.getElementById('mati_intro_overlay');
+								overlay.parentNode.removeChild(overlay);
+							
+								mati_svg_saisonknobeln.removeAttribute('stroke-dashoffset');
+								mati_svg_saisonknobeln_ipunkt.removeAttribute('stroke-dashoffset');
+								mati_svg_saisonknobeln.removeAttribute('stroke-dasharray');
+								mati_svg_saisonknobeln_ipunkt.removeAttribute('stroke-dasharray');
+
+								mati_schriftzug_schreibanimation_fertig = true;
+							}
+
+							if (progress < mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length + mati_schriftzug_stiftlaenge + mati_titel_zoom_animationslaenge) {
+								let zoomanimationsfortschritt = (progress - mati_schriftzug_saisonknobeln_length - mati_schriftzug_ipunkt_length - mati_schriftzug_stiftlaenge) / mati_titel_zoom_animationslaenge;
+								mati_titel.style['top'] = (mati_titel_introAnimationStartzeittop * (1 - zoomanimationsfortschritt)) + 'px';
+								mati_titel.style['height'] = (mati_titel_introAnimationStartzeithoehe + (mati_titel_ziehlhoehe - mati_titel_introAnimationStartzeithoehe) * zoomanimationsfortschritt) + 'px';
+							}
+							else {
+								mati_titel.style['top'] = '0px';
+								mati_titel.style['height'] = '100%';
+								document.getElementById('mati_spiel_lobby_credits').style['display'] = 'block';
+								document.getElementById('mati_spiel_lobby_content').style['display'] = 'flex';
+								mati.spielerChanged();
+							}
+						}
+
+						if (progress < mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length + mati_schriftzug_stiftlaenge + mati_titel_zoom_animationslaenge) {
+							window.requestAnimationFrame(introAnimation);
+						}
+					}
+
+					window.requestAnimationFrame(introAnimation);
+
+					document.getElementById("mati_hauptmusik_button").addEventListener("click",function() {
+						if (matiUtil.musikIstEingeschaltet) {
+							matiUtil.musikAusschalten(document.getElementById("mati_hauptmusik"));
+							for (let musikXIcon of document.getElementsByClassName("mati_hauptmusik_button_x")) {
+								musikXIcon.style['visibility'] = 'visible';
+							}
+						}
+						else {
+							matiUtil.musikEinschalten(document.getElementById("mati_hauptmusik"));
+							for (let musikXIcon of document.getElementsByClassName("mati_hauptmusik_button_x")) {
+								musikXIcon.style['visibility'] = 'hidden';
+							}
+						}
+						mati.broadcast('setSound');
+					});
+					
+					
+					
+					
+					
+					
+					
 				});
 			};
 			Tiltspot.on.connect = function(controllerId) {
@@ -921,11 +1019,15 @@
 					case 'setSound':
 						if (data) {
 							matiUtil.musikEinschalten(document.getElementById("mati_hauptmusik"));
-							document.getElementById("mati_hauptmusik_button_x").style['visibility'] = 'hidden';
+							for (let musikXIcon of document.getElementsByClassName("mati_hauptmusik_button_x")) {
+								musikXIcon.style['visibility'] = 'hidden';
+							}
 						}
 						else {
 							matiUtil.musikAusschalten(document.getElementById("mati_hauptmusik"));
-							document.getElementById("mati_hauptmusik_button_x").style['visibility'] = 'visible';
+							for (let musikXIcon of document.getElementsByClassName("mati_hauptmusik_button_x")) {
+								musikXIcon.style['visibility'] = 'visible';
+							}
 						}
 						mati.broadcast('setSound');
 						break;
@@ -938,7 +1040,10 @@
 				
 				mati.setFrageGroesseUndPosition();
 				
+				let oldMatiFrageDisplay = document.getElementById('mati_frage').style['display'];
+				document.getElementById('mati_frage').style['display'] = 'block';
 				mati.schrittweiseResizeBisEsPasst(document.getElementById('mati_frage_spieler_container'), document.getElementById('mati_frage_spieler'));
+				document.getElementById('mati_frage').style['display'] = oldMatiFrageDisplay;
 				
 				//Workaround fuer verbuggter Microsoft-Edge-Browser, der mit vh in Animationen nicht klar kommt.
 				let hoehe = document.getElementById('mati_spiel_alles').offsetHeight;
@@ -965,86 +1070,7 @@
 			window.addEventListener( 'resize', onAenderungDerFenstergroesse, false );
 			
 			
-			var introAnimationStartzeit = null;
-			var mati_titel = document.getElementById('mati_titel');
-			var mati_svg_saisonknobeln = document.getElementById('mati_svg_saisonknobeln');
-			var mati_svg_saisonknobeln_ipunkt = document.getElementById('mati_svg_saisonknobeln_ipunkt');
-
-
-			var mati_schriftzug_saisonknobeln_length = document.getElementById('mati_schriftzug_saisonknobeln').getTotalLength();
-			var mati_schriftzug_ipunkt_length = document.getElementById('mati_schriftzug_ipunkt').getTotalLength();
-			var mati_schriftzug_stiftlaenge = 10;
-
-			var mati_titel_zoom_animationslaenge = 1000;
-			var mati_titel_introAnimationStartzeithoehe = window.innerWidth / 5;
-			var mati_titel_ziehlhoehe = document.getElementById('mati_titel_container').offsetHeight;
-			var mati_titel_introAnimationStartzeittop = window.innerHeight / 2 - window.innerWidth / 10;
-
-			var mati_schriftzug_schreibanimation_fertig = false;
-
-			mati_svg_saisonknobeln.setAttribute('stroke-dasharray', (mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length) + ' ' + mati_schriftzug_saisonknobeln_length);
-			mati_svg_saisonknobeln_ipunkt.setAttribute('stroke-dasharray', mati_schriftzug_ipunkt_length + ' ' + (mati_schriftzug_saisonknobeln_length * 2));
-
-			mati_svg_saisonknobeln.setAttribute('stroke-dashoffset', mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length + mati_schriftzug_stiftlaenge);
-			mati_svg_saisonknobeln_ipunkt.setAttribute('stroke-dashoffset', mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length + mati_schriftzug_stiftlaenge);
-
-			document.getElementById('mati_titel_container').style['visibility'] = 'visible';
-
-			function introAnimation(timestamp) {
-				if (!introAnimationStartzeit) {
-					introAnimationStartzeit = timestamp;
-				}
-				var progress = (timestamp - introAnimationStartzeit) / 2;
-
-				if (progress < mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length + mati_schriftzug_stiftlaenge) {
-					mati_svg_saisonknobeln.setAttribute('stroke-dashoffset', mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length + mati_schriftzug_stiftlaenge - progress);
-					mati_svg_saisonknobeln_ipunkt.setAttribute('stroke-dashoffset', mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length + mati_schriftzug_stiftlaenge - progress);
-				}
-				else {
-					if (!mati_schriftzug_schreibanimation_fertig) {
-						let overlay = document.getElementById('mati_intro_overlay');
-						overlay.parentNode.removeChild(overlay);
-					
-						mati_svg_saisonknobeln.removeAttribute('stroke-dashoffset');
-						mati_svg_saisonknobeln_ipunkt.removeAttribute('stroke-dashoffset');
-						mati_svg_saisonknobeln.removeAttribute('stroke-dasharray');
-						mati_svg_saisonknobeln_ipunkt.removeAttribute('stroke-dasharray');
-
-						mati_schriftzug_schreibanimation_fertig = true;
-					}
-
-					if (progress < mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length + mati_schriftzug_stiftlaenge + mati_titel_zoom_animationslaenge) {
-						let zoomanimationsfortschritt = (progress - mati_schriftzug_saisonknobeln_length - mati_schriftzug_ipunkt_length - mati_schriftzug_stiftlaenge) / mati_titel_zoom_animationslaenge;
-						mati_titel.style['top'] = (mati_titel_introAnimationStartzeittop * (1 - zoomanimationsfortschritt)) + 'px';
-						mati_titel.style['height'] = (mati_titel_introAnimationStartzeithoehe + (mati_titel_ziehlhoehe - mati_titel_introAnimationStartzeithoehe) * zoomanimationsfortschritt) + 'px';
-					}
-					else {
-						mati_titel.style['top'] = '0px';
-						mati_titel.style['height'] = '100%';
-						document.getElementById('mati_spiel_lobby_credits').style['display'] = 'block';
-						document.getElementById('mati_spiel_lobby_content').style['display'] = 'flex';
-						mati.spielerChanged();
-					}
-				}
-
-				if (progress < mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length + mati_schriftzug_stiftlaenge + mati_titel_zoom_animationslaenge) {
-					window.requestAnimationFrame(introAnimation);
-				}
-			}
-
-			window.requestAnimationFrame(introAnimation);
-
-			document.getElementById("mati_hauptmusik_button").addEventListener("click",function() {
-				if (matiUtil.musikIstEingeschaltet) {
-					matiUtil.musikAusschalten(document.getElementById("mati_hauptmusik"));
-					document.getElementById("mati_hauptmusik_button_x").style['visibility'] = 'visible';
-				}
-				else {
-					matiUtil.musikEinschalten(document.getElementById("mati_hauptmusik"));
-					document.getElementById("mati_hauptmusik_button_x").style['visibility'] = 'hidden';
-				}
-				mati.broadcast('setSound');
-			});
+			
 		</script>
 
 	</body>
