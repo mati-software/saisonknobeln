@@ -220,7 +220,7 @@
 			#mati_spiel_lobby {
 				background-color: #ddd;
 				color: black;
-				background-image: url(game/lobby.jpg);
+				background-image: url(lobby.jpg);
 			}
 			@keyframes mati_animation_intro_hintergrundfarbe {
 				0% {
@@ -736,6 +736,22 @@
 								<path d="M -43 -50 l 10 0 l -10 0 m 50 50 m 250 55 l 0 -2"
 								   stroke="#ffcc33" stroke-width="6" />
 							</g>
+							
+							<path id="mati_svg_saisonknobeln2" d="M 82 130
+							   m 0 -70  c 15 10 50 10 70 -10 c 7 -7 7 -28 -21 -28       c -80 0 65 115 -25 115 c -40 0 -40 -30 -30 -40 c -10 10 -10 40 30 40
+							   c 80 0 57 -55 95 -55 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 50 15 50
+							   q 25 0 25 -50 q 0 50 15 50
+							   q 10 0 35 -50 l -3 7 c 30 13 30 43 0 43
+							   c 60 0 40 -50 75 -50 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 10 15 10
+							   c 10 0 10 -10 20 -10 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25
+							   q 20 0 45 -50 q 25 -50 10 -50 q -15 0 -15 100 q 0 -50 17 -50 q 10 0 10 13 q 0 9 -20 13 c 20 0 20 24 40 24
+							   c 15 0 15 -50 30 -50 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25
+							   c 30 0 10 -50 45 -50 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 10 15 10
+							   c 20 0 60 -60 38 -60 c -20 0 -20 100 15 100 q 25 0 12 -50 q 20 20 40 20
+							   c 40 0 40 -20 25 -20 c -25 0 -25 50 0 50
+							   q 20 0 45 -50 q 25 -50 10 -50 c -20 0 -20 100 15 100
+							   c 15 0 15 -50 30 -50 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25 q 10 0 20 -10"
+							   stroke="#ff0000" stroke-width="12" filter="url(#mati_svg_shadow)" />
 						</g>
 
 
@@ -1002,7 +1018,7 @@
 						mati.sendMsg(controllerId);
 						break;
 					case 'antwortAbgeben':
-						let spieler = mati.spielerImLaufendenSpiel[controllerId];
+						let spieler = mati.getSpielerImLaufendenSpielById(controllerId);
 						spieler.antwortAufAktuelleFrage = data.antwort;
 						spieler.schaetzungAFuerAktuelleFrage = data.schaetzungAntwortA;
 						spieler.schaetzungBFuerAktuelleFrage = data.schaetzungAntwortB;

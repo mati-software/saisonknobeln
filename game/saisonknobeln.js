@@ -636,6 +636,14 @@ mati.findeKnobelSpieler = function(id) {
 	}
 	return null;
 };
+
+mati.getSpielerImLaufendenSpielById = function(id) {
+	for (let knobelSpieler of mati.spielerImLaufendenSpiel) {
+		if (knobelSpieler.id === id) {
+			return knobelSpieler;
+		}
+	}
+};
 	
 mati.spielerChanged = function() {
 	if (!mati.spielLaeuft) {
