@@ -675,84 +675,65 @@
 					<svg id="mati_titel" preserveAspectRatio="xMidYMid meet" viewBox="0 0 800 160" xmlns="http://www.w3.org/2000/svg"
 					  xmlns:xlink="http://www.w3.org/1999/xlink">
 
-						<defs>
-							<!-- width muss den gesamten Bereich abdecken vor dem downscaling -->
-							<filter id="mati_svg_shadow" x="0" y="0" width="1100" height="160" filterUnits="userSpaceOnUse">
-								<feGaussianBlur in="SourceGraphic" stdDeviation="2"/>
-								<feMerge>
-								  <feMergeNode/>
-								  <feMergeNode in="SourceGraphic"/>
-								</feMerge>
-							</filter>
-							<linearGradient id="mati_svg_farbverlauf" x1="0" y1="0" x2="0" y2="1">
-								<stop offset="0" stop-color="#ffcc33" />
-								<stop offset="1" stop-color="#ff7700" />
-							</linearGradient>
-						</defs>
+                        <defs>
+                            <path d="M 82 130
+                               m 0 -70  c 15 10 50 10 70 -10 c 7 -7 7 -28 -21 -28       c -80 0 65 115 -25 115 c -40 0 -40 -30 -30 -40 c -10 10 -10 40 30 40
+                               c 80 0 57 -55 95 -55 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 50 15 50
+                               q 25 0 25 -50 q 0 50 15 50
+                               q 10 0 35 -50 l -3 7 c 30 13 30 43 0 43
+                               c 60 0 40 -50 75 -50 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 10 15 10
+                               c 10 0 10 -10 20 -10 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25
+                               q 20 0 45 -50 q 25 -50 10 -50 q -15 0 -15 100 q 0 -50 17 -50 q 10 0 10 13 q 0 9 -20 13 c 20 0 20 24 40 24
+                               c 15 0 15 -50 30 -50 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25
+                               c 30 0 10 -50 45 -50 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 10 15 10
+                               c 20 0 60 -60 38 -60 c -20 0 -20 100 15 100 q 25 0 12 -50 q 20 20 40 20
+                               c 40 0 40 -20 25 -20 c -25 0 -25 50 0 50
+                               q 20 0 45 -50 q 25 -50 10 -50 c -20 0 -20 100 15 100
+                               c 15 0 15 -50 30 -50 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25 q 10 0 20 -10"
+                               id="mati_schriftzug_saisonknobeln" />
+                            <!-- im unsichtbaren Berech rummalen, damit selbst MSIE kapiert, dass er den Filter rendern soll -->
+                            <path d="M -43 -50 l 10 0 l -10 0 m 50 50 m 250 55 l 0 -2"
+                               id="mati_schriftzug_ipunkt" />
+                            <!-- width muss den gesamten Bereich abdecken vor dem downscaling -->
+                            <filter id="mati_svg_shadow" x="0" y="0" width="1100" height="160" filterUnits="userSpaceOnUse">
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="2"/>
+                                <feMerge>
+                                  <feMergeNode/>
+                                  <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                            <linearGradient id="mati_svg_farbverlauf" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0" stop-color="#ffcc33" />
+                                <stop offset="1" stop-color="#ff7700" />
+                            </linearGradient>
+                        </defs>
 
 
+                        <g transform="scale(.8,1) skewX(-20)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <g id="mati_svg_saisonknobeln">
+                                <g stroke="black" stroke-width="18" filter="url(#mati_svg_shadow)">
+                                    <use xlink:href="#mati_schriftzug_saisonknobeln"/>
+                                </g>
+                                <g stroke="url(#mati_svg_farbverlauf)" stroke-width="6">
+                                    <use xlink:href="#mati_schriftzug_saisonknobeln"/>
+                                </g>
+                            </g>
+                            <g id="mati_svg_saisonknobeln_ipunkt">
+                                <g stroke="black" stroke-width="18" filter="url(#mati_svg_shadow)">
+                                    <use xlink:href="#mati_schriftzug_ipunkt"/>
+                                </g>
+                                <g stroke="#ffcc33" stroke-width="6">
+                                    <use xlink:href="#mati_schriftzug_ipunkt"/>
+                                </g>
+                            </g>
 
-
-
-
-
-						<g transform="scale(.8,1) skewX(-20)" fill="none" stroke-linecap="round" stroke-linejoin="round" >
-							<g id="mati_svg_saisonknobeln">
-								<path id="mati_schriftzug_saisonknobeln" d="M 82 130
-								   m 0 -70  c 15 10 50 10 70 -10 c 7 -7 7 -28 -21 -28       c -80 0 65 115 -25 115 c -40 0 -40 -30 -30 -40 c -10 10 -10 40 30 40
-								   c 80 0 57 -55 95 -55 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 50 15 50
-								   q 25 0 25 -50 q 0 50 15 50
-								   q 10 0 35 -50 l -3 7 c 30 13 30 43 0 43
-								   c 60 0 40 -50 75 -50 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 10 15 10
-								   c 10 0 10 -10 20 -10 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25
-								   q 20 0 45 -50 q 25 -50 10 -50 q -15 0 -15 100 q 0 -50 17 -50 q 10 0 10 13 q 0 9 -20 13 c 20 0 20 24 40 24
-								   c 15 0 15 -50 30 -50 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25
-								   c 30 0 10 -50 45 -50 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 10 15 10
-								   c 20 0 60 -60 38 -60 c -20 0 -20 100 15 100 q 25 0 12 -50 q 20 20 40 20
-								   c 40 0 40 -20 25 -20 c -25 0 -25 50 0 50
-								   q 20 0 45 -50 q 25 -50 10 -50 c -20 0 -20 100 15 100
-								   c 15 0 15 -50 30 -50 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25 q 10 0 20 -10"
-								   stroke="black" stroke-width="18" filter="url(#mati_svg_shadow)" />
-								<path d="M 82 130
-								   m 0 -70  c 15 10 50 10 70 -10 c 7 -7 7 -28 -21 -28       c -80 0 65 115 -25 115 c -40 0 -40 -30 -30 -40 c -10 10 -10 40 30 40
-								   c 80 0 57 -55 95 -55 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 50 15 50
-								   q 25 0 25 -50 q 0 50 15 50
-								   q 10 0 35 -50 l -3 7 c 30 13 30 43 0 43
-								   c 60 0 40 -50 75 -50 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 10 15 10
-								   c 10 0 10 -10 20 -10 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25
-								   q 20 0 45 -50 q 25 -50 10 -50 q -15 0 -15 100 q 0 -50 17 -50 q 10 0 10 13 q 0 9 -20 13 c 20 0 20 24 40 24
-								   c 15 0 15 -50 30 -50 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25
-								   c 30 0 10 -50 45 -50 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 10 15 10
-								   c 20 0 60 -60 38 -60 c -20 0 -20 100 15 100 q 25 0 12 -50 q 20 20 40 20
-								   c 40 0 40 -20 25 -20 c -25 0 -25 50 0 50
-								   q 20 0 45 -50 q 25 -50 10 -50 c -20 0 -20 100 15 100
-								   c 15 0 15 -50 30 -50 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25 q 10 0 20 -10"
-								   stroke="url(#mati_svg_farbverlauf)" stroke-width="6" />
-							</g>
-							
-							<g id="mati_svg_saisonknobeln_ipunkt">
-								<path id="mati_schriftzug_ipunkt" d="M -43 -50 l 10 0 l -10 0 m 50 50 m 250 55 l 0 -2"
-								   stroke="black" stroke-width="18" filter="url(#mati_svg_shadow)" />
-								<path d="M -43 -50 l 10 0 l -10 0 m 50 50 m 250 55 l 0 -2"
-								   stroke="#ffcc33" stroke-width="6" />
-							</g>
-							
-							<path id="mati_svg_saisonknobeln2" d="M 82 130
-							   m 0 -70  c 15 10 50 10 70 -10 c 7 -7 7 -28 -21 -28       c -80 0 65 115 -25 115 c -40 0 -40 -30 -30 -40 c -10 10 -10 40 30 40
-							   c 80 0 57 -55 95 -55 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 50 15 50
-							   q 25 0 25 -50 q 0 50 15 50
-							   q 10 0 35 -50 l -3 7 c 30 13 30 43 0 43
-							   c 60 0 40 -50 75 -50 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 10 15 10
-							   c 10 0 10 -10 20 -10 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25
-							   q 20 0 45 -50 q 25 -50 10 -50 q -15 0 -15 100 q 0 -50 17 -50 q 10 0 10 13 q 0 9 -20 13 c 20 0 20 24 40 24
-							   c 15 0 15 -50 30 -50 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25
-							   c 30 0 10 -50 45 -50 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 10 15 10
-							   c 20 0 60 -60 38 -60 c -20 0 -20 100 15 100 q 25 0 12 -50 q 20 20 40 20
-							   c 40 0 40 -20 25 -20 c -25 0 -25 50 0 50
-							   q 20 0 45 -50 q 25 -50 10 -50 c -20 0 -20 100 15 100
-							   c 15 0 15 -50 30 -50 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25 q 10 0 20 -10"
-							   stroke="#ff0000" stroke-width="12" filter="url(#mati_svg_shadow)" />
-						</g>
+                            <g id="mati_svg_saisonknobeln2" stroke="#ff0000" stroke-width="12">
+                                <use xlink:href="#mati_schriftzug_saisonknobeln"/>
+                            </g>
+                            <g id="mati_svg_saisonknobeln_ipunkt2" stroke="#ff0000" stroke-width="12">
+                                <use xlink:href="#mati_schriftzug_ipunkt"/>
+                            </g>
+                        </g>
 
 
 
@@ -903,29 +884,35 @@
 					
 					
 					var introAnimationStartzeit = null;
-					var mati_titel = document.getElementById('mati_titel');
-					var mati_svg_saisonknobeln = document.getElementById('mati_svg_saisonknobeln');
-					var mati_svg_saisonknobeln_ipunkt = document.getElementById('mati_svg_saisonknobeln_ipunkt');
+                    var mati_titel = document.getElementById('mati_titel');
+                    var mati_svg_saisonknobeln = document.getElementById('mati_svg_saisonknobeln');
+                    var mati_svg_saisonknobeln2 = document.getElementById('mati_svg_saisonknobeln2');
+                    var mati_svg_saisonknobeln_ipunkt = document.getElementById('mati_svg_saisonknobeln_ipunkt');
+                    var mati_svg_saisonknobeln_ipunkt2 = document.getElementById('mati_svg_saisonknobeln_ipunkt2');
 
 
-					var mati_schriftzug_saisonknobeln_length = document.getElementById('mati_schriftzug_saisonknobeln').getTotalLength();
-					var mati_schriftzug_ipunkt_length = document.getElementById('mati_schriftzug_ipunkt').getTotalLength();
-					var mati_schriftzug_stiftlaenge = 10;
+                    var mati_schriftzug_saisonknobeln_length = document.getElementById('mati_schriftzug_saisonknobeln').getTotalLength();
+                    var mati_schriftzug_ipunkt_length = document.getElementById('mati_schriftzug_ipunkt').getTotalLength();
+                    var mati_schriftzug_stiftlaenge = 10;
 
-					var mati_titel_zoom_animationslaenge = 1000;
-					var mati_titel_introAnimationStartzeithoehe = window.innerWidth / 5;
-					var mati_titel_ziehlhoehe = document.getElementById('mati_titel_container').offsetHeight;
-					var mati_titel_introAnimationStartzeittop = window.innerHeight / 2 - window.innerWidth / 10;
+                    var mati_titel_zoom_animationslaenge = 1000;
+                    var mati_titel_introAnimationStartzeithoehe = window.innerWidth / 5;
+                    var mati_titel_ziehlhoehe = document.getElementById('mati_titel_container').offsetHeight;
+                    var mati_titel_introAnimationStartzeittop = window.innerHeight / 2 - window.innerWidth / 10;
 
-					var mati_schriftzug_schreibanimation_fertig = false;
+                    var mati_schriftzug_schreibanimation_fertig = false;
 
-					mati_svg_saisonknobeln.setAttribute('stroke-dasharray', (mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length) + ' ' + mati_schriftzug_saisonknobeln_length);
-					mati_svg_saisonknobeln_ipunkt.setAttribute('stroke-dasharray', mati_schriftzug_ipunkt_length + ' ' + (mati_schriftzug_saisonknobeln_length * 2));
+                    mati_svg_saisonknobeln.setAttribute('stroke-dasharray', (mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length) + ' ' + mati_schriftzug_saisonknobeln_length);
+                    mati_svg_saisonknobeln2.setAttribute('stroke-dasharray', mati_schriftzug_stiftlaenge + ' ' + (mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length));
+                    mati_svg_saisonknobeln_ipunkt.setAttribute('stroke-dasharray', mati_schriftzug_ipunkt_length + ' ' + (mati_schriftzug_saisonknobeln_length * 2));
+                    mati_svg_saisonknobeln_ipunkt2.setAttribute('stroke-dasharray', mati_schriftzug_stiftlaenge + ' ' +  (mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length));
 
-					mati_svg_saisonknobeln.setAttribute('stroke-dashoffset', mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length + mati_schriftzug_stiftlaenge);
-					mati_svg_saisonknobeln_ipunkt.setAttribute('stroke-dashoffset', mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length + mati_schriftzug_stiftlaenge);
+                    mati_svg_saisonknobeln.setAttribute('stroke-dashoffset', mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length + mati_schriftzug_stiftlaenge);
+                    mati_svg_saisonknobeln_ipunkt.setAttribute('stroke-dashoffset', mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length + mati_schriftzug_stiftlaenge);
+                    mati_svg_saisonknobeln2.setAttribute('stroke-dashoffset', mati_schriftzug_stiftlaenge);
+                    mati_svg_saisonknobeln_ipunkt2.setAttribute('stroke-dashoffset', mati_schriftzug_stiftlaenge);
 
-					document.getElementById('mati_titel_container').style['visibility'] = 'visible';
+                    document.getElementById('mati_titel_container').style['visibility'] = 'visible';
 
 					function introAnimation(timestamp) {
 						if (!introAnimationStartzeit) {
@@ -936,6 +923,8 @@
 						if (progress < mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length + mati_schriftzug_stiftlaenge) {
 							mati_svg_saisonknobeln.setAttribute('stroke-dashoffset', mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length + mati_schriftzug_stiftlaenge - progress);
 							mati_svg_saisonknobeln_ipunkt.setAttribute('stroke-dashoffset', mati_schriftzug_saisonknobeln_length + mati_schriftzug_ipunkt_length + mati_schriftzug_stiftlaenge - progress);
+                            mati_svg_saisonknobeln2.setAttribute('stroke-dashoffset', mati_schriftzug_stiftlaenge-progress);
+                            mati_svg_saisonknobeln_ipunkt2.setAttribute('stroke-dashoffset', mati_schriftzug_stiftlaenge-progress);
 						}
 						else {
 							if (!mati_schriftzug_schreibanimation_fertig) {
@@ -947,6 +936,8 @@
 								mati_svg_saisonknobeln.removeAttribute('stroke-dasharray');
 								mati_svg_saisonknobeln_ipunkt.removeAttribute('stroke-dasharray');
 
+                                mati_svg_saisonknobeln2.parentNode.removeChild(mati_svg_saisonknobeln2);
+                                mati_svg_saisonknobeln_ipunkt2.parentNode.removeChild(mati_svg_saisonknobeln_ipunkt2);
 								mati_schriftzug_schreibanimation_fertig = true;
 							}
 
