@@ -349,9 +349,13 @@ mati.neuesSpiel = function() {
 				}
 				
 				mati.zeigeContainer(document.getElementById('mati_frage'), function() {
-					mati.broadcast('zeigeAntwortmoeglichkeiten');
+					matiUtil.gotoNaechsterBefehl();
 				});
 			});
+            matiUtil.pushBefehl(function() {
+                mati.broadcast('zeigeAntwortmoeglichkeiten');
+                return true; //unterbrechbar, da auf Userinteraktion gewartet wird
+            });
 			matiUtil.pushBefehl(function() {
 				mati.tatsaechlicheAnzahlStimmenFuerA = 0;
 				mati.tatsaechlicheAnzahlStimmenFuerB = 0;
@@ -585,9 +589,8 @@ mati.neuesSpiel = function() {
 		if (rubrik === mati.rubriken[mati.rubriken.length - 1]) {
 			matiUtil.pushBefehl(function() {
 				document.getElementById('mati_punktestand_spielerliste_container_container').classList.add('mati_punktestand_endresultat');
-				//TODO smartphne-weiterutton zeigen
 				mati.broadcast('zeigeSpielAbschliessen');
-				//matiUtil.gotoNaechsterBefehl();
+                return true; //unterbrechbar, da auf userinteraktion gewartet wird
 			});
 		}
 		else {

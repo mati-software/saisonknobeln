@@ -2,7 +2,8 @@ var matiUtil = {
 	befehlsQueue : [],
 	befehlsQueueWirdAbgearbeitet : false,
 	l10nTexte : {},
-	musikIstEingeschaltet : true
+	musikIstEingeschaltet : true,
+    aktuellerBefehlIstUnterbrechbar : false
 };
 
 
@@ -27,12 +28,15 @@ matiUtil.gotoNaechsterBefehl = function() {
 	if (matiUtil.befehlsQueue.length > 0) {
 		let befehl = matiUtil.befehlsQueue.shift();
 		matiUtil.befehlsQueueWirdAbgearbeitet = true;
-		befehl();
+		matiUtil.aktuellerBefehlIstUnterbrechbar = befehl();
 	}
 	else {
 		matiUtil.befehlsQueueWirdAbgearbeitet = false;
 	}
 };
+/**
+ * Wenn die befehlsFunktion true zurueck gibt, ist der Befehl unterbrechbar (also keine Animation, sondern irgendwas das auf Nutzereingaben wartet)
+ */
 matiUtil.pushBefehl = function(befehlsFunktion) {
 	matiUtil.befehlsQueue.push(befehlsFunktion);
 	if (!matiUtil.befehlsQueueWirdAbgearbeitet) {
@@ -40,7 +44,12 @@ matiUtil.pushBefehl = function(befehlsFunktion) {
 	}
 };
 
-
+matiUtil.befehlsqueueLeeren = function() {
+    matiUtil.befehlsQueue = [];
+    if (matiUtil.aktuellerBefehlIstUnterbrechbar) {
+        matiUtil.befehlsQueueWirdAbgearbeitet = false;
+    }
+};
 
 
 

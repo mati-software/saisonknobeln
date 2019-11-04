@@ -1038,6 +1038,17 @@
 						}
 						mati.broadcast('setSound');
 						break;
+                    case 'spielAbbrechen':
+                        if (mati.spielLaeuft && mati.queueEnthaeltLaufendesSpiel) {
+                            matiUtil.befehlsqueueLeeren();
+                            mati.spielLaeuft = false;
+                            mati.queueEnthaeltLaufendesSpiel = false;
+                            matiUtil.pushBefehl(function() {
+                                mati.broadcast('zeigeHauptmenue');
+                                mati.zeigeContainer(document.getElementById('mati_spiel_lobby'), matiUtil.gotoNaechsterBefehl);
+                            });
+                        }
+                        break;
 				}
 			};				
 		

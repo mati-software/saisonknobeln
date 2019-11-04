@@ -97,7 +97,8 @@
 				border-radius:1.5em;
 				vertical-align:middle;
 			}
-			.mati_box .mati_button {
+			.mati_box .mati_button,
+            #mati_pause_menue .mati_button {
 				box-shadow:0 0 1em black;
 				margin:1em;
 			}
@@ -191,12 +192,44 @@
 				overflow:hidden;
 				white-space: nowrap;
 				text-overflow: ellipsis;
+                transition-property: right;
+                transition-duration: .5s;
 			}
+            .mati_spieler_mit_menuebutton span.mati_spieler_text {
+                right: 1.8em;
+            }
+            span#mati_spieler_menuebutton {
+                font-size: 200%;
+                width: 1.4em;
+                height: 1.4em;
+                position:absolute;
+                top:.4em;
+                right:-2em;
+				line-height:1.4em;
+				background-color:white;
+                color: black;
+				z-index:3;
+				box-shadow:0 0 .2em black;
+				overflow:hidden;
+                text-align:center;
+                border-radius:.4em;
+                transition-property: border-radius, height, right;
+                transition-duration: .5s;
+            }
+            .mati_spieler_mit_menuebutton span#mati_spieler_menuebutton {
+                right:.2em;
+            }
+            .mati_spieler_mit_menuebutton span#mati_spieler_menuebutton.mati_spieler_menuebutton_aufgeklappt {
+                border-bottom-left-radius: 0;
+                border-bottom-right-radius: 0;
+                height: 2em;
+            }
+
 			#mati_spieler_container {
 				font-size:200%;
 			}
 			
-			#mati_flaggen_container {
+			.mati_flaggen_container {
 				position:absolute;
 				bottom:1em;
 				left:1em;
@@ -226,7 +259,7 @@
 				animation-direction: alternate;
 			}
 			
-			#mati_hauptmusik_button {
+			.mati_hauptmusik_button {
 				height:auto;
 				width:3em;
 				border:.5em solid transparent; 
@@ -326,6 +359,33 @@
 				padding-top: 1em;
 				padding-bottom: 1em;
 			}
+            
+            #mati_pause_menue {
+                position:absolute;
+                left: .4em;
+                top: 4.8em;
+                right: .4em;
+                bottom: .4em;
+                background-color: white;
+                z-index: 3;
+                transform: scale(0);
+                transition-property: transform;
+                transition-duration: .5s;
+            }
+            #mati_pause_menue.mati_pause_menue_visible {
+                transform: scale(1);
+            }
+            #mati_pause_menue_schatten {
+                position:absolute;
+                left: .4em;
+                top: 4.8em;
+                right: .4em;
+                bottom: .4em;
+                background-color: black;
+                display: none;
+                z-index: 2;
+                box-shadow: 0 0 .4em black;
+            }
 			
 			@media (min-aspect-ratio:11/16) {
 				#mati_schieberegler_container1,
@@ -361,21 +421,51 @@
 	</head>
 	<body>
 		<div id="mati_controller_alles">
-			<div id="mati_spieler_container">
-			</div>
+            <div id="mati_spieler_container_container">
+                <div id="mati_spieler_container">
+                </div>
+                <span id="mati_spieler_menuebutton">&#9776;</span>
+            </div>
 			<div id="mati_content_container">
 				<div id="mati_hauptmenue" class="mati_box">
 					<div class="mati_button" id="mati_button_neues_spiel"></div>
 					<div class="mati_button" id="mati_button_beenden"></div>
-					<div id="mati_flaggen_container">
+					<div class="mati_flaggen_container">
+                        <span id="mati_flaggen_container_span">
+                        </span>
+                        <svg class="mati_hauptmusik_button" viewbox="0 0 200 120">
+                            <path d="M5 105 q0 -15 25 -15 q15 0 15 10 q0 15 -25 15 q-15 0 -15 -10 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M75 95 q0 -15 25 -15 q15 0 15 10 q0 15 -25 15 q-15 0 -15 -10 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M45 100 l0 -85 l-5 0 l0 85 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M115 90 l0 -85 l-5 5 l0 80 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M40 15 l75 -10 l0 20 l-75 10 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+                            
+                            <path d="M5 105 q0 -15 25 -15 q15 0 15 10 q0 15 -25 15 q-15 0 -15 -10 z" fill="white" />
+                            <path d="M75 95 q0 -15 25 -15 q15 0 15 10 q0 15 -25 15 q-15 0 -15 -10 z" fill="white" />
+                            <path d="M45 100 l0 -85 l-5 0 l0 85 z" fill="white" />
+                            <path d="M115 90 l0 -85 l-5 5 l0 80 z" fill="white" />
+                            <path d="M40 15 l75 -10 l0 20 l-75 10 z" fill="white" />
+                            
+                            <path d="M115 60 m60 -45 a75 75 0 0 1 0 90" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                            <path d="M115 60 m40 -30 a50 50 0 0 1 0 60" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                            <path d="M115 60 m20 -15 a25 25 0 0 1 0 30" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                            
+                            <path d="M115 60 m60 -45 a75 75 0 0 1 0 90" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                            <path d="M115 60 m40 -30 a50 50 0 0 1 0 60" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                            <path d="M115 60 m20 -15 a25 25 0 0 1 0 30" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                            
+                            <g class="mati_hauptmusik_button_x">
+                                <path d="M10 10 L190 110" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                                <path d="M10 110 L190 10" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                                
+                                <path d="M10 10 L190 110" stroke="#ff1111" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                                <path d="M10 110 L190 10" stroke="#ff1111" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                            </g>
+                        </svg>
 					</div>
 				</div>
 				<div id="mati_spiel_abschliessen" class="mati_box">
 					<div class="mati_button" id="mati_button_spiel_abschliessen"></div>
-				</div>
-				<div id="mati_pausemenue" class="mati_box">
-					<div class="mati_button" id="mati_button_spiel_fortsetzen"></div>
-					<div class="mati_button" id="mati_button_spiel_abbrechen"></div>
 				</div>
 				<div id="mati_wartebild" class="mati_box">
 					<div id="mati_warten_text">
@@ -416,6 +506,43 @@
 					</div>
 				</div>
 			</div>
+            <div id="mati_pause_menue_schatten">
+            </div>
+            <div id="mati_pause_menue">
+                <div class="mati_button" id="mati_button_spiel_fortsetzen"></div>
+                <div class="mati_button" id="mati_button_spiel_abbrechen"></div>
+                <div class="mati_flaggen_container">
+                    <svg class="mati_hauptmusik_button" viewbox="0 0 200 120">
+                        <path d="M5 105 q0 -15 25 -15 q15 0 15 10 q0 15 -25 15 q-15 0 -15 -10 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M75 95 q0 -15 25 -15 q15 0 15 10 q0 15 -25 15 q-15 0 -15 -10 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M45 100 l0 -85 l-5 0 l0 85 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M115 90 l0 -85 l-5 5 l0 80 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M40 15 l75 -10 l0 20 l-75 10 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+                        
+                        <path d="M5 105 q0 -15 25 -15 q15 0 15 10 q0 15 -25 15 q-15 0 -15 -10 z" fill="white" />
+                        <path d="M75 95 q0 -15 25 -15 q15 0 15 10 q0 15 -25 15 q-15 0 -15 -10 z" fill="white" />
+                        <path d="M45 100 l0 -85 l-5 0 l0 85 z" fill="white" />
+                        <path d="M115 90 l0 -85 l-5 5 l0 80 z" fill="white" />
+                        <path d="M40 15 l75 -10 l0 20 l-75 10 z" fill="white" />
+                        
+                        <path d="M115 60 m60 -45 a75 75 0 0 1 0 90" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                        <path d="M115 60 m40 -30 a50 50 0 0 1 0 60" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                        <path d="M115 60 m20 -15 a25 25 0 0 1 0 30" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                        
+                        <path d="M115 60 m60 -45 a75 75 0 0 1 0 90" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                        <path d="M115 60 m40 -30 a50 50 0 0 1 0 60" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                        <path d="M115 60 m20 -15 a25 25 0 0 1 0 30" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                        
+                        <g class="mati_hauptmusik_button_x">
+                            <path d="M10 10 L190 110" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                            <path d="M10 110 L190 10" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                            
+                            <path d="M10 10 L190 110" stroke="#ff1111" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                            <path d="M10 110 L190 10" stroke="#ff1111" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                        </g>
+                    </svg>
+                </div>
+            </div>
 		</div>
 		
 		<script src="matiUtil.js" rel="script" type="application/javascript"></script>
@@ -440,7 +567,8 @@
 				schaetzungAntwortB : 0,
 				gewaehlteAnwortmoeglichkeit : 0,
 				
-				musikIstEingeschaltet : true
+				musikIstEingeschaltet : true,
+                pauseMenueIstAufgeklappt : false
 			};
 			
 			mati.renderFarbe = function() {
@@ -467,10 +595,22 @@
 					.mati_spieler_img {
 						background-color:${hell50};
 					}
-					.mati_spieler_text {
+					span.mati_spieler_text {
 						color: ${hell50};
 						background: ${dunkel50} linear-gradient(135deg, ${dunkel50}, ${dunkel30});
 					}
+                    span#mati_spieler_menuebutton {
+						background-color:${hell50};
+						background:linear-gradient( 90deg, ${hell50dunkel80}, ${hell50}, ${hell50dunkel80});
+                    }
+                    .mati_spieler_mit_menuebutton span#mati_spieler_menuebutton.mati_spieler_menuebutton_aufgeklappt {
+                        background: none;
+                        background-color: ${dunkel50};
+                        color: ${hell50};
+                    }
+                    #mati_pause_menue {
+                        background-color: ${dunkel50};
+                    }
 					
 					.mati_kleiner_button {
 						background-color:${hell50};
@@ -513,9 +653,7 @@
 					}
 					
 					mati.aktuellSichbarerContainer = containerElement;
-					if (containerElement.id !== 'mati_pausemenue') {
-						mati.aktuellerContainerLautSpielstatus = containerElement;
-					}
+                    mati.aktuellerContainerLautSpielstatus = containerElement;
 					callback();
 				}, 1000);
 			};
@@ -526,6 +664,13 @@
 				document.getElementById('mati_schieberegler_anzeige_balken_a').style['width'] = Math.floor(mati.schaetzungAntwortA / mati.anzahlSpieler * 100) + '%';
 				document.getElementById('mati_schieberegler_anzeige_balken_b').style['width'] = Math.floor(mati.schaetzungAntwortB / mati.anzahlSpieler * 100) + '%';
 			};
+            
+            mati.pauseMenueAusblenden = function() {
+                document.getElementById('mati_pause_menue').classList.remove('mati_pause_menue_visible');
+                document.getElementById('mati_pause_menue_schatten').style['display'] = 'none';
+                document.getElementById('mati_spieler_menuebutton').classList.remove('mati_spieler_menuebutton_aufgeklappt');
+                mati.pauseMenueIstAufgeklappt = false;            
+            };
 			
 			
 			
@@ -534,6 +679,7 @@
 			};
 			
 			Tiltspot.on.msg = function (msg, data) {
+                //TODO fix rendern und dann nur inhalt ersetzen
 				if (document.getElementById('mati_spieler_container').getElementsByClassName('mati_spieler').length === 0) {
 					document.getElementById('mati_spieler_container').innerHTML = `
 						<div class="mati_spieler">
@@ -551,41 +697,11 @@
 							matiUtil.loadJson(Tiltspot.get.assetUrl("language-list.json"), function(sprachen) {
 								mati.sprachen = sprachen;
 								
-								document.getElementById('mati_flaggen_container').innerHTML = mati.sprachen.map(function (sprache) {
+								document.getElementById('mati_flaggen_container_span').innerHTML = mati.sprachen.map(function (sprache) {
 									return `
 										<img id="mati_flagge_code_${sprache.code}" class="${sprache.code === mati.spracheCode ? 'mati_flagge mati_flagge_aktiv' : 'mati_flagge'}" src="${Tiltspot.get.assetUrl(`gui-l10n/${sprache.code}.svg`)}" alt="${Tiltspot.get.assetUrl(`gui-l10n/${sprache.name}.svg`)}" />
 									`;
-								}).join('') + `
-									<svg id="mati_hauptmusik_button" viewbox="0 0 200 120">
-										<path d="M5 105 q0 -15 25 -15 q15 0 15 10 q0 15 -25 15 q-15 0 -15 -10 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
-										<path d="M75 95 q0 -15 25 -15 q15 0 15 10 q0 15 -25 15 q-15 0 -15 -10 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
-										<path d="M45 100 l0 -85 l-5 0 l0 85 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
-										<path d="M115 90 l0 -85 l-5 5 l0 80 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
-										<path d="M40 15 l75 -10 l0 20 l-75 10 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
-										
-										<path d="M5 105 q0 -15 25 -15 q15 0 15 10 q0 15 -25 15 q-15 0 -15 -10 z" fill="white" />
-										<path d="M75 95 q0 -15 25 -15 q15 0 15 10 q0 15 -25 15 q-15 0 -15 -10 z" fill="white" />
-										<path d="M45 100 l0 -85 l-5 0 l0 85 z" fill="white" />
-										<path d="M115 90 l0 -85 l-5 5 l0 80 z" fill="white" />
-										<path d="M40 15 l75 -10 l0 20 l-75 10 z" fill="white" />
-										
-										<path d="M115 60 m60 -45 a75 75 0 0 1 0 90" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-										<path d="M115 60 m40 -30 a50 50 0 0 1 0 60" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-										<path d="M115 60 m20 -15 a25 25 0 0 1 0 30" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-										
-										<path d="M115 60 m60 -45 a75 75 0 0 1 0 90" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-										<path d="M115 60 m40 -30 a50 50 0 0 1 0 60" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-										<path d="M115 60 m20 -15 a25 25 0 0 1 0 30" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-										
-										<g class="mati_hauptmusik_button_x">
-											<path d="M10 10 L190 110" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-											<path d="M10 110 L190 10" stroke="black" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-											
-											<path d="M10 10 L190 110" stroke="#ff1111" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-											<path d="M10 110 L190 10" stroke="#ff1111" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-										</g>
-									</svg>
-								`;
+								}).join('');
 								
 								for (let sprache of mati.sprachen) {
 									let spracheCode = sprache.code;
@@ -594,10 +710,11 @@
 									});
 								}
 								
-								document.getElementById('mati_hauptmusik_button').addEventListener('click', function() {
-									Tiltspot.send.msg('setSound', !mati.musikIstEingeschaltet);
-								});
-								
+								for (let musikButton of document.getElementsByClassName('mati_hauptmusik_button')) {
+                                    musikButton.addEventListener('click', function() {
+                                        Tiltspot.send.msg('setSound', !mati.musikIstEingeschaltet);
+                                    });
+								}
 								matiUtil.gotoNaechsterBefehl();
 							});
 						}
@@ -667,11 +784,13 @@
 					case 'zeigeHauptmenue':
 						matiUtil.pushBefehl(function() {
 							mati.zeigeContainer(document.getElementById('mati_hauptmenue'), false, matiUtil.gotoNaechsterBefehl);
+                            document.getElementById('mati_spieler_container_container').classList.remove('mati_spieler_mit_menuebutton');
 						});
 						break;
 					case 'zeigeWarten':
 						matiUtil.pushBefehl(function() {
 							mati.zeigeContainer(document.getElementById('mati_wartebild'), false, matiUtil.gotoNaechsterBefehl);
+                            document.getElementById('mati_spieler_container_container').classList.add('mati_spieler_mit_menuebutton');
 						});
 						break;
 					case 'zeigeAntwortmoeglichkeiten':
@@ -685,6 +804,7 @@
 						
 						matiUtil.pushBefehl(function() {
 							mati.zeigeContainer(document.getElementById('mati_antwortmoeglichkeiten'), false, matiUtil.gotoNaechsterBefehl);
+                            document.getElementById('mati_spieler_container_container').classList.add('mati_spieler_mit_menuebutton');
 						});
 						break;
 					case 'zeigeSpielAbschliessen':
@@ -733,6 +853,17 @@
 						}
 					}
 				}
+                
+                if (event.target.matches('#mati_spieler_menuebutton')) {
+                    if (mati.pauseMenueIstAufgeklappt) {
+                        mati.pauseMenueAusblenden();
+                    }
+                    else {
+                        document.getElementById('mati_pause_menue').classList.add('mati_pause_menue_visible');
+                        document.getElementById('mati_spieler_menuebutton').classList.add('mati_spieler_menuebutton_aufgeklappt');
+                        mati.pauseMenueIstAufgeklappt = true;
+                    }
+                }
 			});
 			document.addEventListener('touchend', function (event) {
 				if (event.target.matches('.mati_button')) {
@@ -809,6 +940,13 @@
 							case 'mati_button_beenden':
 								Tiltspot.exitGame();
 								break;
+                            case 'mati_button_spiel_fortsetzen':
+                                mati.pauseMenueAusblenden();
+                                break;
+                            case 'mati_button_spiel_abbrechen':
+                                mati.pauseMenueAusblenden();
+                                Tiltspot.send.msg('spielAbbrechen');
+                                break;
 						}
 					}
 				}
@@ -846,6 +984,12 @@
 				}
 				
 			});
+            
+            document.getElementById("mati_pause_menue").addEventListener("transitionend", function() {
+                if (mati.pauseMenueIstAufgeklappt) {
+                    document.getElementById('mati_pause_menue_schatten').style['display'] = 'block';
+                }
+            });
 			
 			var onAenderungDerFenstergroesse = function() {
 				//Workaround fuer verbuggter Microsoft-Edge-Browser, der mit vw in Animationen nicht klar kommt.
