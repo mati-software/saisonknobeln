@@ -24,646 +24,7 @@
 			}
 		</style>
 		
-		
-		<style>
-			body {
-				overflow:hidden;
-				padding:0;
-				border:0;
-				margin:0;
-			}
-			
-			#mati_spiel_alles {
-				position:fixed;
-				top:0;
-				left:0;
-				right:0;
-				bottom:0;
-				background-color:black;
-				font-family: Helvetica, Arial, sans-serif;
-				
-				-webkit-user-select: none;  
-				-moz-user-select: none;    
-				-ms-user-select: none;      
-				user-select: none;
-			}
-			
-			#mati_spiel_lobby_credits {
-				text-align: center;
-				color: #fac;
-				font-size: 100%;
-				text-shadow: 0 0 .3em black;
-				margin-top: -.8em;
-				line-height: 1.8em;
-				vertical-align: middle;
-				font-weight: bold;
-				font-style: italic;
-				display:none;
-			}
-			
-			#mati_spiel_spielerliste,
-			#mati_spiel_spielerwarteliste {
-				width:12em;
-				background-color:rgba(0,0,0,.6);
-				border-radius:1em;
-				position: relative;
-				margin: 0 .5em;
-			}
-			#mati_spiel_spielerliste_content,
-			#mati_spiel_spielerwarteliste_content {
-				position:absolute;
-				top:2em;
-				left:.2em;
-				right:.2em;
-				bottom:.2em;
-				overflow:hidden;
-				background-color:rgba(255,255,255,.6);
-				border-bottom-left-radius:.8em;
-				border-bottom-right-radius:.8em;
-				padding-left:.6em;
-			}
-			#mati_spiel_spielerliste_caption,
-			#mati_spiel_spielerwarteliste_caption {
-				position:absolute;
-				top:0;
-				left:0;
-				right:0;
-				height:2em;
-				line-height:2em;
-				vertical-align:middle;
-				padding-left:1em;
-				color:white;
-			}
-			h1 {
-				font-size:2em;
-				line-height:1.5em;
-				vertical-align:middle;
-				height:1.5em;
-				font-weight:bold;
-				text-align:center;
-				margin:0;
-				padding:0;
-			}
-			#mati_spiel_joincode_container {
-				height:2em;
-				line-height:2em;
-				vertical-align:middle;
-				text-align:center;
-			}
-			
-			#mati_spiel_spielerliste_content .mati_liste,
-			#mati_spiel_spielerwarteliste_content .mati_liste {
-				margin:0;
-				padding:.3em 0 .3em 0;
-			}
-			.mati_spieler {
-				padding:0;
-				margin:0;
-				height:2.2em;
-				vertical-align:middle;
-				overflow:hidden;
-				position:relative;
-				width:10em;
-			}
-			span.mati_spieler_img {
-				position:absolute;
-				left:.2em;
-				top:.2em;
-				border-radius:.9em;
-				padding:.1em;
-				width:1.6em;
-				height:1.6em;
-				overflow:hidden;
-				z-index:2;
-				box-shadow:0 0 .2em black;
-			}
-			span.mati_spieler_img img {
-				float:left;
-				width:1.6em;
-				height:1.6em;
-				border-radius:.8em;
-			}
-			span.mati_spieler_text {
-				position:absolute;
-				display:block;
-				line-height:1.4em;
-				top:.4em;
-				bottom:.4em;
-				left:1em;
-				right:.2em;
-				padding-left:1.2em;
-				padding-right:.1em;
-				background-color:black;
-				z-index:1;
-				box-shadow:0 0 .2em black;
-				overflow:hidden;
-				white-space: nowrap;
-				text-overflow: ellipsis;
-			}
-			@keyframes mati_animation_wackelnd {
-				from {
-					transform: rotate(-10deg);
-				}
-				to {
-					transform: rotate(10deg);
-				}
-			}
-			.mati_wackelnd {
-				animation-name: mati_animation_wackelnd;
-				animation-duration: 1s;
-				animation-iteration-count: infinite;
-				animation-direction: alternate;
-				animation-timing-function: ease-in-out;
-			}
-			@keyframes mati_animation_spieler_fertig {
-				from {
-					transform: scale(1);
-				}
-				to {
-					transform: scale(1.2);
-				}
-			}
-			.mati_spieler_fertig {
-				animation-name: mati_animation_spieler_fertig;
-				animation-duration: .2s;
-				animation-iteration-count: 4;
-				animation-direction: alternate;
-				animation-timing-function: linear;
-			}
-			
-			.mati_box {
-				position:absolute;
-				left:0;
-				top:0;
-				width:100%;
-				height:100%;
-				overflow:hidden;
-				backface-visibility: hidden;
-				display:none;
-				background-repeat: no-repeat;
-				background-size: cover;
-                background-position: center;				 
-			}
-			
-			.mati_box_hide {
-				animation-name: mati_animation_box_hide;
-				animation-duration: 1s;
-				animation-iteration-count: 1;
-				transform: perspective(400vh) translateZ(-50vh) rotateX(90deg) translateZ(50vh);
-			}
-			.mati_box_show {
-				animation-name: mati_animation_box_show;
-				animation-duration: 1s;
-				animation-iteration-count: 1;
-			}
-			
-			#mati_spiel_lobby {
-				background-color: #ddd;
-				color: black;
-				background-image: url(lobby.jpg);
-			}
-			@keyframes mati_animation_intro_hintergrundfarbe {
-				0% {
-					background-color: black;
-				}
-				50% {
-					background-color: white;
-				}
-				100% {
-					background-color: rgba(255, 255, 255, 0);
-				}
-			}
-
-			#mati_titel {
-				position:absolute;
-				left: 0;
-				top: calc(50vh - 10vw);
-				height: 20vw;
-				width: 100%;
-				overflow: hidden;
-			}
-
-			#mati_intro_overlay {
-				position:absolute;
-				left:0;
-				top:0;
-				right:0;
-				bottom:0;
-				animation-name: mati_animation_intro_hintergrundfarbe;
-				animation-duration: 6s;
-				animation-fill-mode: forwards;
-				background-color: black;
-				z-index: 2;
-			}
-
-			#mati_titel_container {
-				position: relative;
-				height: 7em;
-				z-index: 3;
-			}
-			
-			#mati_spiel_lobby_content {
-				z-index: 1;
-				position: absolute;
-				top: 8em;
-				left: 0;
-				right: 0;
-				bottom: 1em;
-				display: flex;
-				justify-content: center;
-				display:none;
-			}
-			
-			
-			
-			@keyframes mati_animation_einblenden {
-				from {
-					opacity: 0;
-				}
-				to {
-					opacity: 1;
-				}
-			}
-			.mati_eingeblendet {
-				opacity: 1;
-				animation-name: mati_animation_einblenden;
-				animation-duration: 1s;
-				animation-iteration-count: 1;
-				animation-fill-mode: forwards;
-			}
-			
-			
-			/* RUBRIK-INTRO */
-			
-			#mati_rubrik_intro {
-				background-color: #CCC;
-			}
-			#mati_rubrik_intro svg {
-				position: absolute;
-				left: 0;
-				top: 0;
-				width: 100%;
-				top: 50%;
-				height: 12vw;
-				margin-top: -6vw;
-			}
-			#mati_rubrik_intro_balken1 {
-				position: absolute;
-				top: 50%;
-				height: 12vw;
-				margin-top: -6vw;
-				background-color: rgba(255, 255, 255, .9);
-				left: 0;
-			}
-			#mati_rubrik_intro_balken1::before,
-			#mati_rubrik_intro_balken2::before {
-				content: ' ';
-				position: absolute;
-				top: -2vw;
-				left: 0;
-				right: 0;
-				height: 1vw;
-				background-color: rgba(255, 255, 255, .9);
-			}
-			#mati_rubrik_intro_balken1::after,
-			#mati_rubrik_intro_balken2::after {
-				content: ' ';
-				position: absolute;
-				bottom: -2vw;
-				left: 0;
-				right: 0;
-				height: 1vw;
-				background-color: rgba(255, 255, 255, .9);
-			}
-			#mati_rubrik_intro_balken2 {
-				position: absolute;
-				top: 50%;
-				height: 12vw;
-				margin-top: -6vw;
-				background-color: rgba(255, 255, 255, .9);
-				right: 0;
-			}
-			
-			/* FRAGE */
-			
-			#mati_frage {
-				background-color: #AAA;
-			}
-			#mati_frage_erlaeuterung {
-				border-bottom-left-radius: 1em;
-				border-bottom-right-radius: 1em;
-				vertical-align:middle;
-				background-color: rgba(255, 255, 255, .9);
-				padding: .5em 1em;
-				text-align:center;
-			}
-			#mati_frage_text_und_bild {
-				border-radius: 1em;
-				padding:.5em;
-				background-color: rgba(255, 255, 255, .9);
-				position:relative;
-				display: grid;
-				grid-template-columns: minmax(50%,1fr) minmax(0,15em);
-			}
-			#mati_frage_bild {
-				padding:.5em;
-			}
-			#mati_frage_bild img {
-				border: .5em solid white;
-				box-shadow: 0 0 .3em black;
-				transform: rotate(5deg);
-			}
-			#mati_frage_text_container {
-				position:relative;
-			}
-			#mati_frage_text {
-				font-size: 200%;
-				height: auto;
-				width: auto;
-				position:absolute;
-				text-align: center;
-				padding: .5em;
-			}
-			#mati_frage_spieler_container {
-				overflow: hidden;
-			}
-			#mati_frage_spieler {
-				min-height: 100%;
-				display: flex;
-				flex-wrap: wrap;
-				justify-content: space-around;
-				align-content: space-around;
-			}
-			#mati_frage_spieler .mati_spieler {
-				margin: .5em;
-			}
-			#mati_frage_grid {
-				display: grid;
-				grid-template-rows: auto 11em 1fr;
-				grid-row-gap: 1em;
-				position: absolute;
-				top: 0;
-				bottom: 1em;
-				left: 1em;
-				right: 1em;
-				justify-items: stretch;
-			}
-			
-			/* SCHAETZUNGEN MIT AUFLOESUNG */
-			
-			#mati_frage_ergebnis {
-				background-color: #BBB;
-			}
-			#mati_frage_ergebnis_schaetzungen_container_container,
-			#mati_punktestand_spielerliste_container_container {
-				position: absolute;
-				top: 1em;
-				left: 1em;
-				right: 1em;
-				bottom: 1em;
-				border-radius: 1em;
-				padding: 1em .5em;
-				background-color: rgba(255, 255, 255, .9);
-			}
-			@keyframes mati_animation_endresultat {
-				0% {
-					border-color: #FF0000;
-				}
-				16.66% {
-					border-color: #FFFF00;
-				}
-				33.33% {
-					border-color: #00FF00;
-				}
-				50% {
-					border-color: #00FFFF;
-				}
-				66.66% {
-					border-color: #0000FF;
-				}
-				83.33% {
-					border-color: #FF00FF;
-				}
-				100% {
-					border-color: #FF0000;
-				}
-			}
-			#mati_punktestand_spielerliste_container_container.mati_punktestand_endresultat {
-				top: .5em;
-				left: .5em;
-				right: .5em;
-				bottom: .5em;
-				border-radius: 1.5em;
-				border-width: .5em;
-				border-style: solid;
-				animation-name: mati_animation_endresultat;
-				animation-duration: 6s;
-				animation-iteration-count: infinite;
-				animation-timing-function: linear;
-			}
-			#mati_punktestand_ueberschrift {
-				font-size: 200%;
-				line-height: 1.5em;
-				vertical-align: middle;
-				text-align: center;
-				font-weight: bold;
-			}
-			#mati_frage_ergebnis_schaetzungen_container {
-				position: relative;
-				width: 100%;
-				height: 100%;
-			}
-            #mati_punktestand_spielerliste_container {
-				position: relative;
-				width: 100%;
-				height: calc(100% - 3em);
-			}
-			#mati_frage_ergebnis_schaetzungen {
-				min-height: 100%;
-				display: flex;
-				flex-direction: column;
-				justify-content: space-between;
-			}
-			#mati_punktestand_spielerliste {
-				min-height: 100%;
-				display: flex;
-				flex-direction: column;
-				justify-content: space-evenly;
-			}
-			.mati_frage_ergebnis_zeile,
-            .mati_punktestand_zeile {
-				display: flex;
-				align-items: center;
-				position: relative;
-			}
-			.mati_frage_ergebnis_zeile {
-				opacity: 0;
-			}
-			.mati_frage_ergebnis_zeile_gut_geraten {
-				position:absolute;
-				left: 0;
-				right: 0;
-				top: 0;
-				bottom: 0;
-				opacity: 0;
-				animation-name: mati_animation_einblenden;
-				animation-duration: .5s;
-				animation-iteration-count: 6;
-				animation-direction: alternate;
-				animation-timing-function: ease-in-out;
-			}
-			@keyframes mati_animation_punkte_markierung {
-				from {
-					opacity: 0;
-					left: 5em;
-				}
-				to {
-					opacity: 1;
-					left: 9em;
-				}
-			}
-			.mati_frage_ergebnis_zeile .mati_neue_punkte_markierung {
-				position:absolute;
-				opacity: 0;
-				top: .1em;
-				left: 8em;
-				width:6em;
-				height:2em;
-				animation-name: mati_animation_punkte_markierung;
-				animation-duration: 2s;
-				animation-iteration-count: 1;
-				animation-fill-mode: forwards;
-				animation-delay: 3s;
-				z-index: 3;
-			}
-			.mati_frage_ergebnis_balken_container,
-			.mati_punktestand_balken_container {
-				flex-grow: 1;
-				height: 1.4em;
-				margin-left: .5em;
-				margin-right: .5em;
-				box-shadow: 0 0 .2em black;
-				position: relative;
-			}
-			.mati_frage_ergebnis_balken_zahlA,
-			.mati_punktestand_balken_zahl {
-				position:absolute;
-				left: .25em;
-				top: 0;
-				height: 1.4em;
-				line-height: 1.4em;
-				vertical-align: middle;
-				font-weight: bold;
-				color:white;
-				text-shadow: 0 0 .25em black;
-			}
-			.mati_frage_ergebnis_balken_zahlB {
-				position:absolute;
-				right: .25em;
-				top: 0;
-				height: 1.4em;
-				line-height: 1.4em;
-				vertical-align: middle;
-				font-weight: bold;
-				color:white;
-				text-shadow: 0 0 .25em black;
-			}
-			.mati_frage_ergebnis_balken,
-			.mati_punktestand_balken {
-				height: 100%;
-			}
-			#mati_frage_ergebnis_antwortmoeglichkeiten {
-				overflow:hidden;
-				padding: 0 .5em 0 10.5em;
-			}
-			#mati_frage_ergebnis_antwortmoeglichkeitA {
-				float:left;
-				line-height: 1.4em;
-				vertical-align:middle;
-			}
-			#mati_frage_ergebnis_antwortmoeglichkeitB {
-				float:right;
-				line-height: 1.4em;
-				vertical-align:middle;
-			}
-			#mati_frage_ergebnis_tatsaechlich_container {
-				position: absolute;
-				top: 1.4em;
-				left: 10.5em;
-				right: .5em;
-				bottom: 0;
-			}
-			#mati_frage_ergebnis_tatsaechlich {
-				height: 100%;
-				position: relative;
-				opacity: 0;
-			}
-			#mati_frage_ergebnis_tatsaechlich_box {
-				position: absolute;
-				background-color: black;
-				color: white;
-				width: 3em;
-				right: -1.5em;
-				bottom: 0;
-				height: 1.4em;
-				line-height: 1.4em;
-				border-radius: .7em;
-				font-weight: bold;
-			}
-			#mati_frage_ergebnis_platzhalter {
-				height: 1.4em;
-			}
-			#mati_frage_ergebnis_tatsaechlich_a {
-				float:left;
-				width: 1.25em;
-				text-align: right;
-				vertical-align: middle;
-			}
-			#mati_frage_ergebnis_tatsaechlich_b {
-				float:left;
-				width: 1em; /* etwas weniger, damit nicht durch Rundungsfehler ein Umbruch passiert */
-				text-align: left;
-				vertical-align: middle;
-			}
-			#mati_frage_ergebnis_tatsaechlich_doppelpunkt {
-				float:left;
-				width: 0.5em;
-				text-align: center;
-				vertical-align: middle;
-			}
-			#mati_frage_ergebnis_tatsaechlich_label {
-				position: absolute;
-				font-size: 50%;
-				right: 3.5em;
-				bottom: 0;
-				color: black;
-				text-align: right;
-				line-height: 2.8em; 
-				vertical-align: middle;
-				white-space: nowrap;
-			}
-			#mati_frage_ergebnis_strich {
-				position: absolute;
-				top: 0;
-				bottom: 0;
-				right: -.1em;
-				width: .2em;
-				background-color: black;
-				border-radius: .1em;
-			}
-			
-			#mati_hauptmusik_button {
-				z-index: 2;
-				position: absolute;
-				width: 2em;
-				height: 1.2em;
-				left: .5em;
-				bottom: .5em;
-			}
-			.mati_hauptmusik_button_x {
-				visibility: hidden;
-			}
-		</style>
+        <link href="style.css" rel="stylesheet" type="text/css" />
 	</head>
 	<body>
 		<div id="mati_spiel_alles">
@@ -676,24 +37,6 @@
 					  xmlns:xlink="http://www.w3.org/1999/xlink">
 
                         <defs>
-                            <path d="M 82 130
-                               m 0 -70  c 15 10 50 10 70 -10 c 7 -7 7 -28 -21 -28       c -80 0 65 115 -25 115 c -40 0 -40 -30 -30 -40 c -10 10 -10 40 30 40
-                               c 80 0 57 -55 95 -55 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 50 15 50
-                               q 25 0 25 -50 q 0 50 15 50
-                               q 10 0 35 -50 l -3 7 c 30 13 30 43 0 43
-                               c 60 0 40 -50 75 -50 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 10 15 10
-                               c 10 0 10 -10 20 -10 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25
-                               q 20 0 45 -50 q 25 -50 10 -50 q -15 0 -15 100 q 0 -50 17 -50 q 10 0 10 13 q 0 9 -20 13 c 20 0 20 24 40 24
-                               c 15 0 15 -50 30 -50 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25
-                               c 30 0 10 -50 45 -50 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 10 15 10
-                               c 20 0 60 -60 38 -60 c -20 0 -20 100 15 100 q 25 0 12 -50 q 20 20 40 20
-                               c 40 0 40 -20 25 -20 c -25 0 -25 50 0 50
-                               q 20 0 45 -50 q 25 -50 10 -50 c -20 0 -20 100 15 100
-                               c 15 0 15 -50 30 -50 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25 q 10 0 20 -10"
-                               id="mati_schriftzug_saisonknobeln" />
-                            <!-- im unsichtbaren Berech rummalen, damit selbst MSIE kapiert, dass er den Filter rendern soll -->
-                            <path d="M -43 -50 l 10 0 l -10 0 m 50 50 m 250 55 l 0 -2"
-                               id="mati_schriftzug_ipunkt" />
                             <!-- width muss den gesamten Bereich abdecken vor dem downscaling -->
                             <filter id="mati_svg_shadow" x="0" y="0" width="1100" height="160" filterUnits="userSpaceOnUse">
                                 <feGaussianBlur in="SourceGraphic" stdDeviation="2"/>
@@ -711,27 +54,66 @@
 
                         <g transform="scale(.8,1) skewX(-20)" fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <g id="mati_svg_saisonknobeln">
-                                <g stroke="black" stroke-width="18" filter="url(#mati_svg_shadow)">
-                                    <use xlink:href="#mati_schriftzug_saisonknobeln"/>
+                                <g stroke="black" stroke-width="20" filter="url(#mati_svg_shadow)">
+                                    <path id="mati_schriftzug_saisonknobeln" d="M 82 130
+                                       m 0 -70  c 15 10 50 10 70 -10 c 7 -7 7 -28 -21 -28       c -80 0 65 115 -25 115 c -40 0 -40 -30 -30 -40 c -10 10 -10 40 30 40
+                                       c 80 0 57 -55 95 -55 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 50 15 50
+                                       q 25 0 25 -50 q 0 50 15 50
+                                       q 10 0 35 -50 l -3 7 c 30 13 30 43 0 43
+                                       c 60 0 40 -50 75 -50 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 10 15 10
+                                       c 10 0 10 -10 20 -10 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25
+                                       q 20 0 45 -50 q 25 -50 10 -50 q -15 0 -15 100 q 0 -50 17 -50 q 10 0 10 13 q 0 9 -20 13 c 20 0 20 24 40 24
+                                       c 15 0 15 -50 30 -50 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25
+                                       c 30 0 10 -50 45 -50 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 10 15 10
+                                       c 20 0 60 -60 38 -60 c -20 0 -20 100 15 100 q 25 0 12 -50 q 20 20 40 20
+                                       c 40 0 40 -20 25 -20 c -25 0 -25 50 0 50
+                                       q 20 0 45 -50 q 25 -50 10 -50 c -20 0 -20 100 15 100
+                                       c 15 0 15 -50 30 -50 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25 q 10 0 20 -10" />
                                 </g>
-                                <g stroke="url(#mati_svg_farbverlauf)" stroke-width="6">
-                                    <use xlink:href="#mati_schriftzug_saisonknobeln"/>
+                                <g stroke="url(#mati_svg_farbverlauf)" stroke-width="8">
+                                    <path d="M 82 130
+                                       m 0 -70  c 15 10 50 10 70 -10 c 7 -7 7 -28 -21 -28       c -80 0 65 115 -25 115 c -40 0 -40 -30 -30 -40 c -10 10 -10 40 30 40
+                                       c 80 0 57 -55 95 -55 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 50 15 50
+                                       q 25 0 25 -50 q 0 50 15 50
+                                       q 10 0 35 -50 l -3 7 c 30 13 30 43 0 43
+                                       c 60 0 40 -50 75 -50 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 10 15 10
+                                       c 10 0 10 -10 20 -10 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25
+                                       q 20 0 45 -50 q 25 -50 10 -50 q -15 0 -15 100 q 0 -50 17 -50 q 10 0 10 13 q 0 9 -20 13 c 20 0 20 24 40 24
+                                       c 15 0 15 -50 30 -50 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25
+                                       c 30 0 10 -50 45 -50 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 10 15 10
+                                       c 20 0 60 -60 38 -60 c -20 0 -20 100 15 100 q 25 0 12 -50 q 20 20 40 20
+                                       c 40 0 40 -20 25 -20 c -25 0 -25 50 0 50
+                                       q 20 0 45 -50 q 25 -50 10 -50 c -20 0 -20 100 15 100
+                                       c 15 0 15 -50 30 -50 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25 q 10 0 20 -10" />
                                 </g>
                             </g>
                             <g id="mati_svg_saisonknobeln_ipunkt">
-                                <g stroke="black" stroke-width="18" filter="url(#mati_svg_shadow)">
-                                    <use xlink:href="#mati_schriftzug_ipunkt"/>
+                                <g stroke="black" stroke-width="20" filter="url(#mati_svg_shadow)">
+                                    <path id="mati_schriftzug_ipunkt" d="M -43 -50 l 10 0 l -10 0 m 50 50 m 250 55 l 0 -2" />
                                 </g>
-                                <g stroke="#ffcc33" stroke-width="6">
-                                    <use xlink:href="#mati_schriftzug_ipunkt"/>
+                                <g stroke="#ffcc33" stroke-width="8">
+                                    <path d="M -43 -50 l 10 0 l -10 0 m 50 50 m 250 55 l 0 -2" />
                                 </g>
                             </g>
 
                             <g id="mati_svg_saisonknobeln2" stroke="#ff0000" stroke-width="12">
-                                <use xlink:href="#mati_schriftzug_saisonknobeln"/>
+                                <path d="M 82 130
+                                   m 0 -70  c 15 10 50 10 70 -10 c 7 -7 7 -28 -21 -28       c -80 0 65 115 -25 115 c -40 0 -40 -30 -30 -40 c -10 10 -10 40 30 40
+                                   c 80 0 57 -55 95 -55 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 50 15 50
+                                   q 25 0 25 -50 q 0 50 15 50
+                                   q 10 0 35 -50 l -3 7 c 30 13 30 43 0 43
+                                   c 60 0 40 -50 75 -50 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 10 15 10
+                                   c 10 0 10 -10 20 -10 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25
+                                   q 20 0 45 -50 q 25 -50 10 -50 q -15 0 -15 100 q 0 -50 17 -50 q 10 0 10 13 q 0 9 -20 13 c 20 0 20 24 40 24
+                                   c 15 0 15 -50 30 -50 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25
+                                   c 30 0 10 -50 45 -50 q 10 0 15 10 q -5 -10 -15 -10 c -30 0 -30 50 -5 50 q 20 0 20 -35 l 0 -15 q 0 10 15 10
+                                   c 20 0 60 -60 38 -60 c -20 0 -20 100 15 100 q 25 0 12 -50 q 20 20 40 20
+                                   c 40 0 40 -20 25 -20 c -25 0 -25 50 0 50
+                                   q 20 0 45 -50 q 25 -50 10 -50 c -20 0 -20 100 15 100
+                                   c 15 0 15 -50 30 -50 q 10 0 10 25 l 0 25 q 0 -50 17 -50 q 10 0 10 25 q 0 25 10 25 q 10 0 20 -10" />
                             </g>
                             <g id="mati_svg_saisonknobeln_ipunkt2" stroke="#ff0000" stroke-width="12">
-                                <use xlink:href="#mati_schriftzug_ipunkt"/>
+                                <path d="M -43 -50 l 10 0 l -10 0 m 50 50 m 250 55 l 0 -2" />
                             </g>
                         </g>
 
@@ -753,6 +135,19 @@
 						<div id="mati_spiel_spielerwarteliste_content">
 						</div>
 					</div>
+                    
+                    <div id="mati_sprachauswahl">
+                        <svg id="mati_sprachauswahl_button_links" viewbox="0 0 50 100">
+                            <path d="M5,50 l40,-40 l0,80 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M5,50 l40,-40 l0,80 z" fill="white" />
+                        </svg>
+                        <div id="mati_sprachauswahl_flaggen_container">
+                        </div>
+                        <svg id="mati_sprachauswahl_button_rechts" viewbox="0 0 50 100">
+                            <path d="M45,50 l-40,-40 l0,80 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M45,50 l-40,-40 l0,80 z" fill="white" />
+                        </svg>
+                    </div>
 				</div>
 				<audio autoplay loop id="mati_hauptmusik">
 					<source src="hauptmusik.ogg" type="audio/ogg"-->
@@ -871,8 +266,55 @@
 			//TODO das Hintergrundbild hat derzeit eine seltsame Pfadangabe... versuch CSS auszulagern und dann den Pfad weg zu lassen, oder nutze Assets-Ordner
 		
 			Tiltspot.on.ready = function() {
-				mati.setSpracheCode('en');
-				mati.spielerChanged();
+                matiUtil.pushBefehl(function() {
+                    if (mati.sprachen.length === 0) {
+                        matiUtil.loadJson(Tiltspot.get.assetUrl("language-list.json"), function(sprachen) {
+                            //alle Sprachen laden
+                            let zuLadendeSprachen = sprachen.length;
+                            for (let spracheCode of sprachen) {
+                                matiUtil.loadJson(Tiltspot.get.assetUrl("gui-l10n/" + spracheCode + ".json"), function(texte) {
+                                    mati.sprachen.push({
+                                        code : spracheCode,
+                                        texte : texte
+                                    });
+                                    zuLadendeSprachen--;
+                                    if (zuLadendeSprachen === 0) {
+                                        document.getElementById('mati_sprachauswahl_flaggen_container').innerHTML = mati.sprachen.map(function (sprache) {
+                                            return `
+                                                <img id="mati_flagge_code_${sprache.code}" style="${sprache.code === mati.spracheCode ? 'display:block' : 'display:none'}" src="${Tiltspot.get.assetUrl(`flaggen/${sprache.texte.data_flagge}.svg`)}" alt="${matiUtil.htmlEscape(sprache.texte.data_name)}" />
+                                            `;
+                                        }).join('');
+                                        
+                                        document.getElementById('mati_sprachauswahl_button_links').addEventListener('click', function() {
+                                            let indexAktuelleSprache = mati.getIndexAktuelleSprache();
+                                            let neueSprache = mati.sprachen[(mati.sprachen.length + indexAktuelleSprache - 1) % mati.sprachen.length];
+                                            mati.setSpracheCode(neueSprache.code);
+                                        });
+                                        document.getElementById('mati_sprachauswahl_button_rechts').addEventListener('click', function() {
+                                            let indexAktuelleSprache = mati.getIndexAktuelleSprache();
+                                            let neueSprache = mati.sprachen[(indexAktuelleSprache + 1) % mati.sprachen.length];
+                                            mati.setSpracheCode(neueSprache.code);
+                                        });
+                                        document.getElementById('mati_sprachauswahl_flaggen_container').addEventListener('click', function() {
+                                            let indexAktuelleSprache = mati.getIndexAktuelleSprache();
+                                            let neueSprache = mati.sprachen[(indexAktuelleSprache + 1) % mati.sprachen.length];
+                                            mati.setSpracheCode(neueSprache.code);
+                                        });
+                                        
+                                        matiUtil.gotoNaechsterBefehl();
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    else {
+                        matiUtil.gotoNaechsterBefehl();
+                    }
+                });
+                
+                mati.setSpracheCode('en');
+                mati.spielerChanged();
+                
 				matiUtil.pushBefehl(function() {
 					mati.broadcast('zeigeHauptmenue');
 					mati.zeigeContainer(document.getElementById('mati_spiel_lobby'), matiUtil.gotoNaechsterBefehl);
@@ -1039,6 +481,7 @@
 						mati.broadcast('setSound');
 						break;
                     case 'spielAbbrechen':
+                        //FIXME wenn man im Endresultat ist und Spiel abbricht, geht er nicht ins Hauptmenue
                         if (mati.spielLaeuft && mati.queueEnthaeltLaufendesSpiel) {
                             matiUtil.befehlsqueueLeeren();
                             mati.spielLaeuft = false;

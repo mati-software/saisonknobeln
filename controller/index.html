@@ -695,27 +695,40 @@
 					matiUtil.pushBefehl(function() {
 						if (mati.sprachen.length === 0) {
 							matiUtil.loadJson(Tiltspot.get.assetUrl("language-list.json"), function(sprachen) {
-								mati.sprachen = sprachen;
-								
-								document.getElementById('mati_flaggen_container_span').innerHTML = mati.sprachen.map(function (sprache) {
-									return `
-										<img id="mati_flagge_code_${sprache.code}" class="${sprache.code === mati.spracheCode ? 'mati_flagge mati_flagge_aktiv' : 'mati_flagge'}" src="${Tiltspot.get.assetUrl(`gui-l10n/${sprache.code}.svg`)}" alt="${Tiltspot.get.assetUrl(`gui-l10n/${sprache.name}.svg`)}" />
-									`;
-								}).join('');
-								
-								for (let sprache of mati.sprachen) {
-									let spracheCode = sprache.code;
-									document.getElementById(`mati_flagge_code_${sprache.code}`).addEventListener('click', function() {
-										Tiltspot.send.msg('setSpracheCode', spracheCode);
-									});
-								}
-								
-								for (let musikButton of document.getElementsByClassName('mati_hauptmusik_button')) {
+                                //Musik-Button auch einfach hier initialisieren
+                                for (let musikButton of document.getElementsByClassName('mati_hauptmusik_button')) {
                                     musikButton.addEventListener('click', function() {
                                         Tiltspot.send.msg('setSound', !mati.musikIstEingeschaltet);
                                     });
+								}                            
+                            
+                                //alle Sprachen laden
+                                let zuLadendeSprachen = sprachen.length;
+								for (let spracheCode of sprachen) {
+                                    matiUtil.loadJson(Tiltspot.get.assetUrl("gui-l10n/" + spracheCode + ".json"), function(texte) {
+                                        mati.sprachen.push({
+                                            code : spracheCode,
+                                            texte : texte
+                                        });
+                                        zuLadendeSprachen--;
+                                        if (zuLadendeSprachen === 0) {
+                                            document.getElementById('mati_flaggen_container_span').innerHTML = mati.sprachen.map(function (sprache) {
+                                                return `
+                                                    <img id="mati_flagge_code_${sprache.code}" class="${sprache.code === mati.spracheCode ? 'mati_flagge mati_flagge_aktiv' : 'mati_flagge'}" src="${Tiltspot.get.assetUrl(`flaggen/${sprache.texte.data_flagge}.svg`)}" alt="${matiUtil.htmlEscape(sprache.texte.data_name)}" />
+                                                `;
+                                            }).join('');
+                                            
+                                            for (let sprache of mati.sprachen) {
+                                                let spracheCode = sprache.code;
+                                                document.getElementById(`mati_flagge_code_${sprache.code}`).addEventListener('click', function() {
+                                                    Tiltspot.send.msg('setSpracheCode', spracheCode);
+                                                });
+                                            }
+                                            
+                                            matiUtil.gotoNaechsterBefehl();
+                                        }
+                                    });
 								}
-								matiUtil.gotoNaechsterBefehl();
 							});
 						}
 						else {
@@ -738,33 +751,34 @@
 					matiUtil.pushBefehl(function() {
 						if (data.spracheCode !== mati.spracheCode) {
 							mati.spracheCode = data.spracheCode;
-							matiUtil.loadJson(Tiltspot.get.assetUrl(`gui-l10n/${mati.spracheCode}.json`), function(guiTexte) {
-								matiUtil.l10nTexte = guiTexte;
-								
-								document.getElementById('mati_warten_text').innerText = matiUtil.l10n('Bitte warten bis die nächste Interaktion möglich ist!');
-								
-								document.getElementById('mati_button_neues_spiel').innerText = matiUtil.l10n('Neues Spiel');
-								document.getElementById('mati_button_beenden').innerText = matiUtil.l10n('Beenden');
-								
-								for (let flaggeElement of document.getElementsByClassName('mati_flagge_aktiv')) {
-									flaggeElement.classList.remove('mati_flagge_aktiv');
-								}
-								document.getElementById(`mati_flagge_code_${mati.spracheCode}`).classList.add('mati_flagge_aktiv');
+                            //TODO ist schon geladen
+                            for (let sprache of mati.sprachen) {
+                                if (sprache.code === data.spracheCode) {
+                                    matiUtil.l10nTexte = sprache.texte;
+                                    
+                                    document.getElementById('mati_warten_text').innerText = matiUtil.l10n('Bitte warten bis die nächste Interaktion möglich ist!');
+                                    
+                                    document.getElementById('mati_button_neues_spiel').innerText = matiUtil.l10n('Neues Spiel');
+                                    document.getElementById('mati_button_beenden').innerText = matiUtil.l10n('Beenden');
+                                    
+                                    for (let flaggeElement of document.getElementsByClassName('mati_flagge_aktiv')) {
+                                        flaggeElement.classList.remove('mati_flagge_aktiv');
+                                    }
+                                    document.getElementById(`mati_flagge_code_${mati.spracheCode}`).classList.add('mati_flagge_aktiv');
 
-								document.getElementById('mati_button_spiel_fortsetzen').innerText = matiUtil.l10n('Spiel fortsetzen');
-								document.getElementById('mati_button_spiel_abbrechen').innerText = matiUtil.l10n('Laufendes Spiel abbrechen');
-								
-								document.getElementById('mati_button_spiel_abschliessen').innerText = matiUtil.l10n('Spiel abschließen');
-								
-								document.getElementById('mati_schaetzung_text').innerText = matiUtil.l10n('Schätze wie viele Spieler (inklusive Du selbst) für die jeweilige Antwortmöglichkeit gestimmt haben!');
-								document.getElementById('mati_button_schaetzung_submit').innerText = matiUtil.l10n('OK');
-								
-								matiUtil.gotoNaechsterBefehl();
-							});
+                                    document.getElementById('mati_button_spiel_fortsetzen').innerText = matiUtil.l10n('Spiel fortsetzen');
+                                    document.getElementById('mati_button_spiel_abbrechen').innerText = matiUtil.l10n('Laufendes Spiel abbrechen');
+                                    
+                                    document.getElementById('mati_button_spiel_abschliessen').innerText = matiUtil.l10n('Spiel abschließen');
+                                    
+                                    document.getElementById('mati_schaetzung_text').innerText = matiUtil.l10n('Schätze wie viele Spieler (inklusive Du selbst) für die jeweilige Antwortmöglichkeit gestimmt haben!');
+                                    document.getElementById('mati_button_schaetzung_submit').innerText = matiUtil.l10n('OK');
+                                    
+                                    break;
+                                }
+                            }
 						}
-						else {
-							matiUtil.gotoNaechsterBefehl();
-						}
+                        matiUtil.gotoNaechsterBefehl();
 					});
 				}
 				

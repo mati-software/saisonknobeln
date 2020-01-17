@@ -2,6 +2,7 @@ var mati = {
 	aktuelleRubrik : null,
 	rubriken : [],
 	spracheCode : 'en',
+    sprachen : [],
 	spielerImLaufendenSpiel : [],
 	spielerAufWarteliste : [],
 	spielerFarben : new Map(),
@@ -50,6 +51,9 @@ mati.setSpracheCode = function(neuerSpracheCode) {
 	matiUtil.pushBefehl(function() {
 		mati.spracheCode = neuerSpracheCode;
 		mati.broadcast();
+        for (let sprache of mati.sprachen) {
+            document.getElementById(`mati_flagge_code_${sprache.code}`).style['display'] = sprache.code === mati.spracheCode ? 'block' : 'none';
+        }
 		matiUtil.gotoNaechsterBefehl();
 	});
 	
@@ -91,15 +95,15 @@ mati.setSpracheCode = function(neuerSpracheCode) {
 			});
 		}
 	});
-	//Gui-Texte laden
+	//GUI-Texte uebernehmen
 	matiUtil.pushBefehl(function() {
-		matiUtil.loadJson(Tiltspot.get.assetUrl("gui-l10n/" + mati.spracheCode + ".json"), function(guiTexte) {
-			matiUtil.l10nTexte = guiTexte;
-			matiUtil.gotoNaechsterBefehl();
-		});
-	});
-	//HTML rendern
-	matiUtil.pushBefehl(function() {
+        for (let sprache of mati.sprachen) {
+            if (sprache.code === mati.spracheCode) {
+                matiUtil.l10nTexte = sprache.texte;
+                break;
+            }
+        }
+        
 		document.getElementById('mati_spiel_spielerliste_caption').innerText = matiUtil.l10n('Spieler');
 		document.getElementById('mati_spiel_spielerwarteliste_caption').innerText = matiUtil.l10n('Warteliste');
 		
@@ -750,4 +754,15 @@ mati.schrittweiseResizeBisEsPasst = function(container, inhalt) {
 		inhalt.style['font-size'] = fontProzent + '%';
 		maximaleUebrigeAnzahlVerkleinerungsversuche--;
 	}
+};
+
+mati.getIndexAktuelleSprache = function() {
+    let indexAktuelleSprache = 0;
+    for (sprache of mati.sprachen) {
+        if (sprache.code === mati.spracheCode) {
+            break;
+        }
+        indexAktuelleSprache++;
+    }
+    return indexAktuelleSprache;
 };

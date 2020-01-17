@@ -1,0 +1,673 @@
+body {
+    overflow:hidden;
+    padding:0;
+    border:0;
+    margin:0;
+}
+
+#mati_spiel_alles {
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background-color:black;
+    font-family: Helvetica, Arial, sans-serif;
+    
+    -webkit-user-select: none;  
+    -moz-user-select: none;    
+    -ms-user-select: none;      
+    user-select: none;
+}
+
+#mati_spiel_lobby_credits {
+    text-align: center;
+    color: #fac;
+    font-size: 100%;
+    text-shadow: 0 0 .3em black;
+    margin-top: -.8em;
+    line-height: 1.8em;
+    vertical-align: middle;
+    font-weight: bold;
+    font-style: italic;
+    display:none;
+}
+
+#mati_spiel_spielerliste,
+#mati_spiel_spielerwarteliste {
+    width:12em;
+    background-color:rgba(0,0,0,.6);
+    border-radius:1em;
+    position: relative;
+    margin: 0 .5em 1em .5em;
+}
+#mati_spiel_spielerliste_content,
+#mati_spiel_spielerwarteliste_content {
+    position:absolute;
+    top:2em;
+    left:.2em;
+    right:.2em;
+    bottom:.2em;
+    overflow:hidden;
+    background-color:rgba(255,255,255,.6);
+    border-bottom-left-radius:.8em;
+    border-bottom-right-radius:.8em;
+    padding-left:.6em;
+}
+#mati_spiel_spielerliste_caption,
+#mati_spiel_spielerwarteliste_caption {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:2em;
+    line-height:2em;
+    vertical-align:middle;
+    padding-left:1em;
+    color:white;
+}
+h1 {
+    font-size:2em;
+    line-height:1.5em;
+    vertical-align:middle;
+    height:1.5em;
+    font-weight:bold;
+    text-align:center;
+    margin:0;
+    padding:0;
+}
+#mati_spiel_joincode_container {
+    height:2em;
+    line-height:2em;
+    vertical-align:middle;
+    text-align:center;
+}
+
+#mati_spiel_spielerliste_content .mati_liste,
+#mati_spiel_spielerwarteliste_content .mati_liste {
+    margin:0;
+    padding:.3em 0 .3em 0;
+}
+.mati_spieler {
+    padding:0;
+    margin:0;
+    height:2.2em;
+    vertical-align:middle;
+    overflow:hidden;
+    position:relative;
+    width:10em;
+}
+span.mati_spieler_img {
+    position:absolute;
+    left:.2em;
+    top:.2em;
+    border-radius:.9em;
+    padding:.1em;
+    width:1.6em;
+    height:1.6em;
+    overflow:hidden;
+    z-index:2;
+    box-shadow:0 0 .2em black;
+}
+span.mati_spieler_img img {
+    float:left;
+    width:1.6em;
+    height:1.6em;
+    border-radius:.8em;
+}
+span.mati_spieler_text {
+    position:absolute;
+    display:block;
+    line-height:1.4em;
+    top:.4em;
+    bottom:.4em;
+    left:1em;
+    right:.2em;
+    padding-left:1.2em;
+    padding-right:.1em;
+    background-color:black;
+    z-index:1;
+    box-shadow:0 0 .2em black;
+    overflow:hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+@keyframes mati_animation_wackelnd {
+    from {
+        transform: rotate(-10deg);
+    }
+    to {
+        transform: rotate(10deg);
+    }
+}
+.mati_wackelnd {
+    animation-name: mati_animation_wackelnd;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-timing-function: ease-in-out;
+}
+@keyframes mati_animation_spieler_fertig {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.2);
+    }
+}
+.mati_spieler_fertig {
+    animation-name: mati_animation_spieler_fertig;
+    animation-duration: .2s;
+    animation-iteration-count: 4;
+    animation-direction: alternate;
+    animation-timing-function: linear;
+}
+
+.mati_box {
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    backface-visibility: hidden;
+    display:none;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;				 
+}
+
+.mati_box_hide {
+    animation-name: mati_animation_box_hide;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+    transform: perspective(400vh) translateZ(-50vh) rotateX(90deg) translateZ(50vh);
+}
+.mati_box_show {
+    animation-name: mati_animation_box_show;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+}
+
+#mati_spiel_lobby {
+    background-color: #ddd;
+    color: black;
+    background-image: url("lobby.jpg");
+}
+@keyframes mati_animation_intro_hintergrundfarbe {
+    0% {
+        background-color: black;
+    }
+    50% {
+        background-color: white;
+    }
+    100% {
+        background-color: rgba(255, 255, 255, 0);
+    }
+}
+
+#mati_titel {
+    position:absolute;
+    left: 0;
+    top: calc(50vh - 10vw);
+    height: 20vw;
+    width: 100%;
+    overflow: hidden;
+}
+
+#mati_intro_overlay {
+    position:absolute;
+    left:0;
+    top:0;
+    right:0;
+    bottom:0;
+    animation-name: mati_animation_intro_hintergrundfarbe;
+    animation-duration: 6s;
+    animation-fill-mode: forwards;
+    background-color: black;
+    z-index: 2;
+}
+
+#mati_titel_container {
+    position: relative;
+    height: 7em;
+    z-index: 3;
+}
+
+#mati_spiel_lobby_content {
+    z-index: 1;
+    position: absolute;
+    top: 8em;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    display:none;
+}
+
+
+
+@keyframes mati_animation_einblenden {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+.mati_eingeblendet {
+    opacity: 1;
+    animation-name: mati_animation_einblenden;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+
+/* RUBRIK-INTRO */
+
+#mati_rubrik_intro {
+    background-color: #CCC;
+}
+#mati_rubrik_intro svg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    top: 50%;
+    height: 12vw;
+    margin-top: -6vw;
+}
+#mati_rubrik_intro_balken1 {
+    position: absolute;
+    top: 50%;
+    height: 12vw;
+    margin-top: -6vw;
+    background-color: rgba(255, 255, 255, .9);
+    left: 0;
+}
+#mati_rubrik_intro_balken1::before,
+#mati_rubrik_intro_balken2::before {
+    content: ' ';
+    position: absolute;
+    top: -2vw;
+    left: 0;
+    right: 0;
+    height: 1vw;
+    background-color: rgba(255, 255, 255, .9);
+}
+#mati_rubrik_intro_balken1::after,
+#mati_rubrik_intro_balken2::after {
+    content: ' ';
+    position: absolute;
+    bottom: -2vw;
+    left: 0;
+    right: 0;
+    height: 1vw;
+    background-color: rgba(255, 255, 255, .9);
+}
+#mati_rubrik_intro_balken2 {
+    position: absolute;
+    top: 50%;
+    height: 12vw;
+    margin-top: -6vw;
+    background-color: rgba(255, 255, 255, .9);
+    right: 0;
+}
+
+/* FRAGE */
+
+#mati_frage {
+    background-color: #AAA;
+}
+#mati_frage_erlaeuterung {
+    border-bottom-left-radius: 1em;
+    border-bottom-right-radius: 1em;
+    vertical-align:middle;
+    background-color: rgba(255, 255, 255, .9);
+    padding: .5em 1em;
+    text-align:center;
+}
+#mati_frage_text_und_bild {
+    border-radius: 1em;
+    padding:.5em;
+    background-color: rgba(255, 255, 255, .9);
+    position:relative;
+    display: grid;
+    grid-template-columns: minmax(50%,1fr) minmax(0,15em);
+}
+#mati_frage_bild {
+    padding:.5em;
+}
+#mati_frage_bild img {
+    border: .5em solid white;
+    box-shadow: 0 0 .3em black;
+    transform: rotate(5deg);
+}
+#mati_frage_text_container {
+    position:relative;
+}
+#mati_frage_text {
+    font-size: 200%;
+    height: auto;
+    width: auto;
+    position:absolute;
+    text-align: center;
+    padding: .5em;
+}
+#mati_frage_spieler_container {
+    overflow: hidden;
+}
+#mati_frage_spieler {
+    min-height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-content: space-around;
+}
+#mati_frage_spieler .mati_spieler {
+    margin: .5em;
+}
+#mati_frage_grid {
+    display: grid;
+    grid-template-rows: auto 11em 1fr;
+    grid-row-gap: 1em;
+    position: absolute;
+    top: 0;
+    bottom: 1em;
+    left: 1em;
+    right: 1em;
+    justify-items: stretch;
+}
+
+/* SCHAETZUNGEN MIT AUFLOESUNG */
+
+#mati_frage_ergebnis {
+    background-color: #BBB;
+}
+#mati_frage_ergebnis_schaetzungen_container_container,
+#mati_punktestand_spielerliste_container_container {
+    position: absolute;
+    top: 1em;
+    left: 1em;
+    right: 1em;
+    bottom: 1em;
+    border-radius: 1em;
+    padding: 1em .5em;
+    background-color: rgba(255, 255, 255, .9);
+}
+@keyframes mati_animation_endresultat {
+    0% {
+        border-color: #FF0000;
+    }
+    16.66% {
+        border-color: #FFFF00;
+    }
+    33.33% {
+        border-color: #00FF00;
+    }
+    50% {
+        border-color: #00FFFF;
+    }
+    66.66% {
+        border-color: #0000FF;
+    }
+    83.33% {
+        border-color: #FF00FF;
+    }
+    100% {
+        border-color: #FF0000;
+    }
+}
+#mati_punktestand_spielerliste_container_container.mati_punktestand_endresultat {
+    top: .5em;
+    left: .5em;
+    right: .5em;
+    bottom: .5em;
+    border-radius: 1.5em;
+    border-width: .5em;
+    border-style: solid;
+    animation-name: mati_animation_endresultat;
+    animation-duration: 6s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+#mati_punktestand_ueberschrift {
+    font-size: 200%;
+    line-height: 1.5em;
+    vertical-align: middle;
+    text-align: center;
+    font-weight: bold;
+}
+#mati_frage_ergebnis_schaetzungen_container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+#mati_punktestand_spielerliste_container {
+    position: relative;
+    width: 100%;
+    height: calc(100% - 3em);
+}
+#mati_frage_ergebnis_schaetzungen {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+#mati_punktestand_spielerliste {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+.mati_frage_ergebnis_zeile,
+.mati_punktestand_zeile {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+.mati_frage_ergebnis_zeile {
+    opacity: 0;
+}
+.mati_frage_ergebnis_zeile_gut_geraten {
+    position:absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    opacity: 0;
+    animation-name: mati_animation_einblenden;
+    animation-duration: .5s;
+    animation-iteration-count: 6;
+    animation-direction: alternate;
+    animation-timing-function: ease-in-out;
+}
+@keyframes mati_animation_punkte_markierung {
+    from {
+        opacity: 0;
+        left: 5em;
+    }
+    to {
+        opacity: 1;
+        left: 9em;
+    }
+}
+.mati_frage_ergebnis_zeile .mati_neue_punkte_markierung {
+    position:absolute;
+    opacity: 0;
+    top: .1em;
+    left: 8em;
+    width:6em;
+    height:2em;
+    animation-name: mati_animation_punkte_markierung;
+    animation-duration: 2s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-delay: 3s;
+    z-index: 3;
+}
+.mati_frage_ergebnis_balken_container,
+.mati_punktestand_balken_container {
+    flex-grow: 1;
+    height: 1.4em;
+    margin-left: .5em;
+    margin-right: .5em;
+    box-shadow: 0 0 .2em black;
+    position: relative;
+}
+.mati_frage_ergebnis_balken_zahlA,
+.mati_punktestand_balken_zahl {
+    position:absolute;
+    left: .25em;
+    top: 0;
+    height: 1.4em;
+    line-height: 1.4em;
+    vertical-align: middle;
+    font-weight: bold;
+    color:white;
+    text-shadow: 0 0 .25em black;
+}
+.mati_frage_ergebnis_balken_zahlB {
+    position:absolute;
+    right: .25em;
+    top: 0;
+    height: 1.4em;
+    line-height: 1.4em;
+    vertical-align: middle;
+    font-weight: bold;
+    color:white;
+    text-shadow: 0 0 .25em black;
+}
+.mati_frage_ergebnis_balken,
+.mati_punktestand_balken {
+    height: 100%;
+}
+#mati_frage_ergebnis_antwortmoeglichkeiten {
+    overflow:hidden;
+    padding: 0 .5em 0 10.5em;
+}
+#mati_frage_ergebnis_antwortmoeglichkeitA {
+    float:left;
+    line-height: 1.4em;
+    vertical-align:middle;
+}
+#mati_frage_ergebnis_antwortmoeglichkeitB {
+    float:right;
+    line-height: 1.4em;
+    vertical-align:middle;
+}
+#mati_frage_ergebnis_tatsaechlich_container {
+    position: absolute;
+    top: 1.4em;
+    left: 10.5em;
+    right: .5em;
+    bottom: 0;
+}
+#mati_frage_ergebnis_tatsaechlich {
+    height: 100%;
+    position: relative;
+    opacity: 0;
+}
+#mati_frage_ergebnis_tatsaechlich_box {
+    position: absolute;
+    background-color: black;
+    color: white;
+    width: 3em;
+    right: -1.5em;
+    bottom: 0;
+    height: 1.4em;
+    line-height: 1.4em;
+    border-radius: .7em;
+    font-weight: bold;
+}
+#mati_frage_ergebnis_platzhalter {
+    height: 1.4em;
+}
+#mati_frage_ergebnis_tatsaechlich_a {
+    float:left;
+    width: 1.25em;
+    text-align: right;
+    vertical-align: middle;
+}
+#mati_frage_ergebnis_tatsaechlich_b {
+    float:left;
+    width: 1em; /* etwas weniger, damit nicht durch Rundungsfehler ein Umbruch passiert */
+    text-align: left;
+    vertical-align: middle;
+}
+#mati_frage_ergebnis_tatsaechlich_doppelpunkt {
+    float:left;
+    width: 0.5em;
+    text-align: center;
+    vertical-align: middle;
+}
+#mati_frage_ergebnis_tatsaechlich_label {
+    position: absolute;
+    font-size: 50%;
+    right: 3.5em;
+    bottom: 0;
+    color: black;
+    text-align: right;
+    line-height: 2.8em; 
+    vertical-align: middle;
+    white-space: nowrap;
+}
+#mati_frage_ergebnis_strich {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: -.1em;
+    width: .2em;
+    background-color: black;
+    border-radius: .1em;
+}
+
+#mati_hauptmusik_button {
+    z-index: 2;
+    position: absolute;
+    width: 2em;
+    height: 1.2em;
+    left: .5em;
+    bottom: .5em;
+}
+.mati_hauptmusik_button_x {
+    visibility: hidden;
+}
+
+#mati_sprachauswahl {
+    position: absolute;
+    width:3.7em;
+    height:1.4em;
+    border-radius:.7em;
+    left: 3em;
+    bottom: .4em;
+    background-color:rgba(0,0,0,.6);
+}
+#mati_sprachauswahl_button_links {
+    position:absolute;
+    width:.5em;
+    height:1em;
+    left:.2em;
+    top:.2em;
+}
+#mati_sprachauswahl_button_rechts {
+    position:absolute;
+    width:.5em;
+    height:1em;
+    right:.2em;
+    top:.2em;
+}
+#mati_sprachauswahl_flaggen_container {
+    position:absolute;
+    overflow:hidden;
+    bottom:.2em;
+    top:.2em;
+    left:.9em;
+    right:.9em;
+}
+#mati_sprachauswahl_flaggen_container img {
+    width:100%;
+    height:100%;
+}

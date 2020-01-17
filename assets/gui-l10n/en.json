@@ -1,4 +1,7 @@
 {
+    "data_flagge" : "gb",
+    "data_name" : "English",
+
 	"Neues Spiel" : "New Game",
 	"Spiel fortsetzen" : "Resume Game",
 	"Beenden" : "Exit",
