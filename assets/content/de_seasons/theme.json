@@ -1,0 +1,315 @@
+{
+    "name" : "Jahreszeiten",
+    "sections" : [
+        {
+            "name" : "Herbst",
+            "img" : "autumn.jpg",
+            "questions" : [
+                {
+                    "text" : "Weißwein oder Rotwein?",
+                    "answers" : ["Weißwein", "Rotwein"],
+                    "img" : "wein.jpg"
+                },
+                {
+                    "text" : "An Halloween kostümieren oder nicht kostümieren?",
+                    "answers" : ["kostümieren", "nicht kostümieren"],
+                    "img" : "jack-o-lantern.jpg"
+                },
+                {
+                    "text" : "Äpfel lieber süß oder sauer?",
+                    "answers" : ["süß", "sauer"],
+                    "img" : "aepfel.jpg"
+                },
+                {
+                    "text" : "Walnüsse oder Haselnüsse?",
+                    "answers" : ["Walnüsse", "Haselnüsse"]
+                },
+                {
+                    "text" : "Isst du gerne Pilze?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Am 11.11. Karneval oder Sankt Martin?",
+                    "answers" : ["Karneval", "Sankt Martin"]
+                },
+                {
+                    "text" : "Sind Windräder eine gute Sache?",
+                    "answers" : ["Ja", "Nein"],
+                    "img" : "windraeder.jpg"
+                },
+                {
+                    "text" : "Welche Filmreihe ist besser: 'Halloween' oder 'Freitag der 13.'?",
+                    "answers" : ["Halloween", "Freitag der 13."],
+                    "img" : "jack-o-lantern.jpg"
+                },
+                
+                {
+                    "text" : "Besitzt Du mehr als einen Schirm?",
+                    "answers" : ["Ja", "Nein"],
+                    "img" : "schirme.jpg"
+                },
+                {
+                    "text" : "Hast du in den letzten 12 Monaten selbst gepfücktes Obst gegessen?",
+                    "answers" : ["Ja", "Nein"],
+                    "img" : "aepfel.jpg"
+                },
+                {
+                    "text" : "Hast du in den letzten 12 Monaten Kastanien gegessen?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Hast du schon mal ein Vogelhäuschen gebaut?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Bist du gegen irgend eine Nuss-Sorte allergisch?",
+                    "answers" : ["Ja", "Nein"],
+                    "img": "nuesse.jpg"
+                },
+                {
+                    "text" : "Hast du schon mal an einem Kürbis zu Dekorationszwecken geschnitzt?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Besitzt du Gummistiefel?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Hast du schon mal selbst Marmelade eingekocht?",
+                    "answers" : ["Ja", "Nein"]
+                }
+            ]
+        },
+        {
+            "name" : "Winter",
+            "img" : "winter.jpg",
+            "questions" : [
+                {
+                    "text" : "Zu Weihnachten lieber bunte Lichterketten oder einfarbige Lichterketten?",
+                    "answers" : ["bunt", "einfarbig"],
+                    "img" : "bunte_weihnachtsbeleuchtung.jpg"
+                },
+                {
+                    "text" : "Trinkst du gerne Glühwein?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Welche Wintersportart ist cooler, Eishockey oder Skispringen?",
+                    "answers" : ["Eishockey", "Skispringen"]
+                },
+                {
+                    "text" : "Ski oder Snowboard?",
+                    "answers" : ["Ski", "Snowboard"]
+                },
+                {
+                    "text" : "Soll es im Winter schneien?",
+                    "answers" : ["Ja", "Nein"],
+                    "img" : "schnee.jpg"
+                },
+                {
+                    "text" : "Kirchenbesuch an Weihnachten?",
+                    "answers" : ["Ja", "Nein"],
+                    "img" : "kirche.jpg"
+                },
+                {
+                    "text" : "An Silvester selbst Knaller und Raketen abfeuern?",
+                    "answers" : ["Ja", "Nein"],
+                    "img" : "feuerwerk.jpg"
+                },
+                {
+                    "text" : "Gewürzspekulatius oder Butterspekulatius?",
+                    "answers" : ["Gewürzspekulatius", "Butterspekulatius"]
+                },
+                {
+                    "text" : "Wer bringt die Weihnachtsgeschenke?",
+                    "answers" : ["Christkind", "Weihnachtsmann"]
+                },
+                {
+                    "text" : "Handschuhe bei kaltem Wetter?",
+                    "answers" : ["Ja", "Nein"],
+                    "img": "handschuhe.jpg"
+                },
+                
+                {
+                    "text" : "Hast du schon mal beim Bau eines Iglos mitgewirkt?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Hattest du dir zum Jahreswechsel einen Vorsatz für das aktuell laufende Jahr vorgenommen?",
+                    "answers" : ["Ja", "Nein"],
+                    "img" : "feuerwerk.jpg"
+                },
+                {
+                    "text" : "Bist du schon mal Ski gefahren?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Warst du in den letzten 12 Monaten auf einem Weihnachtsmarkt?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Bist du in den letzten 12 Monaten Schlittschuh gefahren?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Hast du schon mal einen Schneeengel erzeugt?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Besitzt du einen Schlitten?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Warst du schon mal Sternsänger?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Hast du einen Kamin?",
+                    "answers" : ["Ja", "Nein"]
+                }
+            ]
+        },
+        {
+            "name" : "Frühling",
+            "img" : "spring.jpg",
+            "questions" : [
+                {
+                    "text" : "Tulpen oder Rosen?",
+                    "answers" : ["Tulpen", "Rosen"],
+                    "img" : "rose.jpg"
+                },
+                {
+                    "text" : "Ist die Zeitumstellung auf Sommerzeit eine gute Sache?",
+                    "answers" : ["Ja", "Nein"],
+                    "img" : "uhr.jpg"
+                },
+                {
+                    "text" : "Hast du schon mal Kräuter aus deinem eigenen Kräuter-Garten gegessen?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Fasten in der Fastenzeit?",
+                    "answers" : ["Ja", "Nein"],
+                    "img": "riesenburger.jpg"
+                },
+                {
+                    "text" : "Zum Karneval kostümieren oder nicht kostümieren?",
+                    "answers" : ["kostümieren", "nicht kostümieren"]
+                },
+                {
+                    "text" : "Welche Liebeskomödie ist besser, 'Harry und Sally' oder 'Tatsächlich Liebe'?",
+                    "answers" : ["Harry und Sally", "Tatsächlich Liebe"]
+                },
+                {
+                    "text" : "Kirchenbesuch an Ostern?",
+                    "answers" : ["Ja", "Nein"],
+                    "img" : "kirche.jpg"
+                },
+                {
+                    "text" : "'Berlinale' oder 'Filmfestspiele von Cannes'?",
+                    "answers" : ["Berlinale", "Filmfestspiele von Cannes"]
+                },
+                
+                {
+                    "text" : "Hast du in den letzten 12 Monaten selbst Blumen gepflückt?",
+                    "answers" : ["Ja", "Nein"],
+                    "img" : "rose.jpg"
+                },
+                {
+                    "text" : "Hast du schon mal selbst Ostereier bemalt?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Bist du gegen Pollen allergisch?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Isst du gerne Spargel?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Hast du in den letzten 12 Monaten Rhabarber gegessen?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Hast du, als zuletzt 1. April war, einen Aprilscherz gemacht?",
+                    "answers" : ["Ja", "Nein"]
+                }
+            ]
+        },
+        {
+            "name" : "Sommer",
+            "img" : "summer.jpg",
+            "questions" : [
+                {
+                    "text" : "Schokoeis oder Vanilleeis?",
+                    "answers" : ["Schokoeis", "Vanilleeis"]
+                },
+                {
+                    "text" : "Badebekleidung für Frauen: Badeanzug oder Bikini?",
+                    "answers" : ["Badeanzug", "Bikini"],
+                    "img" : "pool.jpg"
+                },
+                {
+                    "text" : "Schwimmbad oder Badesee?",
+                    "answers" : ["Schwimmbad", "Badesee"],
+                    "img" : "pool.jpg"
+                },
+                {
+                    "text" : "Strandurlaub oder Urlaub in den Bergen?",
+                    "answers" : ["Strandurlaub", "Urlaub in den Bergen"],
+                    "img" : "meer.jpg"
+                },
+                {
+                    "text" : "Als Mann bei heißem Wetter oberkörperfrei draußen rum rennen?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Olympische Sommerspiele oder Fußball-WM?",
+                    "answers" : ["Olympische Sommerspiele", "Fußball-WM"]
+                },
+                {
+                    "text" : "Lieber Tageshöchsttemperatur von 25°C oder von 35°C?",
+                    "answers" : ["25°C", "35°C"],
+                    "img" : "pool.jpg"
+                },
+                {
+                    "text" : "Im Schwimmbad die meiste Zeit im Wasser verbringen oder die meiste Zeit in der Sonne liegen?",
+                    "answers" : ["Zeit im Wasser verbringen", "In der Sonne liegen"],
+                    "img" : "pool.jpg"
+                },
+                {
+                    "text" : "Zitronenlimonade oder Orangenlimonade?",
+                    "answers" : ["Zitronenlimonade", "Orangenlimonade"]
+                },
+                
+                {
+                    "text" : "Hast du in den letzten 12 Monaten an einem Picknick teilgenommen?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Bei Städtetripps lieber Sightseeing oder shoppen gehen?",
+                    "answers" : ["Sightseeing", "Shoppen"],
+                    "img" : "brandenburger_tor.jpg"
+                },
+                {
+                    "text" : "Hast du schon mal beim Bau eines Baumhauses mitgewirkt?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Besitzt du eine Sonnenbrille?",
+                    "answers" : ["Ja", "Nein"],
+                    "img": "sonnenbrille.jpg"
+                },
+                {
+                    "text" : "Besitzt du Flipflops?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Wurdest du schon mal im Urlaub bestohlen?",
+                    "answers" : ["Ja", "Nein"]
+                }
+            ]
+        }
+    ]
+}

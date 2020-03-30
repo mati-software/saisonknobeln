@@ -1,0 +1,314 @@
+{
+    "name" : "seasons",
+    "sections" : [
+        {
+            "name": "autumn",
+            "img" : "autumn.jpg",
+            "questions":[
+                {
+                    "text": "White wine or red wine?",
+                    "answers": ["white wine", "red wine"],
+                    "img" : "wein.jpg"
+                },
+                {
+                    "text": "Dress up for Halloween?",
+                    "answers": ["yes", "no"],
+                    "img": "jack-o-lantern.jpg"
+                },
+                {
+                    "text": "Apples sweet or sour?",
+                    "answers": ["sweet", "sour"],
+                    "img": "aepfel.jpg"
+                },
+                {
+                    "text": "Walnuts or hazelnuts?",
+                    "answers": ["walnuts", "hazelnuts"]
+                },
+                {
+                    "text": "Do you like mushrooms?",
+                    "answers": ["yes", "no"]
+                },
+                {
+                    "text": "On November 11 carnival or St. Martin's day?",
+                    "answers": ["Carnival", "St. Martin's day"]
+                },
+                {
+                    "text": "Are wind turbines a good thing?",
+                    "answers": ["yes", "no"],
+                    "img": "windraeder.jpg"
+                },
+                {
+                    "text": "Which film series is better: 'Halloween' or 'Friday the 13th'?",
+                    "answers": ["Halloween", "Friday the 13th"],
+                    "img": "jack-o-lantern.jpg"
+                },
+
+                {
+                    "text": "Do you have more than one umbrella?",
+                    "answers": ["yes", "no"],
+                    "img": "schirme.jpg"
+                },
+                {
+                    "text": "Did you eat self-picked fruit in the last 12 months?",
+                    "answers": ["yes", "no"],
+                    "img": "aepfel.jpg"
+                },
+                {
+                    "text": "Did you eat chestnuts in the last 12 months?",
+                    "answers": ["yes", "no"]
+                },
+                {
+                    "text": "Have you ever built a birdhouse?",
+                    "answers": ["yes", "no"]
+                },
+                {
+                    "text": "Are you allergic to any kind of nuts?",
+                    "answers": ["yes", "no"],
+                    "img": "nuesse.jpg"
+                },
+                {
+                    "text": "Have you ever carved a pumpkin for decoration?",
+                    "answers": ["yes", "no"]
+                },
+                {
+                    "text": "Do you own rubber boots?",
+                    "answers": ["yes", "no"]
+                },
+                {
+                    "text": "Have you ever cooked jam yourself?",
+                    "answers": ["yes", "no"]
+                }
+            ]
+        },
+        {
+            "name": "winter",
+            "img": "winter.jpg",
+            "questions": [
+                {
+                    "text": "Do you prefer colorful Christmas lighting or single-coloured Christmas lighting?",
+                    "answers": ["colorful", "single-coloured"],
+                    "img": "bunte_weihnachtsbeleuchtung.jpg"
+                },
+                {
+                    "text": "Do you like drinking mulled wine?",
+                    "answers": ["yes", "no"]
+                },
+                {
+                    "text": "Which winter sport is cooler, ice hockey or ski jumping?",
+                    "answers": ["ice hockey", "ski jumping"]
+                },
+                {
+                    "text": "Ski or Snowboard?",
+                    "answers": ["ski", "snowboard"]
+                },
+                {
+                    "text": "Should it snow in winter?",
+                    "answers": ["yes", "no"],
+                    "img" : "schnee.jpg"
+                },
+                {
+                    "text": "Church attendance at Christmas?",
+                    "answers": ["yes", "no"],
+                    "img": "kirche.jpg"
+                },
+                {
+                    "text": "Fire your own firecrackers and rockets on New Year's Eve?",
+                    "answers": ["yes", "no"],
+                    "img": "feuerwerk.jpg"
+                },
+                {
+                    "text": "Spicy Christmas cookies or shortbread biscuit?",
+                    "answers": ["spicy Christmas cookies", "shortbread biscuit"]
+                },
+                {
+                    "text": "Who brings the Christmas gifts?",
+                    "answers": ["Christ Child", "Santa Claus"]
+                },
+                {
+                    "text": "Gloves in cold weather?",
+                    "answers": ["yes", "no"],
+                    "img": "handschuhe.jpg"
+                },
+
+                {
+                    "text": "Have you ever worked on the construction of an igloo?",
+                    "answers": ["yes", "no"]
+                },
+                {
+                    "text": "Did you make a New Year's resolution at the last turn of the year?",
+                    "answers": ["yes", "no"]
+                },
+                {
+                    "text": "Have you ever skied?",
+                    "answers": ["yes", "no"]
+                },
+                {
+                    "text": "Have you been to a Christmas market in the last 12 months?",
+                    "answers": ["yes", "no"]
+                },
+                {
+                    "text": "Have you skated on ice in the last 12 months?",
+                    "answers": ["yes", "no"]
+                },
+                {
+                    "text": "Have you ever created a snow angel?",
+                    "answers": ["yes", "no"]
+                },
+                {
+                    "text": "Do you own a sled?",
+                    "answers": ["yes", "no"]
+                },
+                {
+                    "text": "Have you ever been a star singer?",
+                    "answers": ["yes", "no"]
+                },
+                {
+                    "text": "Do you have a fireplace?",
+                    "answers": ["yes", "no"]
+                }
+            ]
+        },
+        {
+            "name": "spring",
+            "img": "spring.jpg",
+            "questions" : [
+                {
+                    "text": "Tulips or roses?",
+                    "answers": ["tulips", "roses"],
+                    "img": "rose.jpg"
+                },
+                {
+                    "text": "Is the daylight-saving time good thing?",
+                    "answers": ["yes", "no"],
+                    "img": "uhr.jpg"
+                },
+                {
+                    "text": "Have you ever had herbs from your own herb garden?",
+                    "answers": ["yes", "no"]
+                },
+                {
+                    "text": "Fasting in Lent?",
+                    "answers": ["yes", "no"],
+                    "img": "riesenburger.jpg"
+                },
+                {
+                    "text": "Dress up for carnival?",
+                    "answers": ["yes", "no"]
+                },
+                {
+                    "text": "Which romantic comedy is better, 'When Harry Met Sally' or 'Love Actually'?",
+                    "answers": ["When Harry Met Sally", "Love Actually"]
+                },
+                {
+                    "text": "Church attendance at Easter?",
+                    "answers": ["yes", "no"],
+                    "img": "kirche.jpg"
+                },
+                {
+                    "text": "'Berlinale' or 'Cannes Film Festival'?",
+                    "answers": ["Berlinale", "Cannes Film Festival"]
+                },
+
+                {
+                    "text": "Did you pick flowers yourself in the last 12 months?",
+                    "answers": ["yes", "no"],
+                    "img": "rose.jpg"
+                },
+                {
+                    "text": "Have you ever painted Easter eggs yourself?",
+                    "answers": ["yes", "no"]
+                },
+                {
+                    "text": "Are you allergic to pollen?",
+                    "answers": ["yes", "no"]
+                },
+                {
+                    "text": "Do you like asparagus?",
+                    "answers": ["yes", "no"]
+                },
+                {
+                    "text": "Did you eat rhubarb in the last 12 months?",
+                    "answers": ["yes", "no"]
+                },
+                {
+                    "text": "On last April 1st, did you do an April Fool's joke?",
+                    "answers": ["yes", "no"]
+                }
+            ]
+        },
+        {
+            "name": "summer",
+            "img": "summer.jpg",
+            "questions": [
+                {
+                    "text": "Chocolate ice cream or vanilla ice cream?",
+                    "answers": ["chocolate", "vanilla"]
+                },
+                {
+                    "text": "Swimwear for women: swimsuit or bikini?",
+                    "answers": ["swimsuit", "bikini"],
+                    "img": "pool.jpg"
+                },
+                {
+                    "text": "Swimming in a pool or in a lake?",
+                    "answers": ["pool", "lake"],
+                    "img": "pool.jpg"
+                },
+                {
+                    "text": "Beach holiday or vacation in the mountains?",
+                    "answers": ["beach holiday", "vacation in the mountains"],
+                    "img": "meer.jpg"
+                },
+                {
+                    "text": "Is it OK for a man to be shirtless in public during hot weather?",
+                    "answers": ["yes", "no"]
+                },
+                {
+                    "text": "Summer Olympics or World Cup?",
+                    "answers": ["Summer Olympics", "World Cup"]
+                },
+                {
+                    "text": "Do you prefer a daily maximum temperature of 25 ° C or 35 ° C?",
+                    "answers": ["25 ° C", "35 ° C"],
+                    "img": "pool.jpg"
+                },
+                {
+                    "text": "Visiting a lido: spend most of the time in the water or most of the time lying in the sun?",
+                    "answers": ["in the water", "lying in the sun"],
+                    "img": "pool.jpg"
+                },
+                {
+                    "text": "Lemonade or orange soda?",
+                    "answers": ["lemonade", "orange soda"]
+                },
+
+                {
+                    "text": "Did you attend a picnic in the last 12 months?",
+                    "answers": ["yes", "no"]
+                },
+                {
+                    "text": "If you are on a city trip, do you prefer sightseeing or shopping?",
+                    "answers": ["sightseeing", "shopping"],
+                    "img": "brandenburger_tor.jpg"
+                },
+                {
+                    "text": "Have you ever worked on the construction of a tree house?",
+                    "answers": ["yes", "no"]
+                },
+                {
+                    "text": "Do you own sunglasses?",
+                    "answers": ["yes", "no"],
+                    "img": "sonnenbrille.jpg"
+                },
+                {
+                    "text": "Do you own flip flops?",
+                    "answers": ["yes", "no"]
+                },
+                {
+                    "text": "Have you ever been robbed on vacation?",
+                    "answers": ["yes", "no"]
+                }
+            ]
+        }
+    ]
+}

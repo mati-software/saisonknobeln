@@ -1,13 +1,15 @@
 var mati = {
-	aktuelleRubrik : null,
-	rubriken : [],
+    aktuellesTheme : null,
+	aktuelleSection : null,
+    aktuelleFrage : null,
 	spracheCode : 'en',
     sprachen : [],
+    themes : [],
 	spielerImLaufendenSpiel : [],
 	spielerAufWarteliste : [],
 	spielerFarben : new Map(),
-	spielLaeuft : false,
 	queueEnthaeltLaufendesSpiel : false,
+    aktuellerStatus : 'hauptmenue', //der Status wird immer sofort angepasst, auch bereits vor einer noch auszufuehrenden Animation
 	aktuellSichbarerContainer : null,
 	tatsaechlicheAnzahlStimmenFuerA : null,
 	tatsaechlicheAnzahlStimmenFuerB : null,
@@ -57,44 +59,21 @@ mati.setSpracheCode = function(neuerSpracheCode) {
 		matiUtil.gotoNaechsterBefehl();
 	});
 	
-	//Rubriken laden
+    //Section-Bilder laden
 	matiUtil.pushBefehl(function() {
-		matiUtil.loadJson(Tiltspot.get.assetUrl("category-list.json"), function(rubrikKeys) {
-			mati.rubriken = rubrikKeys.map(function(rubrikKey) {
-				let img = document.createElement("IMG");
-				img.src = Tiltspot.get.assetUrl(rubrikKey + '.jpg');
-				return {key : rubrikKey, img : img};
-			});
-			matiUtil.gotoNaechsterBefehl();
-		});
+        for (let theme of mati.themes) {
+            if (theme.codeMitPrefix.indexOf(neuerSpracheCode + '_') === 0 && theme.sectionImages === null) {
+                theme.sectionImages = {};
+                for (let section of theme.content.sections) {
+                    let img = document.createElement("IMG");
+                    img.src = Tiltspot.get.assetUrl("content/" + theme.codeMitPrefix + "/" + section.img);
+                    theme.sectionImages[img.src] = img;
+                }
+            }
+        }
+        matiUtil.gotoNaechsterBefehl();
 	});
-	//Fragen laden
-	matiUtil.pushBefehl(function() {
-		let anzahlGeladeneRubriken = 0;
-		for (let rubrik of mati.rubriken) {
-			rubrik.aktuellerFrageIndex = -1;
-			matiUtil.loadJson(Tiltspot.get.assetUrl("questions/" + rubrik.key + "_" + mati.spracheCode + ".json"), function(data) {
-				rubrik.fragen = data.questions.map(function(frage) {
-					let frageMitImgObj = {
-						"text" : frage.text,
-						"answers" : frage.answers
-					};
-					if (frage.img) {
-						let img = document.createElement("IMG");
-						img.src = Tiltspot.get.assetUrl('questions/' + frage.img);
-						frageMitImgObj.img = img;
-					}
-					return frageMitImgObj;
-				});
-				matiUtil.shuffleArray(rubrik.fragen);
-				rubrik.name = data.name;
-				anzahlGeladeneRubriken++;
-				if (anzahlGeladeneRubriken === mati.rubriken.length) {
-					matiUtil.gotoNaechsterBefehl();
-				}
-			});
-		}
-	});
+    
 	//GUI-Texte uebernehmen
 	matiUtil.pushBefehl(function() {
         for (let sprache of mati.sprachen) {
@@ -112,12 +91,11 @@ mati.setSpracheCode = function(neuerSpracheCode) {
 		document.getElementById('mati_frage_ergebnis_tatsaechlich_label').innerText = matiUtil.l10n('Tatsächliche Aufteilung');
 		
 		document.getElementById('mati_spiel_lobby_credits').innerText = matiUtil.l10n('Ein Spiel von Timo Scheit und Martin Dostert');
+        
+        document.getElementById('mati_theme_selection_erlaeuterung').innerText = matiUtil.l10n('Thema wählen');
 		
 		matiUtil.gotoNaechsterBefehl();
 	});
-	
-
-	
 };
 
 
@@ -147,7 +125,7 @@ mati.sendMsg = function(spieler, befehl) {
 	};
 	
 	if (befehl === 'zeigeAntwortmoeglichkeiten') {
-		daten.antwortMoeglichkeiten = mati.aktuelleRubrik.fragen[mati.aktuelleRubrik.aktuellerFrageIndex].answers;
+		daten.antwortMoeglichkeiten = mati.aktuelleFrage.answers;
 		daten.anzahlSpieler = mati.spielerImLaufendenSpiel.length;
 	}
 	
@@ -216,11 +194,61 @@ mati.setFrageGroesseUndPosition = function() {
 };
 
 mati.neuesSpiel = function() {
+    matiUtil.pushBefehl(function() {
+        mati.aktuellerStatus = 'themeauswahl';
+        
+        let verfuegbareThemes = mati.themes.filter(function(theme) {
+            return theme.codeMitPrefix.indexOf(mati.spracheCode + '_') === 0;
+        });
+        
+        if (verfuegbareThemes.length === 0) {
+            //TODO
+        }
+        
+        mati.aktuellesTheme = verfuegbareThemes[0];
+        
+        if (verfuegbareThemes.length === 1) {
+            mati.pushThemeStarten();
+            matiUtil.gotoNaechsterBefehl();
+        }
+        else {
+            document.getElementById('mati_theme_selection_items').innerHTML = `
+                ${verfuegbareThemes.map(function(theme) {
+                    return `
+                        <div style="display:none" class="mati_themeselection_item_container" id="mati_themeselection_item_container_${theme.codeMitPrefix}">
+                            <div class="mati_themeselection_item">
+                                <div class="mati_themeselection_item_imagecontainer">
+                                    ${theme.content.sections.map(function(section) {
+                                        //FIXME alles was aus json kommt muss sicherheitshalber ordentlich gefiltert werden
+                                        return `
+                                            <div style="background-image:url(${Tiltspot.get.assetUrl('content/' + theme.codeMitPrefix + '/' + section.img)})">
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                                <div class="mati_themeselection_item_text">
+                                    ${matiUtil.htmlEscape(theme.content.name)}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            `;
+            
+            document.getElementById('mati_themeselection_item_container_' + mati.aktuellesTheme.codeMitPrefix).style['display'] = 'flex';
+            
+            mati.broadcast('zeigeThemeSelection');
+            mati.zeigeContainer(document.getElementById('mati_theme_selection'), matiUtil.gotoNaechsterBefehl);
+        }
+    });
+};
+
+mati.pushThemeStarten = function() {
 	mati.queueEnthaeltLaufendesSpiel = true;
 	
 	matiUtil.pushBefehl(function() {
-		mati.spielLaeuft = true;
-		mati.aktuelleRubrik = null;
+		mati.aktuellerStatus = 'spiel';
+		mati.aktuelleSection = null;
 		
 		for (let spieler of mati.spielerImLaufendenSpiel) {
 			spieler.altePunktzahl = 0;
@@ -237,69 +265,85 @@ mati.neuesSpiel = function() {
 		document.getElementById('mati_frage').style['display'] = 'block';
 		mati.schrittweiseResizeBisEsPasst(document.getElementById('mati_frage_spieler_container'), document.getElementById('mati_frage_spieler'));
 		document.getElementById('mati_frage').style['display'] = 'none';
+        
+        //Alle Fragen-Bilder vorladen
+        mati.aktuellesTheme.questionImages = {};
+        for (let section of mati.aktuellesTheme.content.sections) {
+            for (let question of section.questions) {
+                if (question.img) {
+                    //zunaechst nur Map mit null-Werten aufbauen, damit DOM-Objekte bei gleichen Bildern nicht unnoetig mehrfach erstellt werden
+                    mati.aktuellesTheme.questionImages[question.img] = null;
+                }
+            }
+        }
+        for (let imgName in mati.aktuellesTheme.questionImages) {
+            let img = document.createElement("IMG");
+            img.src = Tiltspot.get.assetUrl("content/" + mati.aktuellesTheme.codeMitPrefix + "/" + imgName);
+            mati.aktuellesTheme.questionImages[imgName] = img;
+        }
 		
 		matiUtil.gotoNaechsterBefehl();
 	});
 	
-	for (let rubrik of mati.rubriken) {
+	for (let section of mati.aktuellesTheme.content.sections) {
 		matiUtil.pushBefehl(function() {
-			//naechste Rubrik waehlen
-			if (mati.aktuelleRubrik === null) {
-				mati.aktuelleRubrik = mati.rubriken[0];
+			//naechste Section waehlen
+			if (mati.aktuelleSection === null) {
+				mati.aktuelleSection = mati.aktuellesTheme.content.sections[0];
 			}
 			else {
-				var alterIndex = mati.rubriken.indexOf(mati.aktuelleRubrik);
-				var neuerIndex = (alterIndex + 1) % mati.rubriken.length;
-				mati.aktuelleRubrik = mati.rubriken[neuerIndex];
+				var alterIndex = mati.aktuellesTheme.content.sections.indexOf(mati.aktuelleSection);
+				var neuerIndex = (alterIndex + 1) % mati.aktuellesTheme.content.sections.length;
+				mati.aktuelleSection = mati.aktuellesTheme.content.sections[neuerIndex];
 			}
 			
-			document.getElementById('mati_rubrik_intro_name').setAttribute('stroke-dasharray', '0 100');
-			document.getElementById('mati_rubrik_intro_name').setAttribute('fill', 'none');
-			document.getElementById('mati_rubrik_intro_balken1').style['width'] = '0';
-			document.getElementById('mati_rubrik_intro_balken2').style['width'] = '0';
+			document.getElementById('mati_section_intro_name').setAttribute('stroke-dasharray', '0 100');
+			document.getElementById('mati_section_intro_name').setAttribute('fill', 'none');
+			document.getElementById('mati_section_intro_balken1').style['width'] = '0';
+			document.getElementById('mati_section_intro_balken2').style['width'] = '0';
 			
-			document.getElementById('mati_rubrik_intro_name').textContent = mati.aktuelleRubrik.name;
-			document.getElementById('mati_rubrik_intro').style['background-image'] = `url(${mati.aktuelleRubrik.img.src})`;
+			document.getElementById('mati_section_intro_name').textContent = mati.aktuelleSection.name;
+			document.getElementById('mati_section_intro').style['background-image'] = `url(${Tiltspot.get.assetUrl("content/" + mati.aktuellesTheme.codeMitPrefix + "/" + mati.aktuelleSection.img)})`;
 			
-			mati.zeigeContainer(document.getElementById('mati_rubrik_intro'), matiUtil.gotoNaechsterBefehl);
+			mati.zeigeContainer(document.getElementById('mati_section_intro'), matiUtil.gotoNaechsterBefehl);
 			matiUtil.fadeOut(document.getElementById("mati_hauptmusik"), 1000);
 		});
 
 		matiUtil.pushBefehl(function() {
-			matiUtil.play(document.getElementById("mati_rubrikintro_musik"));
+			matiUtil.play(document.getElementById("mati_sectionintro_musik"));
 
-			let balken1 = document.getElementById('mati_rubrik_intro_balken1');
-			let balken2 = document.getElementById('mati_rubrik_intro_balken2');
+			let balken1 = document.getElementById('mati_section_intro_balken1');
+			let balken2 = document.getElementById('mati_section_intro_balken2');
 			
-			let rubrikIntroAnimationStartzeit;
-			let textElement = document.getElementById('mati_rubrik_intro_name');
+			let sectionIntroAnimationStartzeit;
+			let textElement = document.getElementById('mati_section_intro_name');
 			
 			
-			function rubrikIntroAnimation(timestamp) {
-				if (!rubrikIntroAnimationStartzeit) {
-					rubrikIntroAnimationStartzeit = timestamp;
+			function sectionIntroAnimation(timestamp) {
+				if (!sectionIntroAnimationStartzeit) {
+					sectionIntroAnimationStartzeit = timestamp;
 				}
-				var progress = timestamp - rubrikIntroAnimationStartzeit;
+				var progress = timestamp - sectionIntroAnimationStartzeit;
 				
 				
 				if (progress < 1000) {
 					balken1.style['width'] = (progress / 20) + '%';
 					balken2.style['width'] = (progress / 20) + '%';
-					window.requestAnimationFrame(rubrikIntroAnimation);
+					window.requestAnimationFrame(sectionIntroAnimation);
 				}
 				else if (progress < 3000) {
 					balken1.style['width'] = '100%';
 					balken2.style['width'] = '0%';
 					let dashLaenge = Math.floor((progress-1000) / 20);
 					textElement.setAttribute('stroke-dasharray', dashLaenge+' '+(100-dashLaenge));
-					window.requestAnimationFrame(rubrikIntroAnimation);
+					window.requestAnimationFrame(sectionIntroAnimation);
 				}
 				else if (progress < 5000) {
 					balken1.style['width'] = '100%';
 					balken2.style['width'] = '0%';
 					textElement.removeAttribute('stroke-dasharray');
 					textElement.setAttribute('fill', `rgba(0, 0, 0, ${(progress - 3000)/2000})`);
-					window.requestAnimationFrame(rubrikIntroAnimation);
+					window.requestAnimationFrame(sectionIntroAnimation);
 				}
 				else {
 					balken1.style['width'] = '100%';
@@ -313,24 +357,45 @@ mati.neuesSpiel = function() {
 				}
 			}
 
-			window.requestAnimationFrame(rubrikIntroAnimation);
+			window.requestAnimationFrame(sectionIntroAnimation);
 		});
 		
 		for (let i=0; i<3; i++) {
 			matiUtil.pushBefehl(function() {
 				//naechste Frage waehlen
-				mati.aktuelleRubrik.aktuellerFrageIndex = (mati.aktuelleRubrik.aktuellerFrageIndex + 1) % mati.aktuelleRubrik.fragen.length;
+                while (mati.aktuellesTheme.shuffledQuestionOrderForSections.length < mati.aktuellesTheme.content.sections.length) {
+                    mati.aktuellesTheme.shuffledQuestionOrderForSections.push({
+                        shuffledArray : [],
+                        aktuellerArrayIndex : 0
+                    });
+                }
+                let aktuelleSectionIndex = mati.aktuellesTheme.content.sections.indexOf(mati.aktuelleSection);
+                let shuffledOrderForSection = mati.aktuellesTheme.shuffledQuestionOrderForSections[aktuelleSectionIndex];
+                if (shuffledOrderForSection.shuffledArray.length !== mati.aktuelleSection.questions.length) {
+                    if (shuffledOrderForSection.shuffledArray.length > mati.aktuelleSection.questions.length) {
+                        shuffledOrderForSection.shuffledArray = [];
+                    }
+                    while (shuffledOrderForSection.shuffledArray.length < mati.aktuelleSection.questions.length) {
+                        shuffledOrderForSection.shuffledArray.push(shuffledOrderForSection.shuffledArray.length);
+                    }
+                    matiUtil.shuffleArray(shuffledOrderForSection.shuffledArray);
+                    shuffledOrderForSection.aktuellerArrayIndex = 0;
+                }
+
+				shuffledOrderForSection.aktuellerArrayIndex = (shuffledOrderForSection.aktuellerArrayIndex + 1) % shuffledOrderForSection.shuffledArray.length;
 				
-				let frage = mati.aktuelleRubrik.fragen[mati.aktuelleRubrik.aktuellerFrageIndex];
-				document.getElementById('mati_frage_text').innerText = frage.text;
-				document.getElementById('mati_frage').style['background-image'] = `url(${mati.aktuelleRubrik.img.src})`;
+                mati.aktuelleFrage = mati.aktuelleSection.questions[shuffledOrderForSection.shuffledArray[shuffledOrderForSection.aktuellerArrayIndex]];
+				document.getElementById('mati_frage_text').innerText = mati.aktuelleFrage.text;
+				document.getElementById('mati_frage').style['background-image'] = `url(${Tiltspot.get.assetUrl("content/" + mati.aktuellesTheme.codeMitPrefix + "/" + mati.aktuelleSection.img)})`;
 				
 				document.getElementById('mati_frage_bild').innerHTML = '';
-				if (frage.img) {
-					let seitenverhaeltnis = frage.img.naturalWidth / frage.img.naturalHeight;
-					document.getElementById('mati_frage_bild').appendChild(frage.img);
-					frage.img.style['width'] = (8*seitenverhaeltnis)+'em';
-					frage.img.style['height'] = 8+'em';
+				if (mati.aktuelleFrage.img) {
+                    let imgObject = mati.aktuellesTheme.questionImages[mati.aktuelleFrage.img];
+                    
+					let seitenverhaeltnis = imgObject.naturalWidth / imgObject.naturalHeight;
+					document.getElementById('mati_frage_bild').appendChild(imgObject);
+					imgObject.style['width'] = (8*seitenverhaeltnis)+'em';
+					imgObject.style['height'] = 8+'em';
 					document.getElementById('mati_frage_text_und_bild').style['grid-template-columns'] = `minmax(50%,1fr) minmax(0,${8*seitenverhaeltnis + 2}em)`;
 				}
 				else {
@@ -372,15 +437,15 @@ mati.neuesSpiel = function() {
 					}
 				}
 				
-				document.getElementById('mati_frage_ergebnis').style['background-image'] = `url(${mati.aktuelleRubrik.img.src})`;
+                document.getElementById('mati_frage_ergebnis').style['background-image'] = `url(${Tiltspot.get.assetUrl("content/" + mati.aktuellesTheme.codeMitPrefix + "/" + mati.aktuelleSection.img)})`;
 				
 				let sortierteSpieler = mati.spielerImLaufendenSpiel.slice().sort(function(spieler1, spieler2) {
 					return spieler2.schaetzungAFuerAktuelleFrage - spieler1.schaetzungAFuerAktuelleFrage;
 				});
 				document.getElementById('mati_frage_ergebnis_schaetzungen').innerHTML = `
 					<div id="mati_frage_ergebnis_antwortmoeglichkeiten">
-						<div id="mati_frage_ergebnis_antwortmoeglichkeitA">${matiUtil.htmlEscape(mati.aktuelleRubrik.fragen[mati.aktuelleRubrik.aktuellerFrageIndex].answers[0])}</div>
-						<div id="mati_frage_ergebnis_antwortmoeglichkeitB">${matiUtil.htmlEscape(mati.aktuelleRubrik.fragen[mati.aktuelleRubrik.aktuellerFrageIndex].answers[1])}</div>
+						<div id="mati_frage_ergebnis_antwortmoeglichkeitA">${matiUtil.htmlEscape(mati.aktuelleFrage.answers[0])}</div>
+						<div id="mati_frage_ergebnis_antwortmoeglichkeitB">${matiUtil.htmlEscape(mati.aktuelleFrage.answers[1])}</div>
 					</div>
 					${sortierteSpieler.map(function(knobelSpieler) {
 						return `
@@ -500,7 +565,7 @@ mati.neuesSpiel = function() {
 			
 			document.getElementById('mati_punktestand_spielerliste_container_container').classList.remove('mati_punktestand_endresultat');
 			
-			document.getElementById('mati_punktestand_ueberschrift').innerText = matiUtil.l10n(mati.aktuelleRubrik === mati.rubriken[mati.rubriken.length - 1] ? 'Endresultat' : 'Zwischenstand');
+			document.getElementById('mati_punktestand_ueberschrift').innerText = matiUtil.l10n(mati.aktuelleSection === mati.aktuellesTheme.content.sections[mati.aktuellesTheme.content.sections.length - 1] ? 'Endresultat' : 'Zwischenstand');
 			
 			document.getElementById('mati_punktestand_spielerliste').innerHTML = sortierteSpieler.map(function(knobelSpieler) {
 				return `
@@ -516,7 +581,7 @@ mati.neuesSpiel = function() {
 					</div>
 				`;
 			}).join('');
-			document.getElementById('mati_punktestand').style['background-image'] = `url(${mati.aktuelleRubrik.img.src})`;
+            document.getElementById('mati_punktestand').style['background-image'] = `url(${Tiltspot.get.assetUrl("content/" + mati.aktuellesTheme.codeMitPrefix + "/" + mati.aktuelleSection.img)})`;
 			
 			//bei vielen Spielern skalieren
 			document.getElementById('mati_punktestand').style['display'] = 'block';
@@ -590,7 +655,7 @@ mati.neuesSpiel = function() {
 				matiUtil.gotoNaechsterBefehl();
 			}
 		});
-		if (rubrik === mati.rubriken[mati.rubriken.length - 1]) {
+		if (section === mati.aktuellesTheme.content.sections[mati.aktuellesTheme.content.sections.length - 1]) {
 			matiUtil.pushBefehl(function() {
 				document.getElementById('mati_punktestand_spielerliste_container_container').classList.add('mati_punktestand_endresultat');
 				mati.broadcast('zeigeSpielAbschliessen');
@@ -605,7 +670,7 @@ mati.neuesSpiel = function() {
 		}
 	}
 	matiUtil.pushBefehl(function() {
-		mati.spielLaeuft = false;
+		mati.aktuellerStatus = 'hauptmenue';
 		mati.queueEnthaeltLaufendesSpiel = false;
 		
 		mati.broadcast('zeigeHauptmenue');
@@ -653,7 +718,7 @@ mati.getSpielerImLaufendenSpielById = function(id) {
 };
 	
 mati.spielerChanged = function() {
-	if (!mati.spielLaeuft) {
+	if (mati.aktuellerStatus !== 'spiel') {
 		//Alle Spieler in der Warteschlange mit ins Spiel aufnehmen
 		mati.spielerImLaufendenSpiel = mati.spielerImLaufendenSpiel.concat(mati.spielerAufWarteliste);
 		mati.spielerAufWarteliste = [];
@@ -664,7 +729,7 @@ mati.spielerChanged = function() {
 		let knobelSpieler = mati.spielerImLaufendenSpiel[i];
 		let user = Tiltspot.get.user(knobelSpieler.id);
 		if (user === null || user === undefined || !user.isLoggedIn) {
-			if (mati.spielLaeuft) {
+			if (mati.aktuellerStatus === 'spiel') {
 				knobelSpieler.verbindungAbgebrochen = true;
 			}
 			else {

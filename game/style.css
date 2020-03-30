@@ -194,17 +194,6 @@ span.mati_spieler_text {
     color: black;
     background-image: url("lobby.jpg");
 }
-@keyframes mati_animation_intro_hintergrundfarbe {
-    0% {
-        background-color: black;
-    }
-    50% {
-        background-color: white;
-    }
-    100% {
-        background-color: rgba(255, 255, 255, 0);
-    }
-}
 
 #mati_titel {
     position:absolute;
@@ -212,6 +201,10 @@ span.mati_spieler_text {
     top: calc(50vh - 10vw);
     height: 20vw;
     width: 100%;
+}
+#mati_titel svg {
+    width:100%;
+    height:100%;
     overflow: hidden;
 }
 
@@ -221,9 +214,6 @@ span.mati_spieler_text {
     top:0;
     right:0;
     bottom:0;
-    animation-name: mati_animation_intro_hintergrundfarbe;
-    animation-duration: 6s;
-    animation-fill-mode: forwards;
     background-color: black;
     z-index: 2;
 }
@@ -267,10 +257,10 @@ span.mati_spieler_text {
 
 /* RUBRIK-INTRO */
 
-#mati_rubrik_intro {
+#mati_section_intro {
     background-color: #CCC;
 }
-#mati_rubrik_intro svg {
+#mati_section_intro svg {
     position: absolute;
     left: 0;
     top: 0;
@@ -279,7 +269,7 @@ span.mati_spieler_text {
     height: 12vw;
     margin-top: -6vw;
 }
-#mati_rubrik_intro_balken1 {
+#mati_section_intro_balken1 {
     position: absolute;
     top: 50%;
     height: 12vw;
@@ -287,8 +277,8 @@ span.mati_spieler_text {
     background-color: rgba(255, 255, 255, .9);
     left: 0;
 }
-#mati_rubrik_intro_balken1::before,
-#mati_rubrik_intro_balken2::before {
+#mati_section_intro_balken1::before,
+#mati_section_intro_balken2::before {
     content: ' ';
     position: absolute;
     top: -2vw;
@@ -297,8 +287,8 @@ span.mati_spieler_text {
     height: 1vw;
     background-color: rgba(255, 255, 255, .9);
 }
-#mati_rubrik_intro_balken1::after,
-#mati_rubrik_intro_balken2::after {
+#mati_section_intro_balken1::after,
+#mati_section_intro_balken2::after {
     content: ' ';
     position: absolute;
     bottom: -2vw;
@@ -307,7 +297,7 @@ span.mati_spieler_text {
     height: 1vw;
     background-color: rgba(255, 255, 255, .9);
 }
-#mati_rubrik_intro_balken2 {
+#mati_section_intro_balken2 {
     position: absolute;
     top: 50%;
     height: 12vw;
@@ -671,3 +661,101 @@ span.mati_spieler_text {
     width:100%;
     height:100%;
 }
+#mati_theme_selection {
+    background-color: #eee;
+    color: black;
+    background-image: url("lobby.jpg");
+}
+.mati_themeselection_item {
+    position:relative;
+    width:18em;
+    height:9em;
+    box-shadow: 0 0 .5em black;
+}
+.mati_themeselection_item_imagecontainer {
+    width:100%;
+    height:100%;
+    display: flex;
+    align-items: stretch;
+}
+.mati_themeselection_item_imagecontainer div {
+    flex-grow: 1;
+    background-size: cover;
+    background-repeat:no-repeat;
+    background-position: center;
+}
+.mati_themeselection_item_text {
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    line-height: 4.5em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size:200%;
+    text-align:center;
+    background-image: radial-gradient(rgba(255,255,255,.7), rgba(255,255,255,0));
+    font-weight:bold;
+    text-shadow:0 0 .2em white;
+}
+.mati_themeselection_item_container {
+    position:absolute;
+    left:0;
+    top:0;
+    bottom:0;
+    right:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+#mati_theme_selection_grid {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-row-gap: 1em;
+    position: absolute;
+    top: 0;
+    bottom: 1em;
+    left: 1em;
+    right: 1em;
+    justify-items: stretch;
+}
+#mati_theme_selection_erlaeuterung {
+    border-bottom-left-radius: 1em;
+    border-bottom-right-radius: 1em;
+    background-color: rgba(255, 255, 255, .9);
+    padding: .5em 1em;
+    text-align:center;
+}
+#mati_theme_selection_content {
+    border-radius: 1em;
+    background-color: rgba(255, 255, 255, .9);
+    position: relative;
+}
+#mati_theme_selection_ui {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    display:flex;
+    justify-content:space-evenly;
+    align-items:center;
+}
+#mati_theme_selection_button_prev,
+#mati_theme_selection_button_next {
+    width:1em;
+    height:2em;
+}
+#mati_theme_selection_button_prev svg,
+#mati_theme_selection_button_next svg {
+    width:100%;
+    height:100%;
+}
+#mati_theme_selection_button_spacer {
+    width:18em;
+    height:9em;
+    position:relative;
+}
+
