@@ -156,6 +156,11 @@ mati.zeigeContainer = function(containerElement, callback) {
 	
 	setTimeout(function () {
 		if (mati.aktuellSichbarerContainer !== null) {
+            if (mati.aktuellSichbarerContainer.id === 'mati_spiel_lobby') {
+                //Sicherstellen, dass Animation beendet ist, da DIV ausgeblendet wird
+                matiAnimationUtil.finishQueue('matiIntroQueue');
+            }
+            
 			mati.aktuellSichbarerContainer.style['display'] = 'none';
 			containerElement.classList.remove('mati_box_hide');
 		}
@@ -830,4 +835,45 @@ mati.getIndexAktuelleSprache = function() {
         indexAktuelleSprache++;
     }
     return indexAktuelleSprache;
+};
+
+mati.wechseleTheme = function(deltaTheme) {
+    if (mati.aktuellerStatus === 'themeauswahl') {
+        let verfuegbareThemes = mati.themes.filter(function(theme) {
+            return theme.codeMitPrefix.indexOf(mati.spracheCode + '_') === 0;
+        });
+        
+        let aktuellerIndex = verfuegbareThemes.indexOf(mati.aktuellesTheme);
+        let neuerIndex = (aktuellerIndex + deltaTheme + verfuegbareThemes.length) % verfuegbareThemes.length;
+        let altesTheme = mati.aktuellesTheme;
+        mati.aktuellesTheme = verfuegbareThemes[neuerIndex];
+        
+        let altesThemeDomObject = document.getElementById('mati_themeselection_item_container_' + altesTheme.codeMitPrefix);
+        let neuesThemeDomObject = document.getElementById('mati_themeselection_item_container_' + mati.aktuellesTheme.codeMitPrefix);
+        
+        neuesThemeDomObject.style['display'] = 'flex';
+        
+        //ggf. noch laufende Animationen beenden
+        //FIXME MSIE kackt ab (ich hab version 44, die auch von XBox verwendet wird und noch die alte EdgeHTML-Engine nutzt)
+        Velocity(neuesThemeDomObject, 'stop');
+        Velocity(altesThemeDomObject, 'stop');
+        
+        Velocity(neuesThemeDomObject, {
+            opacity: [1, 0],
+            left: ['0em', (30 * deltaTheme) + 'em'],
+        }, {
+            easing: 'linear',
+            duration: 500
+        });
+        Velocity(altesThemeDomObject, {
+            opacity: [0, 1],
+            left: [(-30 * deltaTheme) + 'em', '0em'],
+        }, {
+            easing: 'linear',
+            duration: 500,
+            complete: () => {
+                altesThemeDomObject.style['display'] = 'none';
+            }
+        });
+    }
 };

@@ -1,0 +1,41 @@
+{
+    "name" : "Filme",
+    "sections" : [
+        {
+            "name" : "Komödien",
+            "img" : "comedy.jpg",
+            "questions" : [
+                {
+                    "text" : "Liebeskomödie oder Actionkomödie?",
+                    "answers" : ["Liebeskomödie", "Actionkomödie"]
+                },
+                {
+                    "text" : "Adam Sandler oder Will Ferrell?",
+                    "answers" : ["Adam Sandler", "Will Ferrell"]
+                },
+                {
+                    "text" : "Monty Python oder National Lampoon?",
+                    "answers" : ["Monty Python", "National Lampoon"]
+                }
+            ]
+        },
+        {
+            "name" : "Action",
+            "img" : "action.jpg",
+            "questions" : [
+                {
+                    "text" : "Schwarzenegger oder Stallone?",
+                    "answers" : ["Arnold Schwarzenegger", "Sylvester Stallone"]
+                },
+                {
+                    "text" : "James Bond oder Jason Bourne?",
+                    "answers" : ["James Bond", "Jason Bourne"]
+                },
+                {
+                    "text" : "Terminator 1 oder Terminator 2?",
+                    "answers" : ["Terminator 1", "Terminator 2"]
+                }
+            ]
+        }
+    ]
+}

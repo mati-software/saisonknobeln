@@ -259,6 +259,7 @@
                         <div id="mati_theme_selection_items">
                         </div>
                         <div id="mati_theme_selection_ui">
+                            <div class="mati_null_breite"></div>
                             <div id="mati_theme_selection_button_prev">
                                 <svg viewbox="0 0 50 100">
                                     <path d="M5,50 l40,-40 l0,80 z" fill="black" />
@@ -270,6 +271,7 @@
                                     <path d="M45,50 l-40,-40 l0,80 z" fill="black" />
                                 </svg>
                             </div>
+                            <div class="mati_null_breite"></div>
                         </div>
 					</div>
 				</div>
@@ -280,6 +282,7 @@
 		<script src="lib/velocity.min.js" rel="script" type="application/javascript"></script>
 		<script src="matiUtil.js" rel="script" type="application/javascript"></script>
 		<script src="matiFarbutil.js" rel="script" type="application/javascript"></script>
+		<script src="matiAnimationUtil.js" rel="script" type="application/javascript"></script>
 		<script src="https://tiltspot.tv/api/game/game-1.0.0.js" rel="script" type="application/javascript"></script>
 		<script src="saisonknobeln.js" rel="script" type="application/javascript"></script>
 		<script>
@@ -301,9 +304,9 @@
                                 }
                             }
                             let anzahlZuLadendeSprachen = zuLadendeSprachen.length;
-                            //FIXME alle sprachen werden aktuell gleichzeitig geladen und laden daher um die wette... dadurch ist nicht klar in welcher reihenfolge die flaggen gezeigt werden
                             for (let spracheCode of zuLadendeSprachen) {
                                 matiUtil.loadJson(Tiltspot.get.assetUrl("content/" + spracheCode + ".json"), function(texte) {
+                                    //An passender Stelle in Array einfuegen (Reihenfolge soll genau so sein wie in der content-list angegeben)
                                     mati.sprachen[zuLadendeSprachen.indexOf(spracheCode)] = {
                                         code : spracheCode,
                                         texte : texte
@@ -363,27 +366,9 @@
                 
 				matiUtil.pushBefehl(function() {
 					mati.broadcast('zeigeHauptmenue');
+                    //FIXME wtf? wenn das direkt ausgefuehrt wird, springe ich zum naechsten befehl bevor ich die intro-animation starte
 					mati.zeigeContainer(document.getElementById('mati_spiel_lobby'), matiUtil.gotoNaechsterBefehl);
-                    
-                    Velocity(document.getElementById('mati_intro_overlay'), {
-                        backgroundColor: ['rgb(255, 255, 255)', 'rgb(0,0,0)']
-                    }, {
-                        easing: 'linear',
-                        duration: 3000
-                    });
-                    Velocity(document.getElementById('mati_intro_overlay'), {
-                        backgroundColor: ['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)']
-                    }, {
-                        easing: 'linear',
-                        duration: 3000,
-                        complete: () => {
-                            let overlay = document.getElementById('mati_intro_overlay');
-							overlay.parentNode.removeChild(overlay);
-                        }
-                    });
-                    
-                    
-                    
+
                     var mati_svg_saisonknobeln = document.getElementById('mati_svg_saisonknobeln');
                     var mati_svg_saisonknobeln2 = document.getElementById('mati_svg_saisonknobeln2');
                     var mati_svg_saisonknobeln_ipunkt = document.getElementById('mati_svg_saisonknobeln_ipunkt');
@@ -391,81 +376,123 @@
                     var mati_schriftzug_saisonknobeln_length = document.getElementById('mati_schriftzug_saisonknobeln').getTotalLength();
                     var mati_schriftzug_ipunkt_length = document.getElementById('mati_schriftzug_ipunkt').getTotalLength();
                     var mati_schriftzug_stiftlaenge = 10;
+                    let mati_titel = document.getElementById('mati_titel');
 
-                    mati_svg_saisonknobeln.setAttribute('stroke-dasharray', mati_schriftzug_saisonknobeln_length + ' ' + mati_schriftzug_saisonknobeln_length);
-                    mati_svg_saisonknobeln2.setAttribute('stroke-dasharray', mati_schriftzug_stiftlaenge + ' ' + mati_schriftzug_saisonknobeln_length);
-                    mati_svg_saisonknobeln_ipunkt.setAttribute('stroke-dasharray', mati_schriftzug_ipunkt_length + ' ' + mati_schriftzug_ipunkt_length);
-                    mati_svg_saisonknobeln_ipunkt2.setAttribute('stroke-dasharray', mati_schriftzug_stiftlaenge + ' ' + mati_schriftzug_ipunkt_length);
+                    matiAnimationUtil.animate('matiIntroQueue',
+                        [
+                            'parallel',
+                            [
+                                'successive',
+                                {
+                                    element : document.getElementById('mati_intro_overlay'),
+                                    attribute : 'background-color',
+                                    start : 'rgb(0,0,0)',
+                                    end : 'rgb(255, 255, 255)',
+                                    easing: 'linear',
+                                    duration: 3000
+                                },
+                                {
+                                    element : document.getElementById('mati_intro_overlay'),
+                                    attribute : 'background-color',
+                                    start : 'rgba(255, 255, 255, 1)',
+                                    end : 'rgba(255, 255, 255, 0)',
+                                    easing: 'linear',
+                                    duration: 3000
+                                },
+                                () => {
+                                    let overlay = document.getElementById('mati_intro_overlay');
+                                    overlay.parentNode.removeChild(overlay);
+                                }
+                            ],
+                            [
+                                'successive',
+                                () => {
+                                    mati_svg_saisonknobeln.setAttribute('stroke-dasharray', mati_schriftzug_saisonknobeln_length + ' ' + mati_schriftzug_saisonknobeln_length);
+                                    mati_svg_saisonknobeln2.setAttribute('stroke-dasharray', mati_schriftzug_stiftlaenge + ' ' + mati_schriftzug_saisonknobeln_length);
+                                    mati_svg_saisonknobeln_ipunkt.setAttribute('stroke-dasharray', mati_schriftzug_ipunkt_length + ' ' + mati_schriftzug_ipunkt_length);
+                                    mati_svg_saisonknobeln_ipunkt2.setAttribute('stroke-dasharray', mati_schriftzug_stiftlaenge + ' ' + mati_schriftzug_ipunkt_length);
 
-                    mati_svg_saisonknobeln.setAttribute('stroke-dashoffset', mati_schriftzug_saisonknobeln_length);
-                    mati_svg_saisonknobeln_ipunkt.setAttribute('stroke-dashoffset', mati_schriftzug_ipunkt_length);
-                    mati_svg_saisonknobeln2.setAttribute('stroke-dashoffset', mati_schriftzug_stiftlaenge);
-                    mati_svg_saisonknobeln_ipunkt2.setAttribute('stroke-dashoffset', mati_schriftzug_stiftlaenge);
+                                    mati_svg_saisonknobeln_ipunkt.style['visibility'] = 'hidden';
+                                    mati_svg_saisonknobeln_ipunkt2.style['visibility'] = 'hidden';
 
-                    mati_svg_saisonknobeln_ipunkt.style['visibility'] = 'hidden';
-                    mati_svg_saisonknobeln_ipunkt2.style['visibility'] = 'hidden';
-
-                    document.getElementById('mati_titel_container').style['visibility'] = 'visible';
-                    
-                    Velocity(mati_svg_saisonknobeln, {
-                        'stroke-dashoffset': 0
-                    }, {
-                        duration: 5900,
-                        easing: 'linear',
-                        complete: () => {
-                            mati_svg_saisonknobeln.removeAttribute('stroke-dashoffset');
-                            mati_svg_saisonknobeln.removeAttribute('stroke-dasharray');
-                            
-                            mati_svg_saisonknobeln_ipunkt.style['visibility'] = 'visible';
-                            
-                            Velocity(mati_svg_saisonknobeln_ipunkt, {
-                                'stroke-dashoffset': 0
-                            }, {
-                                duration: 100,
-                                easing: 'linear',
-                                complete: () => {
+                                    document.getElementById('mati_titel_container').style['visibility'] = 'visible';            
+                                },
+                                [
+                                    'parallel',
+                                    {
+                                        element : mati_svg_saisonknobeln,
+                                        start : mati_schriftzug_saisonknobeln_length,
+                                        end : 0,
+                                        attribute : 'stroke-dashoffset',
+                                        duration : 5900,
+                                        easing : 'linear'
+                                    },
+                                    {
+                                        element : mati_svg_saisonknobeln2,
+                                        start : mati_schriftzug_stiftlaenge,
+                                        end : -mati_schriftzug_saisonknobeln_length,
+                                        attribute : 'stroke-dashoffset',
+                                        duration : 5900,
+                                        easing : 'linear'
+                                    }
+                                ],
+                                () => {
+                                    mati_svg_saisonknobeln.removeAttribute('stroke-dashoffset');
+                                    mati_svg_saisonknobeln.removeAttribute('stroke-dasharray');
+                                    mati_svg_saisonknobeln_ipunkt.style['visibility'] = 'visible';
+                                    mati_svg_saisonknobeln2.parentNode.removeChild(mati_svg_saisonknobeln2);
+                                    mati_svg_saisonknobeln_ipunkt2.style['visibility'] = 'visible';
+                                },
+                                [
+                                    'parallel',
+                                    {
+                                        element : mati_svg_saisonknobeln_ipunkt,
+                                        attribute : 'stroke-dashoffset',
+                                        start : mati_schriftzug_ipunkt_length,
+                                        end : 0,
+                                        duration : 100,
+                                        easing : 'linear'
+                                    },
+                                    {
+                                        element : mati_svg_saisonknobeln_ipunkt2,
+                                        attribute : 'stroke-dashoffset',
+                                        start : mati_schriftzug_stiftlaenge,
+                                        end : -mati_schriftzug_ipunkt_length,
+                                        duration : 100,
+                                        easing : 'linear'
+                                    }
+                                ],
+                                () => {
                                     mati_svg_saisonknobeln_ipunkt.removeAttribute('stroke-dashoffset');
                                     mati_svg_saisonknobeln_ipunkt.removeAttribute('stroke-dasharray');
-                                    
-                                    let mati_titel = document.getElementById('mati_titel');
-                                    Velocity(mati_titel, {
-                                        'top': 0,
-                                        'height': document.getElementById('mati_titel_container').offsetHeight + 'px'
-                                    }, {
-                                        duration: 2000,
-                                        easing: 'linear',
-                                        complete: () => {
-                                            mati_titel.style['height'] = '100%';
-                                            document.getElementById('mati_spiel_lobby_credits').style['display'] = 'block';
-                                            document.getElementById('mati_spiel_lobby_content').style['display'] = 'flex';
-                                            mati.spielerChanged();
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    });
-                    Velocity(mati_svg_saisonknobeln2, {
-                        'stroke-dashoffset': -mati_schriftzug_saisonknobeln_length
-                    }, {
-                        duration: 5900,
-                        easing: 'linear',
-                        complete: () => {
-                            mati_svg_saisonknobeln2.parentNode.removeChild(mati_svg_saisonknobeln2);
-                            
-                            mati_svg_saisonknobeln_ipunkt2.style['visibility'] = 'visible';
-                            
-                            Velocity(mati_svg_saisonknobeln_ipunkt2, {
-                                'stroke-dashoffset': -mati_schriftzug_ipunkt_length
-                            }, {
-                                duration: 100,
-                                easing: 'linear',
-                                complete: () => {
                                     mati_svg_saisonknobeln_ipunkt2.parentNode.removeChild(mati_svg_saisonknobeln_ipunkt2);
+                                },
+                                {
+                                    element : mati_titel,
+                                    list : [
+                                        {
+                                            attribute : 'top',
+                                            end : 0
+                                        },
+                                        {
+                                            attribute : 'height',
+                                            end : document.getElementById('mati_titel_container').offsetHeight + 'px'
+                                        }
+                                    ],
+                                    duration : 2000,
+                                    easing: 'linear'
+                                },
+                                () => {
+                                    mati_titel.style['height'] = '100%';
+                                    document.getElementById('mati_spiel_lobby_credits').style['display'] = 'block';
+                                    document.getElementById('mati_spiel_lobby_content').style['display'] = 'flex';
+                                    mati.spielerChanged();
                                 }
-                            });
-                        }
-                    });
+                            ]
+                        ]
+                    );                    
+                    
+                    
                     
 					document.getElementById("mati_hauptmusik_button").addEventListener("click",function() {
 						if (matiUtil.musikIstEingeschaltet) {
@@ -550,6 +577,12 @@
                             });
                         }
                         break;
+                    case 'prevTheme':
+                        mati.wechseleTheme(-1);
+                        break;
+                    case 'nextTheme':
+                        mati.wechseleTheme(1);
+                        break;
 				}
 			};				
 		
@@ -588,7 +621,12 @@
 			onAenderungDerFenstergroesse();
 			window.addEventListener( 'resize', onAenderungDerFenstergroesse, false );
 			
-			
+			document.getElementById('mati_theme_selection_button_prev').addEventListener('click', function() {
+                mati.wechseleTheme(-1);
+            });
+			document.getElementById('mati_theme_selection_button_next').addEventListener('click', function() {
+                mati.wechseleTheme(1);
+            });
 			
 		</script>
 
