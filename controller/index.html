@@ -129,21 +129,8 @@
 				animation-iteration-count: 1;
 				transform: perspective(400vw) translateZ(-50vw) rotateY(-90deg) translateZ(50vw);
 			}
-			.mati_box_hide_back {
-				animation-name: mati_animation_box_show;
-				animation-direction: reverse;
-				animation-duration: 1s;
-				animation-iteration-count: 1;
-				transform: perspective(400vw) translateZ(-50vw) rotateY(90deg) translateZ(50vw);
-			}
 			.mati_box_show {
 				animation-name: mati_animation_box_show;
-				animation-duration: 1s;
-				animation-iteration-count: 1;
-			}
-			.mati_box_show_back {
-				animation-name: mati_animation_box_hide;
-				animation-direction: reverse;
 				animation-duration: 1s;
 				animation-iteration-count: 1;
 			}
@@ -223,6 +210,14 @@
                 border-bottom-left-radius: 0;
                 border-bottom-right-radius: 0;
                 height: 2em;
+            }
+            #mati_spieler_menuebutton svg {
+                position: absolute;
+                width: 1em;
+                height: 1em;
+                top: .2em;
+                left: .2em;
+                fill: currentColor;
             }
 
 			#mati_spieler_container {
@@ -310,6 +305,14 @@
 				right:.5em;
 				top:0;
 			}
+            .mati_schieberegler_minus svg,
+            .mati_schieberegler_plus svg {
+                position: absolute;
+                width: .9em;
+                height: .9em;
+                left: .3em;
+                top: .3em;
+            }
 			.mati_schieberegler_anzeige {
 				position:absolute;
 				top:.5em;
@@ -415,6 +418,84 @@
 					display: block;
 				}
 			}
+            
+            #mati_theme_selection_items {
+                height: 8.5em;
+                width: 17em;
+                margin-top: 1em;
+                margin-right: auto;
+                margin-left: auto;
+                position:relative;
+            }
+            .mati_themeselection_item {
+                position:absolute;
+                width: 100%;
+                height: 100%;
+                left: 0;
+                top: 0;
+                box-shadow: 0 0 .5em black;
+            }
+            .mati_themeselection_item_imagecontainer {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: stretch;
+            }
+            .mati_themeselection_item_imagecontainer div {
+                flex-grow: 1;
+                background-size: cover;
+                background-repeat:no-repeat;
+                background-position: center;
+            }
+            .mati_themeselection_item_text {
+                position: absolute;
+                top:0;
+                left:0;
+                right:0;
+                bottom:0;
+                line-height: 4.25em;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                font-size:200%;
+                text-align:center;
+                background-image: radial-gradient(rgba(255,255,255,.7), rgba(255,255,255,0));
+                font-weight:bold;
+                text-shadow:0 0 .2em white;
+                color: black;
+            }
+            #mati_theme_selection_ui {
+                position:relative;
+                margin: 1em;
+            }
+            #mati_theme_selection_button_ok {
+                margin-left: 4em;
+                margin-right: 4em;
+            }
+            #mati_theme_selection_button_prev,
+            #mati_theme_selection_button_next {
+                position: absolute;
+                top: 0;
+            }
+            #mati_theme_selection_button_prev {
+                left: 0;
+            }
+            #mati_theme_selection_button_next {
+                right: 0;
+            }
+            #mati_theme_selection_button_prev svg,
+            #mati_theme_selection_button_next svg {
+                position: absolute;
+                top: .25em;
+                height: 1em;
+                width: .5em;
+            }
+            #mati_theme_selection_button_prev svg {
+                left: .4em;
+            }
+            #mati_theme_selection_button_next svg {
+                right: .4em;
+            }
 		</style>
 		<style id="mati_farbstyle">
 		</style>
@@ -424,7 +505,14 @@
             <div id="mati_spieler_container_container">
                 <div id="mati_spieler_container">
                 </div>
-                <span id="mati_spieler_menuebutton" class="mati_click_on_touch">&#9776;</span>
+                <!-- FIXME SVG weil Apple das falsch zeigt -->
+                <span id="mati_spieler_menuebutton" class="mati_click_on_touch">
+                    <svg viewbox="0 0 120 120">
+                        <path d="M20,10 l80,0 a10,10 0 0 1 0,20 l-80,0 a10,10 0 0 1 0,-20 z" />
+                        <path d="M20,50 l80,0 a10,10 0 0 1 0,20 l-80,0 a10,10 0 0 1 0,-20 z" />
+                        <path d="M20,90 l80,0 a10,10 0 0 1 0,20 l-80,0 a10,10 0 0 1 0,-20 z" />
+                    </svg>
+                </span>
             </div>
 			<div id="mati_content_container">
 				<div id="mati_hauptmenue" class="mati_box">
@@ -485,8 +573,16 @@
 									<div class="mati_schieberegler_anzeige_balken" id="mati_schieberegler_anzeige_balken_a"></div>
 									<div class="mati_schieberegler_anzeige_zahl" id="mati_schieberegler_anzeige_zahl_a"></div>
 								</div>
-								<div id="mati_schieberegler_minus_a" class="mati_kleiner_button mati_schieberegler_minus mati_click_on_touch">&minus;</div>
-								<div id="mati_schieberegler_plus_a" class="mati_kleiner_button mati_schieberegler_plus mati_click_on_touch">&plus;</div>
+								<div id="mati_schieberegler_minus_a" class="mati_kleiner_button mati_schieberegler_minus mati_click_on_touch">
+                                    <svg viewbox="0 0 110 110">
+                                        <path d="M20,50 l70,0 l0,10 l-70,0 z" fill="black" />
+                                    </svg>
+                                </div>
+								<div id="mati_schieberegler_plus_a" class="mati_kleiner_button mati_schieberegler_plus mati_click_on_touch">
+                                    <svg viewbox="0 0 110 110">
+                                        <path d="M20,50 l30,0 l0,-30 l10,0 l0,30 l30,0 l0,10 l-30,0 l0,30 l-10,0 l0,-30 l-30,0 z" fill="black" />
+                                    </svg>
+                                </div>
 							</div>
 						</div>
 						<div class="mati_schaetzung_flexitem" id="mati_schieberegler_container2">
@@ -496,8 +592,16 @@
 									<div class="mati_schieberegler_anzeige_balken" id="mati_schieberegler_anzeige_balken_b"></div>
 									<div class="mati_schieberegler_anzeige_zahl" id="mati_schieberegler_anzeige_zahl_b"></div>
 								</div>
-								<div id="mati_schieberegler_minus_b" class="mati_kleiner_button mati_schieberegler_minus mati_click_on_touch">&minus;</div>
-								<div id="mati_schieberegler_plus_b" class="mati_kleiner_button mati_schieberegler_plus mati_click_on_touch">&plus;</div>
+								<div id="mati_schieberegler_minus_b" class="mati_kleiner_button mati_schieberegler_minus mati_click_on_touch">
+                                    <svg viewbox="0 0 110 110">
+                                        <path d="M20,50 l70,0 l0,10 l-70,0 z" fill="black" />
+                                    </svg>
+                                </div>
+								<div id="mati_schieberegler_plus_b" class="mati_kleiner_button mati_schieberegler_plus mati_click_on_touch">
+                                    <svg viewbox="0 0 110 110">
+                                        <path d="M20,50 l30,0 l0,-30 l10,0 l0,30 l30,0 l0,10 l-30,0 l0,30 l-10,0 l0,-30 l-30,0 z" fill="black" />
+                                    </svg>
+                                </div>
 							</div>
 						</div>
 						<div class="mati_schaetzung_flexitem">
@@ -506,6 +610,23 @@
 					</div>
 				</div>
 				<div id="mati_theme_selection" class="mati_box">
+					<div id="mati_theme_selection_content">
+                        <div id="mati_theme_selection_items" class="mati_click_on_touch">
+                        </div>
+                        <div id="mati_theme_selection_ui">
+                            <div id="mati_theme_selection_button_prev" class="mati_kleiner_button mati_click_on_touch">
+                                <svg viewbox="0 0 50 100">
+                                    <path d="M5,50 l40,-40 l0,80 z" fill="black" />
+                                </svg>
+                            </div>
+                            <div id="mati_theme_selection_button_ok" class="mati_button">OK</div>
+                            <div id="mati_theme_selection_button_next" class="mati_kleiner_button mati_click_on_touch">
+                                <svg viewbox="0 0 50 100">
+                                    <path d="M45,50 l-40,-40 l0,80 z" fill="black" />
+                                </svg>
+                            </div>
+                        </div>
+					</div>
 				</div>
 			</div>
             <div id="mati_pause_menue_schatten">
@@ -547,6 +668,7 @@
             </div>
 		</div>
 		
+		<script src="lib/velocity.min.js" rel="script" type="application/javascript"></script>
 		<script src="matiUtil.js" rel="script" type="application/javascript"></script>
 		<script src="matiFarbutil.js" rel="script" type="application/javascript"></script>
 		<script src='https://tiltspot.tv/api/controller/controller-1.0.0.js' rel='script' type='application/javascript'></script>
@@ -560,8 +682,7 @@
 				farbe : matiFarbutil.WEISS,
 				spracheCode : null,
 				sprachen : [],
-				aktuellSichbarerContainer : null,
-				aktuellerContainerLautSpielstatus : null,
+				aktuellSichtbarerContainer : null,
 				buttonMitFokus : null,
 
 				anzahlSpieler : 0,
@@ -570,7 +691,8 @@
 				gewaehlteAnwortmoeglichkeit : 0,
 				
 				musikIstEingeschaltet : true,
-                pauseMenueIstAufgeklappt : false
+                pauseMenueIstAufgeklappt : false,
+                themeSelectionDeaktiviert : false
 			};
 			
 			mati.renderFarbe = function() {
@@ -602,6 +724,7 @@
 						background: ${dunkel50} linear-gradient(135deg, ${dunkel50}, ${dunkel30});
 					}
                     span#mati_spieler_menuebutton {
+                        color: ${dunkel30};
 						background-color:${hell50};
 						background:linear-gradient( 90deg, ${hell50dunkel80}, ${hell50}, ${hell50dunkel80});
                     }
@@ -632,30 +755,27 @@
 				`;
 			};
 			
-			mati.zeigeContainer = function(containerElement, rueckwaerts, callback) {
-				if (containerElement === mati.aktuellSichbarerContainer) {
+			mati.zeigeContainer = function(containerElement, callback) {
+				if (containerElement === mati.aktuellSichtbarerContainer) {
 					callback();
 					return;
 				}
 				
 				containerElement.style['visibility'] = 'visible';
 				containerElement.classList.remove('mati_box_hide');
-				containerElement.classList.remove('mati_box_hide_back');
-				containerElement.classList.add(rueckwaerts ? 'mati_box_show_back' : 'mati_box_show');
+				containerElement.classList.add('mati_box_show');
 				
-				if (mati.aktuellSichbarerContainer !== null) {
-					mati.aktuellSichbarerContainer.classList.remove('mati_box_show');
-					mati.aktuellSichbarerContainer.classList.remove('mati_box_show_back');
-					mati.aktuellSichbarerContainer.classList.add(rueckwaerts ? 'mati_box_hide_back' : 'mati_box_hide');
+				if (mati.aktuellSichtbarerContainer !== null) {
+					mati.aktuellSichtbarerContainer.classList.remove('mati_box_show');
+					mati.aktuellSichtbarerContainer.classList.add('mati_box_hide');
 				}
 				
 				setTimeout(function () {
-					if (mati.aktuellSichbarerContainer !== null) {
-						mati.aktuellSichbarerContainer.style['visibility'] = 'hidden';
+					if (mati.aktuellSichtbarerContainer !== null) {
+						mati.aktuellSichtbarerContainer.style['visibility'] = 'hidden';
 					}
 					
-					mati.aktuellSichbarerContainer = containerElement;
-                    mati.aktuellerContainerLautSpielstatus = containerElement;
+					mati.aktuellSichtbarerContainer = containerElement;
 					callback();
 				}, 1000);
 			};
@@ -678,22 +798,21 @@
             
             
             
-            //TODO gib allen anklickbaren elementen spezielle Klassen, auch den Flaggen und dem Sound-Button:
-            //     anklickbar_on_pointer_down und anklickbar_on_pointer_up
-            //     mati_button_focus geb ich einfach allen diesen Elementen bei bedarf
             //Wird von Pointer-, Maus- und Touch-Events genutzt (iOS kann keine Pointer-Events). Daher muss sichergestellt werden, dass die Aktion nur einmal ausgefuehrt wird.
             mati.onPointerDown = function(event, target, clientX, clientY) {
-				if (target.matches('.mati_button, .mati_click_on_touch')) {
+                let closestButton = target.closest('.mati_button, .mati_click_on_touch');
+            
+				if (closestButton !== null) {
                     event.preventDefault();
                 }
                 
-				if (target.matches('.mati_button, .mati_click_on_touch') && target.id && mati.buttonMitFokus === null) {
-					target.classList.add('mati_button_focus');
-					mati.buttonMitFokus = target;
+				if (closestButton != null && closestButton.id && mati.buttonMitFokus === null) {
+					closestButton.classList.add('mati_button_focus');
+					mati.buttonMitFokus = closestButton;
 					
 					//Kleine Buttons schon bei touchstart ausloesen
-					if (target.matches('.mati_click_on_touch')) {
-						switch (target.id) {
+					if (closestButton.matches('.mati_click_on_touch')) {
+						switch (closestButton.id) {
 							case 'mati_schieberegler_minus_a':
 							case 'mati_schieberegler_plus_b':
 								if (mati.schaetzungAntwortA > 0) {
@@ -720,22 +839,41 @@
                                     mati.pauseMenueIstAufgeklappt = true;
                                 }
                                 break;
+                            case 'mati_theme_selection_button_prev':
+                                if (!mati.themeSelectionDeaktiviert) {
+                                    mati.themeSelectionDeaktiviert = true;
+                                    Tiltspot.send.msg('prevTheme');
+                                }
+                                break;
+                            case 'mati_theme_selection_button_next':
+                                if (!mati.themeSelectionDeaktiviert) {
+                                    mati.themeSelectionDeaktiviert = true;
+                                    Tiltspot.send.msg('nextTheme');
+                                }
+                                break;
+                            case 'mati_theme_selection_items':
+                                if (!mati.themeSelectionDeaktiviert) {
+                                    Tiltspot.send.msg('themeSelectionOk');
+                                }
+                                break;
 						}
 					}
 				}
             };
             
             mati.onPointerUp = function (event, target, clientX, clientY) {
-				if (target.matches('.mati_button, .mati_click_on_touch')) {
+                let closestButton = target.closest('.mati_button, .mati_click_on_touch');
+                
+				if (closestButton !== null) {
                     event.preventDefault();
                 }
             
-				if (target.matches('.mati_button')) {
-					let boundingClientRect = target.getBoundingClientRect();
+				if (closestButton !== null && closestButton.matches('.mati_button')) {
+					let boundingClientRect = closestButton.getBoundingClientRect();
 
 					//der Button ist eigentlich nicht rechteckig sondern hat runde Enden, aber besser gehts nicht
 					//(JS hilft bei gedrueckter Maustaste in keinster Weise mit wenn es um das Verlassen der Hit-Area geht)
-					let buttonWurdeGeklickt = target === mati.buttonMitFokus
+					let buttonWurdeGeklickt = closestButton === mati.buttonMitFokus
 								&& clientX >= boundingClientRect.left
 								&& clientX <= boundingClientRect.right
 								&& clientY >= boundingClientRect.top
@@ -745,7 +883,7 @@
 						//Button-Effekt
 						let cloneButton = document.createElement("div");
 						cloneButton.classList.add('mati_button');
-						cloneButton.innerText = target.innerText;
+						cloneButton.innerText = closestButton.innerText;
 						let cloneContainer = document.createElement("div");
 						cloneContainer.classList.add('mati_buttoneffekt_container');
 						cloneContainer.style['top'] = boundingClientRect.top + 'px';
@@ -756,7 +894,7 @@
 						}, 1000);
 						
 						//Aktion ausfuehren
-						switch (target.id) {
+						switch (closestButton.id) {
 							case 'mati_button_neues_spiel':
 								Tiltspot.send.msg('neuesSpiel');
 								break;
@@ -766,7 +904,7 @@
 								mati.schaetzungAntwortB = mati.anzahlSpieler - mati.schaetzungAntwortA;
 								mati.updateSchaetzungGui();
 								matiUtil.pushBefehl(function() {
-									mati.zeigeContainer(document.getElementById('mati_schaetzung'), false, function() {
+									mati.zeigeContainer(document.getElementById('mati_schaetzung'), function() {
 										document.getElementById('mati_schieberegler_anzeige_balken_a').classList.add('mati_schieberegler_anzeige_balken_transition');
 										document.getElementById('mati_schieberegler_anzeige_balken_b').classList.add('mati_schieberegler_anzeige_balken_transition');
 										matiUtil.gotoNaechsterBefehl();
@@ -779,7 +917,7 @@
 								mati.schaetzungAntwortB = mati.anzahlSpieler - mati.schaetzungAntwortA;
 								mati.updateSchaetzungGui();
 								matiUtil.pushBefehl(function() {
-									mati.zeigeContainer(document.getElementById('mati_schaetzung'), false, function() {
+									mati.zeigeContainer(document.getElementById('mati_schaetzung'), function() {
 										document.getElementById('mati_schieberegler_anzeige_balken_a').classList.add('mati_schieberegler_anzeige_balken_transition');
 										document.getElementById('mati_schieberegler_anzeige_balken_b').classList.add('mati_schieberegler_anzeige_balken_transition');
 										matiUtil.gotoNaechsterBefehl();
@@ -795,7 +933,7 @@
 								document.getElementById('mati_schieberegler_anzeige_balken_a').classList.remove('mati_schieberegler_anzeige_balken_transition');
 								document.getElementById('mati_schieberegler_anzeige_balken_b').classList.remove('mati_schieberegler_anzeige_balken_transition');
 								matiUtil.pushBefehl(function() {
-									mati.zeigeContainer(document.getElementById('mati_wartebild'), false, matiUtil.gotoNaechsterBefehl);
+									mati.zeigeContainer(document.getElementById('mati_wartebild'), matiUtil.gotoNaechsterBefehl);
 								});
 								break;
 							case 'mati_button_spiel_abschliessen':
@@ -811,6 +949,9 @@
                                 mati.pauseMenueAusblenden();
                                 Tiltspot.send.msg('spielAbbrechen');
                                 break;
+                            case 'mati_theme_selection_button_ok':
+                                Tiltspot.send.msg('themeSelectionOk');
+                                break;
 						}
 					}
 				}
@@ -823,19 +964,24 @@
 			};
             
             mati.onPointerMove = function (event, target, clientX, clientY) {
-				if (target.matches('.mati_button, .mati_click_on_touch')) {
+                let closestButton = target.closest('.mati_button, .mati_click_on_touch');
+            
+				if (closestButton !== null && closestButton.matches('.mati_button, .mati_click_on_touch')) {
                     event.preventDefault();
                 }
                 
-				let boundingClientRect = target.getBoundingClientRect();
+                let ueberButton = false;
+                if (closestButton !== null) {
+                    let boundingClientRect = closestButton.getBoundingClientRect();
 
-				//der Button ist eigentlich nicht rechteckig sondern hat runde Enden, aber besser gehts nicht
-				//(JS hilft bei gedrueckter Maustaste in keinster Weise mit wenn es um das Verlassen der Hit-Area geht)
-				let ueberButton = target === mati.buttonMitFokus
-							&& clientX >= boundingClientRect.left
-							&& clientX <= boundingClientRect.right
-							&& clientY >= boundingClientRect.top
-							&& clientY <= boundingClientRect.bottom;
+                    //der Button ist eigentlich nicht rechteckig sondern hat runde Enden, aber besser gehts nicht
+                    //(JS hilft bei gedrueckter Maustaste in keinster Weise mit wenn es um das Verlassen der Hit-Area geht)
+                    ueberButton = closestButton === mati.buttonMitFokus
+                                && clientX >= boundingClientRect.left
+                                && clientX <= boundingClientRect.right
+                                && clientY >= boundingClientRect.top
+                                && clientY <= boundingClientRect.bottom;
+                }
 
 				if (!ueberButton && mati.buttonMitFokus) {
 					mati.buttonMitFokus.classList.remove('mati_button_focus');
@@ -844,7 +990,9 @@
 			};
             
             mati.onPointerCancel = function (event, target, clientX, clientY) {
-				if (target.matches('.mati_button, .mati_click_on_touch')) {
+                let closestButton = target.closest('.mati_button, .mati_click_on_touch');
+            
+				if (closestButton.matches('.mati_button, .mati_click_on_touch')) {
                     event.preventDefault();
                 }
                 
@@ -989,13 +1137,13 @@
 				switch (msg) { 
 					case 'zeigeHauptmenue':
 						matiUtil.pushBefehl(function() {
-							mati.zeigeContainer(document.getElementById('mati_hauptmenue'), false, matiUtil.gotoNaechsterBefehl);
+							mati.zeigeContainer(document.getElementById('mati_hauptmenue'), matiUtil.gotoNaechsterBefehl);
                             document.getElementById('mati_spieler_container_container').classList.remove('mati_spieler_mit_menuebutton');
 						});
 						break;
 					case 'zeigeWarten':
 						matiUtil.pushBefehl(function() {
-							mati.zeigeContainer(document.getElementById('mati_wartebild'), false, matiUtil.gotoNaechsterBefehl);
+							mati.zeigeContainer(document.getElementById('mati_wartebild'), matiUtil.gotoNaechsterBefehl);
                             document.getElementById('mati_spieler_container_container').classList.add('mati_spieler_mit_menuebutton');
 						});
 						break;
@@ -1009,20 +1157,83 @@
 						document.getElementById('mati_schieberegler_text_b').innerText = data.antwortMoeglichkeiten[1];
 						
 						matiUtil.pushBefehl(function() {
-							mati.zeigeContainer(document.getElementById('mati_antwortmoeglichkeiten'), false, matiUtil.gotoNaechsterBefehl);
+							mati.zeigeContainer(document.getElementById('mati_antwortmoeglichkeiten'), matiUtil.gotoNaechsterBefehl);
                             document.getElementById('mati_spieler_container_container').classList.add('mati_spieler_mit_menuebutton');
 						});
 						break;
 					case 'zeigeSpielAbschliessen':
 						matiUtil.pushBefehl(function() {
-							mati.zeigeContainer(document.getElementById('mati_spiel_abschliessen'), false, matiUtil.gotoNaechsterBefehl);
+							mati.zeigeContainer(document.getElementById('mati_spiel_abschliessen'), matiUtil.gotoNaechsterBefehl);
 						});
 						break;
                     case 'zeigeThemeSelection':
+                        //TODO wenn ich mich schon in der ThemeSelection befinde, dann nicht alles neu rendern, sondern animation
 						matiUtil.pushBefehl(function() {
-							mati.zeigeContainer(document.getElementById('mati_theme_selection'), false, matiUtil.gotoNaechsterBefehl);
-                            document.getElementById('mati_spieler_container_container').classList.add('mati_spieler_mit_menuebutton');
+                            mati.themeSelectionDeaktiviert = true;
+                            if (mati.aktuellSichtbarerContainer !== null && mati.aktuellSichtbarerContainer.id === 'mati_theme_selection') {
+                                let anzuzeigendesTheme = document.getElementById('mati_themeselection_item_' + data.aktuellesTheme);
+                                if (anzuzeigendesTheme.style.display === 'none') {
+                                    let bisherAngezeigtesTheme;
+                                    for (let theme of document.getElementsByClassName('mati_themeselection_item')) {
+                                        if (theme.style.display !== 'none') {
+                                            bisherAngezeigtesTheme = theme;
+                                        }
+                                    }
+                                    anzuzeigendesTheme.style.display = 'block';
+                                    Velocity(anzuzeigendesTheme, {
+                                        opacity: [1, 0],
+                                        left: ['0em', (30 * data.lastDeltaThemeInThemeSelection) + 'em'],
+                                    }, {
+                                        easing: 'linear',
+                                        duration: 500
+                                    });
+                                    Velocity(bisherAngezeigtesTheme, {
+                                        opacity: [0, 1],
+                                        left: [(-30 * data.lastDeltaThemeInThemeSelection) + 'em', '0em'],
+                                    }, {
+                                        easing: 'linear',
+                                        duration: 500,
+                                        complete: () => {
+                                            bisherAngezeigtesTheme.style['display'] = 'none';
+                                            matiUtil.gotoNaechsterBefehl();
+                                        }
+                                    });
+                                }
+                                else {
+                                    //nichts zu tun
+                                    matiUtil.gotoNaechsterBefehl();
+                                }
+                            }
+                            else {
+                                document.getElementById('mati_theme_selection_items').innerHTML = `
+                                    ${data.verfuegbareThemes.map(function(theme) {
+                                        return `
+                                            <div style="display:${theme.codeMitPrefix === data.aktuellesTheme ? 'block' : 'none'}" class="mati_themeselection_item" id="mati_themeselection_item_${theme.codeMitPrefix}">
+                                                <div class="mati_themeselection_item_imagecontainer">
+                                                    ${theme.sectionImages.map(function(sectionImage) {
+                                                        return `
+                                                            <div style="background-image:url(${Tiltspot.get.assetUrl('content/' + theme.codeMitPrefix + '/' + sectionImage)})">
+                                                            </div>
+                                                        `;
+                                                    }).join('')}
+                                                </div>
+                                                <div class="mati_themeselection_item_text">
+                                                    ${matiUtil.htmlEscape(theme.name)}
+                                                </div>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                `;
+                            
+                                mati.zeigeContainer(document.getElementById('mati_theme_selection'), matiUtil.gotoNaechsterBefehl);
+                                document.getElementById('mati_spieler_container_container').classList.add('mati_spieler_mit_menuebutton');
+                            }
 						});
+                        //Nach Animationsende Buttons wieder aktivieren
+                        matiUtil.pushBefehl(function () {
+                            mati.themeSelectionDeaktiviert = false;
+                            matiUtil.gotoNaechsterBefehl();
+                        });
 						break;
 				}
 			};
@@ -1035,6 +1246,7 @@
                 mati.onPointerDown(event, event.changedTouches[0].target, event.changedTouches[0].clientX, event.changedTouches[0].clientY);
             });
 			document.addEventListener('pointerdown', function(event) {
+                //FIXME nur auf pen hoeren (oder anders als 'mouse'/'touch')! ... teste ob beim pen ggf. auch immer einer der anderen events feuert
                 if (event.pointerType !== "mouse" || event.button === 0) {
                     mati.onPointerDown(event, event.target, event.clientX, event.clientY);
                 }
@@ -1049,6 +1261,7 @@
 				mati.onPointerUp(event, event.changedTouches[0].target, event.changedTouches[0].clientX, event.changedTouches[0].clientY);
 			});
 			document.addEventListener('pointerup', function (event) {
+                //FIXME nur auf pen hoeren!
 				mati.onPointerUp(event, event.target, event.clientX, event.clientY);
 			});            
 			document.addEventListener('mouseup', function (event) {
@@ -1061,6 +1274,7 @@
 				mati.onPointerMove(event, event.changedTouches[0].target, event.changedTouches[0].clientX, event.changedTouches[0].clientY);
 			});
 			document.addEventListener('pointermove', function (event) {
+                //FIXME nur auf pen hoeren!
 				mati.onPointerMove(event, event.target, event.clientX, event.clientY);
 			});            
 			document.addEventListener('mousemove', function (event) {

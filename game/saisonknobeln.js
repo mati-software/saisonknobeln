@@ -14,7 +14,8 @@ var mati = {
 	tatsaechlicheAnzahlStimmenFuerA : null,
 	tatsaechlicheAnzahlStimmenFuerB : null,
 	maximalePunktzahl : 0,
-	platzwechselVorhanden : false
+	platzwechselVorhanden : false,
+    lastDeltaThemeInThemeSelection : 0
 };
 
 mati.Spieler = class {
@@ -128,6 +129,21 @@ mati.sendMsg = function(spieler, befehl) {
 		daten.antwortMoeglichkeiten = mati.aktuelleFrage.answers;
 		daten.anzahlSpieler = mati.spielerImLaufendenSpiel.length;
 	}
+    
+    if (befehl === 'zeigeThemeSelection') {
+        daten.aktuellesTheme = mati.aktuellesTheme.codeMitPrefix;
+        daten.lastDeltaThemeInThemeSelection = mati.lastDeltaThemeInThemeSelection;
+        daten.verfuegbareThemes = mati.themes.filter(function(theme) {
+            return theme.codeMitPrefix.indexOf(mati.spracheCode + '_') === 0;
+        }).map(function(theme) {
+            let simplifiedThemeObject = {
+                sectionImages : theme.content.sections.map((section) => section.img),
+                name : theme.content.name,
+                codeMitPrefix : theme.codeMitPrefix
+            };
+            return simplifiedThemeObject;
+        });
+    }
 	
 	Tiltspot.send.msg(spieler.id, befehl, daten);
 	spieler.lastMsg = befehl;
@@ -249,6 +265,10 @@ mati.neuesSpiel = function() {
 };
 
 mati.pushThemeStarten = function() {
+    if (mati.queueEnthaeltLaufendesSpiel) {
+        return;
+    }
+    
 	mati.queueEnthaeltLaufendesSpiel = true;
 	
 	matiUtil.pushBefehl(function() {
@@ -854,7 +874,6 @@ mati.wechseleTheme = function(deltaTheme) {
         neuesThemeDomObject.style['display'] = 'flex';
         
         //ggf. noch laufende Animationen beenden
-        //FIXME MSIE kackt ab (ich hab version 44, die auch von XBox verwendet wird und noch die alte EdgeHTML-Engine nutzt)
         Velocity(neuesThemeDomObject, 'stop');
         Velocity(altesThemeDomObject, 'stop');
         
@@ -875,5 +894,8 @@ mati.wechseleTheme = function(deltaTheme) {
                 altesThemeDomObject.style['display'] = 'none';
             }
         });
+        mati.lastDeltaThemeInThemeSelection = deltaTheme;
+
+        mati.broadcast('zeigeThemeSelection');
     }
 };

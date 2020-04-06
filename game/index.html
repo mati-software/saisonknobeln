@@ -583,6 +583,9 @@
                     case 'nextTheme':
                         mati.wechseleTheme(1);
                         break;
+                    case 'themeSelectionOk':
+                        mati.pushThemeStarten();
+                        break;
 				}
 			};				
 		
@@ -627,7 +630,9 @@
 			document.getElementById('mati_theme_selection_button_next').addEventListener('click', function() {
                 mati.wechseleTheme(1);
             });
-			
+			document.getElementById('mati_theme_selection_button_spacer').addEventListener('click', function() {
+                mati.pushThemeStarten();
+            });
 		</script>
 
 	</body>
