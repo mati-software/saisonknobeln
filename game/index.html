@@ -507,7 +507,7 @@
 								musikXIcon.style['visibility'] = 'hidden';
 							}
 						}
-						mati.broadcast('setSound');
+						mati.broadcast();
 					});
 				});
 			};
@@ -561,7 +561,7 @@
 								musikXIcon.style['visibility'] = 'visible';
 							}
 						}
-						mati.broadcast('setSound');
+						mati.broadcast();
 						break;
                     case 'spielAbbrechen':
                         //FIXME wenn man im Endresultat ist und Spiel abbricht, geht er nicht ins Hauptmenue
@@ -585,6 +585,9 @@
                         break;
                     case 'themeSelectionOk':
                         mati.pushThemeStarten();
+                        break;
+                    case 'setUsername':
+                        mati.changeUsername(controllerId, data);
                         break;
 				}
 			};				

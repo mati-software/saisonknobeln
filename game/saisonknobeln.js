@@ -42,6 +42,8 @@ mati.Spieler = class {
 		this.schaetzungBFuerAktuelleFrage = null;
 		
 		this.lastMsg = null;
+        
+        this.name = Tiltspot.get.user(id).nickname;
     }
 };
 
@@ -122,6 +124,7 @@ mati.sendMsg = function(spieler, befehl) {
 	let daten = {
 		spracheCode : mati.spracheCode,
 		farbe : spieler.farbe,
+        username : spieler.name,
 		sound : matiUtil.musikIstEingeschaltet
 	};
 	
@@ -818,7 +821,7 @@ mati.renderSpieler = function(knobelSpieler) {
 			<span class="mati_spieler_img" style="background-color:${knobelSpieler.cssFarbeHell50}">
 				<img src="${tiltspotUser.profilePicture}" />
 			</span>
-			<span class="mati_spieler_text" style="color: ${knobelSpieler.cssFarbeHell50}; background: ${knobelSpieler.cssFarbe50} linear-gradient(135deg, ${knobelSpieler.cssFarbe50}, ${knobelSpieler.cssFarbe30});">${matiUtil.htmlEscape(tiltspotUser.nickname)}</span>
+			<span class="mati_spieler_text" style="color: ${knobelSpieler.cssFarbeHell50}; background: ${knobelSpieler.cssFarbe50} linear-gradient(135deg, ${knobelSpieler.cssFarbe50}, ${knobelSpieler.cssFarbe30});">${matiUtil.htmlEscape(knobelSpieler.name)}</span>
 		</div>
 	`;
 };
@@ -848,7 +851,7 @@ mati.schrittweiseResizeBisEsPasst = function(container, inhalt) {
 
 mati.getIndexAktuelleSprache = function() {
     let indexAktuelleSprache = 0;
-    for (sprache of mati.sprachen) {
+    for (let sprache of mati.sprachen) {
         if (sprache.code === mati.spracheCode) {
             break;
         }
@@ -897,5 +900,12 @@ mati.wechseleTheme = function(deltaTheme) {
         mati.lastDeltaThemeInThemeSelection = deltaTheme;
 
         mati.broadcast('zeigeThemeSelection');
+    }
+};
+
+mati.changeUsername = function(id, neuerName) {
+    mati.getSpielerImLaufendenSpielById(id).name = neuerName;
+    for (let nameDomElement of document.querySelectorAll('.mati_spieler_id_' + id + ' .mati_spieler_text')) {
+        nameDomElement.innerText = neuerName;
     }
 };

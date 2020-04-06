@@ -31,6 +31,10 @@
 				
 				font-size: 5vmin;
 			}
+            #mati_controller_alles.mati_username_hat_fokus {
+                font-size: 5vw;
+                min-height: 134vw;
+            }
 			
 			#mati_content_container {
 				position:absolute;
@@ -133,27 +137,28 @@
 				height:1.6em;
 				border-radius:.8em;
 			}
-			span.mati_spieler_text {
+			input#mati_spieler_text {
 				position:absolute;
 				display:block;
 				line-height:1.4em;
 				top:.4em;
 				bottom:.4em;
 				left:1em;
-				right:.2em;
-				padding-left:1.2em;
-				padding-right:.1em;
+				width: 7.5em;
+                padding: 0 .1em 0 1.2em;
 				background-color:black;
 				z-index:1;
 				box-shadow:0 0 .2em black;
 				overflow:hidden;
-				white-space: nowrap;
-				text-overflow: ellipsis;
-                transition-property: right;
+                transition-property: width;
                 transition-duration: .5s;
+                border: 0;
+                margin: 0;
+                font-size: 100%;
+                font-family: Helvetica, Arial, sans-serif;
 			}
-            .mati_spieler_mit_menuebutton span.mati_spieler_text {
-                right: 1.8em;
+            .mati_spieler_mit_menuebutton input#mati_spieler_text {
+                width: 5.9em;
             }
             span#mati_spieler_menuebutton {
                 font-size: 200%;
@@ -373,12 +378,23 @@
 				#mati_controller_alles {
 					font-size: 4.8vmin;
 				}
+                #mati_controller_alles.mati_username_hat_fokus {
+                    font-size: 5vw;
+                }
 			}
 			@media (min-aspect-ratio:4/3) {
 				#mati_controller_alles {
 					font-size: 5vmin;
 				}
+                #mati_controller_alles.mati_username_hat_fokus {
+                    font-size: 5vw;
+                }
 			}
+            @media (min-aspect-ratio:200/44) {
+                #mati_controller_alles.mati_username_hat_fokus {
+                    font-size: 22.727vh;
+                }
+            }
 			@media (min-aspect-ratio:16/9) {
 				#mati_schieberegler_container1 {
 					flex-basis: 50%;
@@ -690,7 +706,7 @@
 					.mati_spieler_img {
 						background-color:${hell50};
 					}
-					span.mati_spieler_text {
+					input#mati_spieler_text {
 						color: ${hell50};
 						background: ${dunkel50} linear-gradient(135deg, ${dunkel50}, ${dunkel30});
 					}
@@ -733,12 +749,15 @@
 				}
                 
                 if (mati.aktuellSichtbarerContainer !== null) {
-                    Velocity(mati.aktuellSichtbarerContainer, {
-                        'transform' : ['perspective(400vw) translateZ(-50vw) rotateY(-90deg) translateZ(50vw)', 'perspective(400vw) translateZ(-50vw) rotateY(0deg) translateZ(50vw)'],
-                        'display' : 'none'
+                    let alterContainer = mati.aktuellSichtbarerContainer;
+                    Velocity(alterContainer, {
+                        'transform' : ['perspective(400vw) translateZ(-50vw) rotateY(-90deg) translateZ(50vw)', 'perspective(400vw) translateZ(-50vw) rotateY(0deg) translateZ(50vw)']
                     }, {
                         easing: 'ease',
-                        duration: 1000
+                        duration: 1000,
+                        complete : function() {
+                            alterContainer.style.display = 'none';
+                        }
                     });
                 }
                 
@@ -746,18 +765,20 @@
                     //Bilder ausblenden, da das fuer die Animation sonst zu viel wird bei Smartphones
                     document.getElementById('mati_theme_selection_items').style.display = 'none';
                 }
+                containerElement.style.display = 'block';
                 Velocity(containerElement, {
-                    'transform' : ['perspective(400vw) translateZ(-50vw) rotateY(0deg) translateZ(50vw)', 'perspective(400vw) translateZ(-50vw) rotateY(90deg) translateZ(50vw)'],
-                    'display' : 'block'
+                    'transform' : ['perspective(400vw) translateZ(-50vw) rotateY(0deg) translateZ(50vw)', 'perspective(400vw) translateZ(-50vw) rotateY(90deg) translateZ(50vw)']
                 }, {
                     easing: 'ease',
                     duration: 1000,
                     complete : function() {
+                        //Fuer Performance wichtig
                         containerElement.style.transform = 'none';
                         mati.aktuellSichtbarerContainer = containerElement;
                         if (containerElement.id === 'mati_theme_selection') {
+                            document.getElementById('mati_theme_selection_items').style.opacity = 0;
+                            document.getElementById('mati_theme_selection_items').style.display = 'block';
                             Velocity(document.getElementById('mati_theme_selection_items'), {
-                                'display' : 'block',
                                 'opacity' : [1, 0]
                             }, {
                                 easing: 'linear',
@@ -789,6 +810,11 @@
             
             //Wird von Pointer-, Maus- und Touch-Events genutzt (iOS kann keine Pointer-Events). Daher muss sichergestellt werden, dass die Aktion nur einmal ausgefuehrt wird.
             mati.onPointerDown = function(event, target, clientX, clientY) {
+                if (document.getElementById('mati_spieler_text') === document.activeElement) {
+                    //Nichts ausfuehren und keine preventDefault, damit man sicher per Touch den Fokus entfernen kann
+                    return;
+                }
+            
                 let closestButton = target.closest('.mati_button, .mati_click_on_touch');
             
 				if (closestButton !== null) {
@@ -1010,9 +1036,37 @@
 							<span class="mati_spieler_img">
 								<img src="${Tiltspot.get.user().profilePicture}" />
 							</span>
-							<span class="mati_spieler_text">${matiUtil.htmlEscape(Tiltspot.get.user().nickname)}</span>
+							<input id="mati_spieler_text" value="${matiUtil.htmlEscape(data.username)}" />
 						</div>
 					`;
+                    let inputDomElement = document.getElementById('mati_spieler_text');
+                    inputDomElement.addEventListener('focus', function() {
+                        document.getElementById('mati_controller_alles').classList.add('mati_username_hat_fokus');
+
+                        //Cursor am ende positionieren
+                        let pos = inputDomElement.value.length;
+                        if (inputDomElement.createTextRange) {
+                            var textRange = inputDomElement.createTextRange();
+                            textRange.collapse(true);
+                            textRange.moveEnd(pos);
+                            textRange.moveStart(pos);
+                            textRange.select();
+                        }
+                        else if (inputDomElement.setSelectionRange) {
+                            inputDomElement.setSelectionRange(pos,pos);
+                        }
+                    });
+                    inputDomElement.addEventListener('blur', function() {
+                        document.getElementById('mati_controller_alles').classList.remove('mati_username_hat_fokus');
+                    });
+                    inputDomElement.addEventListener('keyup', function(event) {
+                        if (event.keyCode === 13) {
+                            inputDomElement.blur();
+                        }
+                    });
+                    inputDomElement.addEventListener('change', function() {
+                        Tiltspot.send.msg('setUsername', inputDomElement.value);
+                    });
 				}
 				
 				if (mati.sprachen.length === 0) {
