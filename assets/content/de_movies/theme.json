@@ -16,6 +16,34 @@
                 {
                     "text" : "Monty Python oder National Lampoon?",
                     "answers" : ["Monty Python", "National Lampoon"]
+                },
+                {
+                    "text" : "'Shaun of the Dead' oder 'Tucker & Dale vs Evil'?",
+                    "answers" : ["Shaun of the Dead", "Tucker & Dale vs Evil"]
+                },
+                {
+                    "text" : "Hast du 'Und täglich grüßt das Murmeltier' mehr als einmal gesehen?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Hast du 'The Big Lebowski' mehr als einmal gesehen?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "'This Is Spinal Tap' oder 'Almost Famous'?",
+                    "answers" : ["This Is Spinal Tap", "Almost Famous"]
+                },
+                {
+                    "text" : "'Die unglaubliche Reise in einem verrückten Flugzeug' oder 'Top Secret'?",
+                    "answers" : ["Die unglaubliche Reise...", "Top Secret"]
+                },
+                {
+                    "text" : "Wer schaffte den besseren Sprung auf die Kino-Leinwand?",
+                    "answers" : ["Die Simpsons", "South Park"]
+                },
+                {
+                    "text" : "'Super' oder 'Kick-Ass'?",
+                    "answers" : ["Super", "Kick-Ass"]
                 }
             ]
         },
@@ -32,8 +60,136 @@
                     "answers" : ["James Bond", "Jason Bourne"]
                 },
                 {
-                    "text" : "Terminator 1 oder Terminator 2?",
+                    "text" : "'Terminator 1' oder 'Terminator 2'?",
                     "answers" : ["Terminator 1", "Terminator 2"]
+                },
+                {
+                    "text" : "Auf Grundlage welcher Comic-Vorlagen existieren bessere Kino-Filme?",
+                    "answers" : ["DC Comics", "Marvel Comics"]
+                },
+                {
+                    "text" : "Welche Film-Reihe ist besser, 'The Fast and the Furious' oder 'The Expendables'?",
+                    "answers" : ["The Fast and the Furious", "The Expendables"]
+                },
+                {
+                    "text" : "Wurden vor oder nach dem Jahrtausendwechsel die besseren Action-Filme gemacht?",
+                    "answers" : ["Vorher", "Nachher"]
+                },
+                {
+                    "text" : "Welche Video-Spiel-Verfilmung ist besser?",
+                    "answers" : ["Street Fighter", "Mortal Kombat"]
+                },
+                {
+                    "text" : "Jackie Chan oder Bruce Lee?",
+                    "answers" : ["Jackie Chan", "Bruce Lee"]
+                },
+                {
+                    "text" : "'Alien' oder 'Aliens'?",
+                    "answers" : ["Alien", "Aliens"]
+                },
+                {
+                    "text" : "'Sarah Connor' oder 'Ripley'?",
+                    "answers" : ["Sarah Connor", "Ripley"]
+                },
+                {
+                    "text" : "'Blade Runner' oder 'Blade Runner 2049'?",
+                    "answers" : ["Blade Runner", "Blade Runner 2049"]
+                },
+                {
+                    "text" : "'Star Wars' oder 'Star Trek'?",
+                    "answers" : ["Star Wars", "Star Trek"]
+                }
+            ]
+        },
+        {
+            "name" : "Dramen",
+            "img" : "drama.jpg",
+            "questions" : [
+                {
+                    "text" : "Hast du schon mal einen Film von Ingmar Bergman gesehen?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Hast du schon mal 'Citizen Kane' gesehen?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Hast du 'Requiem for a Dream' mehr als einmal gesehen?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Hast du 'Schindlers Liste' mehr als einmal gesehen?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "'Magnolia' oder 'American Beauty'?",
+                    "answers" : ["Magnolia", "American Beauty"]
+                },
+                {
+                    "text" : "'Rainer Werner Fassbinder' oder 'Wim Wenders'?",
+                    "answers" : ["Fassbinder", "Wenders"]
+                },
+                {
+                    "text" : "'Der Pate 1' oder 'Der Pate 2'?",
+                    "answers" : ["Der Pate 1", "Der Pate 2"]
+                },
+                {
+                    "text" : "'Vom Winde verweht' oder 'Casablanca'?",
+                    "answers" : ["Vom Winde verweht", "Casablanca"]
+                },
+                {
+                    "text" : "'Romper Stomper' oder 'American History X'?",
+                    "answers" : ["Romper Stomper", "American History X"]
+                },
+                {
+                    "text" : "Ist 'Die Verurteilten' verdient auf dem ersten Platz der IMDb Charts?",
+                    "answers" : ["Ja", "Nein"]
+                }
+            ]
+        },
+        {
+            "name" : "Filme allgemein",
+            "img" : "movies.jpg",
+            "questions" : [
+                {
+                    "text" : "Fremdsprachige Filme lieber in der O-Ton oder Synchronisiert?",
+                    "answers" : ["O-Ton", "Synchronisiert"]
+                },
+                {
+                    "text" : "Europäische Filme oder US-Produktionen?",
+                    "answers" : ["Europäische Filme", "US-Produktionen"]
+                },
+                {
+                    "text" : "'Die unendliche Geschichte' oder 'Die Reise ins Labyrinth'?",
+                    "answers" : ["Die unendliche Geschichte", "Die Reise ins Labyrinth"]
+                },
+                {
+                    "text" : "Welches Film-Jahrzehnt war besser?",
+                    "answers" : ["80er", "90er"]
+                },
+                {
+                    "text" : "Hast du in den letzten 7 Tagen einen Spielfilm gesehen?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Wars du in den letzten 4 Wochen im Kino?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Filme lieber in stereoskopischem 3D oder 2D?",
+                    "answers" : ["3D", "2D"]
+                },
+                {
+                    "text" : "Hast du in den letzten 12 Monaten einen Schwarz-Weiß-Film gesehen?",
+                    "answers" : ["Ja", "Nein"]
+                },
+                {
+                    "text" : "Lieber Filme auf Blu-Ray oder online streamen?",
+                    "answers" : ["Blu-Ray", "Online streamen"]
+                },
+                {
+                    "text" : "Lieber gezeichnete Animationsfilme oder lieber 3D-gerenderte Animationsfilme?",
+                    "answers" : ["Gezeichnet", "3D-gerendert"]
                 }
             ]
         }

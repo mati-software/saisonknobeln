@@ -1,0 +1,197 @@
+{
+    "name" : "Movies",
+    "sections" : [
+        {
+            "name" : "Comedy",
+            "img" : "comedy.jpg",
+            "questions" : [
+                {
+                    "text" : "Romantic comedy or action comedy?",
+                    "answers" : ["Romantic comedy", "Action comedy"]
+                },
+                {
+                    "text" : "Adam Sandler or Will Ferrell?",
+                    "answers" : ["Adam Sandler", "Will Ferrell"]
+                },
+                {
+                    "text" : "Monty Python or National Lampoon?",
+                    "answers" : ["Monty Python", "National Lampoon"]
+                },
+                {
+                    "text" : "'Shaun of the Dead' or 'Tucker & Dale vs Evil'?",
+                    "answers" : ["Shaun of the Dead", "Tucker & Dale vs Evil"]
+                },
+                {
+                    "text" : "Have you watched 'Groundhog Day' more than once?",
+                    "answers" : ["Yes", "No"]
+                },
+                {
+                    "text" : "Have you watched 'The Big Lebowski' more than once?",
+                    "answers" : ["Yes", "No"]
+                },
+                {
+                    "text" : "'This Is Spinal Tap' or 'Almost Famous'?",
+                    "answers" : ["This Is Spinal Tap", "Almost Famous"]
+                },
+                {
+                    "text" : "'Airplane!' or 'Top Secret'?",
+                    "answers" : ["Airplane!", "Top Secret"]
+                },
+                {
+                    "text" : "Who made the better jump to the big screen?",
+                    "answers" : ["The Simpsons", "South Park"]
+                },
+                {
+                    "text" : "'Super' or 'Kick-Ass'?",
+                    "answers" : ["Super", "Kick-Ass"]
+                }
+            ]
+        },
+        {
+            "name" : "Action",
+            "img" : "action.jpg",
+            "questions" : [
+                {
+                    "text" : "Arnold Schwarzenegger or Sylvester Stallone?",
+                    "answers" : ["Schwarzenegger", "Stallone"]
+                },
+                {
+                    "text" : "James Bond or Jason Bourne?",
+                    "answers" : ["James Bond", "Jason Bourne"]
+                },
+                {
+                    "text" : "'Terminator 1' or 'Terminator 2'?",
+                    "answers" : ["Terminator 1", "Terminator 2"]
+                },
+                {
+                    "text" : "Which comics have better movie adaptations?",
+                    "answers" : ["DC Comics", "Marvel Comics"]
+                },
+                {
+                    "text" : "Which movie series is better, 'The Fast and the Furious' or 'The Expendables'?",
+                    "answers" : ["The Fast and the Furious", "The Expendables"]
+                },
+                {
+                    "text" : "Were the better action films made before or after the turn of the millennium?",
+                    "answers" : ["Before", "After"]
+                },
+                {
+                    "text" : "Which video game adaptation is better?",
+                    "answers" : ["Street Fighter", "Mortal Kombat"]
+                },
+                {
+                    "text" : "Jackie Chan or Bruce Lee?",
+                    "answers" : ["Jackie Chan", "Bruce Lee"]
+                },
+                {
+                    "text" : "'Alien' or 'Aliens'?",
+                    "answers" : ["Alien", "Aliens"]
+                },
+                {
+                    "text" : "'Sarah Connor' or 'Ripley'?",
+                    "answers" : ["Sarah Connor", "Ripley"]
+                },
+                {
+                    "text" : "'Blade Runner' or 'Blade Runner 2049'?",
+                    "answers" : ["Blade Runner", "Blade Runner 2049"]
+                },
+                {
+                    "text" : "'Star Wars' or 'Star Trek'?",
+                    "answers" : ["Star Wars", "Star Trek"]
+                }
+            ]
+        },
+        {
+            "name" : "Drama",
+            "img" : "drama.jpg",
+            "questions" : [
+                {
+                    "text" : "Have you ever watched a movie by Ingmar Bergman?",
+                    "answers" : ["Yes", "No"]
+                },
+                {
+                    "text" : "Have you ever watched 'Citizen Kane'?",
+                    "answers" : ["Yes", "No"]
+                },
+                {
+                    "text" : "Have you watched 'Requiem for a Dream' more than once?",
+                    "answers" : ["Yes", "No"]
+                },
+                {
+                    "text" : "Have you watched 'Schindler’s List' more than once?",
+                    "answers" : ["Yes", "No"]
+                },
+                {
+                    "text" : "'Magnolia' or 'American Beauty'?",
+                    "answers" : ["Magnolia", "American Beauty"]
+                },
+                {
+                    "text" : "'Rainer Werner Fassbinder' or 'Wim Wenders'?",
+                    "answers" : ["Fassbinder", "Wenders"]
+                },
+                {
+                    "text" : "'The Godfather 1' or 'The Godfather 2'?",
+                    "answers" : ["The Godfather 1", "The Godfather 2"]
+                },
+                {
+                    "text" : "'Gone with the Wind' or 'Casablanca'?",
+                    "answers" : ["Gone with the Wind", "Casablanca"]
+                },
+                {
+                    "text" : "'Romper Stomper' or 'American History X'?",
+                    "answers" : ["Romper Stomper", "American History X"]
+                },
+                {
+                    "text" : "Does 'The Shawshank Redemption' deserve to be no. 1 in the IMDb Charts?",
+                    "answers" : ["Yes", "No"]
+                }
+            ]
+        },
+        {
+            "name" : "Movies in general",
+            "img" : "movies.jpg",
+            "questions" : [
+                {
+                    "text" : "Do you prefer to watch foreign language movies with subtitles or synchronized?",
+                    "answers" : ["Subtitles", "Synchronized"]
+                },
+                {
+                    "text" : "European movies or US movies?",
+                    "answers" : ["European movies", "US movies"]
+                },
+                {
+                    "text" : "'The NeverEnding Story' or 'Labyrinth'?",
+                    "answers" : ["The NeverEnding Story", "Labyrinth"]
+                },
+                {
+                    "text" : "Which film decade was better?",
+                    "answers" : ["80s", "90s"]
+                },
+                {
+                    "text" : "Have you seen a feature film in the past 7 days?",
+                    "answers" : ["Yes", "No"]
+                },
+                {
+                    "text" : "Have you been to the cinema in the past 4 weeks?",
+                    "answers" : ["Yes", "No"]
+                },
+                {
+                    "text" : "Do you prefer films in stereoscopic 3D or 2D?",
+                    "answers" : ["3D", "2D"]
+                },
+                {
+                    "text" : "Have you seen a black and white movie in the past 12 months?",
+                    "answers" : ["Yes", "No"]
+                },
+                {
+                    "text" : "Do you prefer to watch movies on Blu-Ray or stream online?",
+                    "answers" : ["Blu-Ray", "Stream online"]
+                },
+                {
+                    "text" : "Do you prefer drawn animated movies or 3D rendered animated movies?",
+                    "answers" : ["Drawn", "3D rendered"]
+                }
+            ]
+        }
+    ]
+}
