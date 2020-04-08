@@ -91,8 +91,6 @@ mati.setSpracheCode = function(neuerSpracheCode) {
 		
 		document.getElementById('mati_frage_erlaeuterung').innerText = matiUtil.l10n('Wähle eine Antwort! Halte Deine Wahl vor den anderen Spielern geheim!');
 		
-		document.getElementById('mati_frage_ergebnis_tatsaechlich_label').innerText = matiUtil.l10n('Tatsächliche Aufteilung');
-		
 		document.getElementById('mati_spiel_lobby_credits').innerText = matiUtil.l10n('Ein Spiel von Timo Scheit und Martin Dostert');
         
         document.getElementById('mati_theme_selection_erlaeuterung').innerText = matiUtil.l10n('Thema wählen');
@@ -453,6 +451,10 @@ mati.pushThemeStarten = function() {
                 mati.broadcast('zeigeAntwortmoeglichkeiten');
                 return true; //unterbrechbar, da auf Userinteraktion gewartet wird
             });
+            
+            
+            
+            
 			matiUtil.pushBefehl(function() {
 				mati.tatsaechlicheAnzahlStimmenFuerA = 0;
 				mati.tatsaechlicheAnzahlStimmenFuerB = 0;
@@ -471,36 +473,52 @@ mati.pushThemeStarten = function() {
 					return spieler2.schaetzungAFuerAktuelleFrage - spieler1.schaetzungAFuerAktuelleFrage;
 				});
 				document.getElementById('mati_frage_ergebnis_schaetzungen').innerHTML = `
-					<div id="mati_frage_ergebnis_antwortmoeglichkeiten">
-						<div id="mati_frage_ergebnis_antwortmoeglichkeitA">${matiUtil.htmlEscape(mati.aktuelleFrage.answers[0])}</div>
-						<div id="mati_frage_ergebnis_antwortmoeglichkeitB">${matiUtil.htmlEscape(mati.aktuelleFrage.answers[1])}</div>
-					</div>
 					${sortierteSpieler.map(function(knobelSpieler) {
 						return `
 							<div class="mati_frage_ergebnis_zeile" id="mati_frage_ergebnis_zeile_id_${knobelSpieler.id}">
 								${mati.renderSpieler(knobelSpieler)}
 								<div class="mati_frage_ergebnis_balken_container" style="background: ${knobelSpieler.cssFarbe50} linear-gradient(0deg, ${knobelSpieler.cssFarbe50}, ${knobelSpieler.cssFarbe30});">
-									<div class="mati_frage_ergebnis_balken" style="background: ${knobelSpieler.cssFarbeHell50} linear-gradient(0deg, ${knobelSpieler.cssFarbe100}, ${knobelSpieler.cssFarbeHell50}); width: ${knobelSpieler.schaetzungAFuerAktuelleFrage / (knobelSpieler.schaetzungAFuerAktuelleFrage + knobelSpieler.schaetzungBFuerAktuelleFrage) * 100}%">
+									<div class="mati_frage_ergebnis_balken_a" style="background: ${knobelSpieler.cssFarbeHell50} linear-gradient(0deg, ${knobelSpieler.cssFarbe100}, ${knobelSpieler.cssFarbeHell50});">
+                                        <div class="mati_frage_ergebnis_balken_text">
+                                            ${matiUtil.htmlEscape(mati.aktuelleFrage.answers[0])}
+                                        </div>
 									</div>
-									<div class="mati_frage_ergebnis_balken_zahlA">
-										${knobelSpieler.schaetzungAFuerAktuelleFrage}
-									</div>
-									<div class="mati_frage_ergebnis_balken_zahlB">
-										${knobelSpieler.schaetzungBFuerAktuelleFrage}
+									<div class="mati_frage_ergebnis_balken_b">
+                                        <div class="mati_frage_ergebnis_balken_text">
+                                            ${matiUtil.htmlEscape(mati.aktuelleFrage.answers[1])}
+                                        </div>
 									</div>
 								</div>
 							</div>
 						`;
 					}).join('')}
-					<div id="mati_frage_ergebnis_platzhalter"></div>
-				`;
-				
+                    <div class="mati_frage_ergebnis_zeile" id="mati_frage_ergebnis_zeile_tatsaechlich">
+                        <div id="mati_frage_ergebnis_tatsaechlich_label">
+                            <div id="mati_frage_ergebnis_tatsaechlich_label_content">
+                                ${matiUtil.l10nHtml('Tatsächliche Aufteilung')}
+                            </div>
+                        </div>
+                        <div class="mati_frage_ergebnis_balken_container">
+                            <div class="mati_frage_ergebnis_balken_a">
+                                <div class="mati_frage_ergebnis_balken_text">
+                                    ${matiUtil.htmlEscape(mati.aktuelleFrage.answers[0])}
+                                </div>
+                            </div>
+                            <div class="mati_frage_ergebnis_balken_b">
+                                <div class="mati_frage_ergebnis_balken_text">
+                                    ${matiUtil.htmlEscape(mati.aktuelleFrage.answers[1])}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
 				document.getElementById('mati_frage_ergebnis_tatsaechlich_a').innerText = mati.tatsaechlicheAnzahlStimmenFuerA;
 				document.getElementById('mati_frage_ergebnis_tatsaechlich_b').innerText = mati.tatsaechlicheAnzahlStimmenFuerB;
 				
 				document.getElementById('mati_frage_ergebnis_tatsaechlich').style['width'] = (mati.tatsaechlicheAnzahlStimmenFuerA / (mati.tatsaechlicheAnzahlStimmenFuerA + mati.tatsaechlicheAnzahlStimmenFuerB) * 100) + '%';
 				
-				document.getElementById('mati_frage_ergebnis_tatsaechlich').classList.remove('mati_eingeblendet');
+				document.getElementById('mati_frage_ergebnis_tatsaechlich').style['opacity'] = 0;
 				
 				//bei vielen Spielern skalieren
 				document.getElementById('mati_frage_ergebnis').style['display'] = 'block';
@@ -508,21 +526,91 @@ mati.pushThemeStarten = function() {
 				
 				mati.zeigeContainer(document.getElementById('mati_frage_ergebnis'), matiUtil.gotoNaechsterBefehl);
 			});
-			for (let i=0; i<mati.spielerImLaufendenSpiel.length; i++) {
-				matiUtil.pushBefehl(function() {
-					document.getElementById('mati_frage_ergebnis_schaetzungen').getElementsByClassName('mati_frage_ergebnis_zeile')[i].classList.add('mati_eingeblendet');
-					setTimeout(matiUtil.gotoNaechsterBefehl, 500);
+            
+            matiUtil.pushBefehl(function() {
+                mati.schrittweiseResizeBisEsPasst(document.getElementById('mati_frage_ergebnis_tatsaechlich_label'), document.getElementById('mati_frage_ergebnis_tatsaechlich_label_content'));
+				
+                let sortierteSpieler = mati.spielerImLaufendenSpiel.slice().sort(function(spieler1, spieler2) {
+					return spieler2.schaetzungAFuerAktuelleFrage - spieler1.schaetzungAFuerAktuelleFrage;
 				});
-			}
+                
+                let animationListe = ['successive'];
+                
+                for (let knobelSpieler of sortierteSpieler) {
+                    let prozentA = knobelSpieler.schaetzungAFuerAktuelleFrage / (knobelSpieler.schaetzungAFuerAktuelleFrage + knobelSpieler.schaetzungBFuerAktuelleFrage) * 100;
+                    let prozentB = 100 - prozentA;
+                    //animationListe.push();
+                    animationListe.push([
+                        'parallel',
+                        {
+                            element : document.getElementById('mati_frage_ergebnis_zeile_id_' + knobelSpieler.id),
+                            attribute : 'opacity',
+                            start : 0,
+                            end : 1,
+                            easing : 'ease',
+                            duration : 1000
+                        },
+                        {
+                            element : document.querySelector('#mati_frage_ergebnis_zeile_id_' + knobelSpieler.id + ' .mati_frage_ergebnis_balken_a'),
+                            attribute : 'width',
+                            start : '50%',
+                            end : prozentA + '%',
+                            easing : 'ease',
+                            duration : 1000
+                        },
+                        {
+                            element : document.querySelector('#mati_frage_ergebnis_zeile_id_' + knobelSpieler.id + ' .mati_frage_ergebnis_balken_b'),
+                            attribute : 'width',
+                            start : '50%',
+                            end : prozentB + '%',
+                            easing : 'ease',
+                            duration : 1000
+                        }
+                    ]);
+                }
+                
+                let tatsaechlichProzentA = mati.tatsaechlicheAnzahlStimmenFuerA / (mati.tatsaechlicheAnzahlStimmenFuerA + mati.tatsaechlicheAnzahlStimmenFuerB) * 100;
+                let tatsaechlichProzentB = 100 - tatsaechlichProzentA;
+                animationListe.push([
+                    'parallel',
+                    {
+                        element : document.getElementById('mati_frage_ergebnis_zeile_tatsaechlich'),
+                        attribute : 'opacity',
+                        start : 0,
+                        end : 1,
+                        easing : 'ease',
+                        duration : 1000
+                    },
+                    {
+                        element : document.querySelector('#mati_frage_ergebnis_zeile_tatsaechlich .mati_frage_ergebnis_balken_a'),
+                        attribute : 'width',
+                        start : '50%',
+                        end : tatsaechlichProzentA + '%',
+                        easing : 'ease',
+                        duration : 1000
+                    },
+                    {
+                        element : document.querySelector('#mati_frage_ergebnis_zeile_tatsaechlich .mati_frage_ergebnis_balken_b'),
+                        attribute : 'width',
+                        start : '50%',
+                        end : tatsaechlichProzentB + '%',
+                        easing : 'ease',
+                        duration : 1000
+                    }
+                ]);
+                
+                animationListe.push({
+                    element : document.getElementById('mati_frage_ergebnis_tatsaechlich'),
+                    attribute : 'opacity',
+                    start : 0,
+                    end : 1,
+                    easing : 'ease',
+                    duration : 1000
+                });
+                
+                matiAnimationUtil.animate(animationListe, matiUtil.gotoNaechsterBefehl);
+            });
 			
-			
-			matiUtil.pushBefehl(function() {
-				setTimeout(function() {
-					document.getElementById('mati_frage_ergebnis_tatsaechlich').classList.add('mati_eingeblendet');
-					
-					setTimeout(matiUtil.gotoNaechsterBefehl, 1000);
-				}, 500);
-			});
 			matiUtil.pushBefehl(function() {
 				let minimalerAbstand = mati.spielerImLaufendenSpiel.length;
 				for (let spieler of mati.spielerImLaufendenSpiel) {
@@ -567,7 +655,7 @@ mati.pushThemeStarten = function() {
 					spielerZeileElement.appendChild(neuePunkteMarkierung);
 					
 				}
-				
+                
 				setTimeout(matiUtil.gotoNaechsterBefehl, 6000);
 			});
 		}
@@ -595,20 +683,24 @@ mati.pushThemeStarten = function() {
 			
 			document.getElementById('mati_punktestand_ueberschrift').innerText = matiUtil.l10n(mati.aktuelleSection === mati.aktuellesTheme.content.sections[mati.aktuellesTheme.content.sections.length - 1] ? 'Endresultat' : 'Zwischenstand');
 			
-			document.getElementById('mati_punktestand_spielerliste').innerHTML = sortierteSpieler.map(function(knobelSpieler) {
-				return `
-					<div class="mati_punktestand_zeile" id="mati_punktestand_zeile_id_${knobelSpieler.id}">
-						${mati.renderSpieler(knobelSpieler)}
-						<div class="mati_punktestand_balken_container" style="background: ${knobelSpieler.cssFarbe50} linear-gradient(0deg, ${knobelSpieler.cssFarbe50}, ${knobelSpieler.cssFarbe30});">
-							<div class="mati_punktestand_balken" style="background: ${knobelSpieler.cssFarbeHell50} linear-gradient(0deg, ${knobelSpieler.cssFarbe100}, ${knobelSpieler.cssFarbeHell50}); width: ${knobelSpieler.altePunktzahl / mati.maximalePunktzahl * 100}%">
-							</div>
-							<div class="mati_punktestand_balken_zahl">
-								<span class="mati_punktestand_balken_zahl_wert">${knobelSpieler.altePunktzahl}</span> ${matiUtil.l10nHtml('Punkte')}
-							</div>
-						</div>
-					</div>
-				`;
-			}).join('');
+			document.getElementById('mati_punktestand_spielerliste').innerHTML = `
+                <div class="mati_null_hoehe"></div>
+                ${sortierteSpieler.map(function(knobelSpieler) {
+                    return `
+                        <div class="mati_punktestand_zeile" id="mati_punktestand_zeile_id_${knobelSpieler.id}">
+                            ${mati.renderSpieler(knobelSpieler)}
+                            <div class="mati_punktestand_balken_container" style="background: ${knobelSpieler.cssFarbe50} linear-gradient(0deg, ${knobelSpieler.cssFarbe50}, ${knobelSpieler.cssFarbe30});">
+                                <div class="mati_punktestand_balken" style="background: ${knobelSpieler.cssFarbeHell50} linear-gradient(0deg, ${knobelSpieler.cssFarbe100}, ${knobelSpieler.cssFarbeHell50}); width: ${knobelSpieler.altePunktzahl / mati.maximalePunktzahl * 100}%">
+                                </div>
+                                <div class="mati_punktestand_balken_zahl">
+                                    <span class="mati_punktestand_balken_zahl_wert">${knobelSpieler.altePunktzahl}</span> ${matiUtil.l10nHtml('Punkte')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+                <div class="mati_null_hoehe"></div>
+            `;
             document.getElementById('mati_punktestand').style['background-image'] = `url(${Tiltspot.get.assetUrl("content/" + mati.aktuellesTheme.codeMitPrefix + "/" + mati.aktuelleSection.img)})`;
 			
 			//bei vielen Spielern skalieren
@@ -841,7 +933,7 @@ mati.schrittweiseResizeBisEsPasst = function(container, inhalt) {
 	inhalt.style['font-size'] = fontProzent + '%';
 	
 	let maximaleUebrigeAnzahlVerkleinerungsversuche = 20;
-	while (inhalt.clientHeight - 1 > container.clientHeight
+	while ((inhalt.clientHeight - 1 > container.clientHeight || inhalt.clientWidth - 1 > container.clientWidth)
 			&& maximaleUebrigeAnzahlVerkleinerungsversuche > 0) {
 		fontProzent = Math.floor(fontProzent * .9);
 		inhalt.style['font-size'] = fontProzent + '%';

@@ -444,13 +444,16 @@ span.mati_spieler_text {
     min-height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
+}
+#mati_frage_ergebnis_zeile_tatsaechlich {
+    padding-bottom: 1.4em;
 }
 #mati_punktestand_spielerliste {
     min-height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly; /* FIXME MSIE kann das nicht... fuege 2 leere Elemente an und nutze space-between */
+    justify-content: space-between;
 }
 .mati_frage_ergebnis_zeile,
 .mati_punktestand_zeile {
@@ -506,8 +509,8 @@ span.mati_spieler_text {
     margin-right: .5em;
     box-shadow: 0 0 .2em black;
     position: relative;
+    background: hsl(0, 0%, 25%) linear-gradient(0deg, hsl(0, 0%, 25%), hsl(0, 0%, 15%));
 }
-.mati_frage_ergebnis_balken_zahlA,
 .mati_punktestand_balken_zahl {
     position:absolute;
     left: .25em;
@@ -519,38 +522,40 @@ span.mati_spieler_text {
     color:white;
     text-shadow: 0 0 .25em black;
 }
-.mati_frage_ergebnis_balken_zahlB {
-    position:absolute;
-    right: .25em;
+.mati_frage_ergebnis_balken_a {
+    position: absolute;
+    left: 0;
     top: 0;
-    height: 1.4em;
+    height: 100%;
+    width: 50%;
+    overflow: hidden;
+    background: hsl(0, 0%, 75%) linear-gradient(0deg, hsl(0, 0%, 50%), hsl(0, 0%, 75%));
+}
+.mati_frage_ergebnis_balken_b {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 50%;
+    overflow: hidden;
+}
+.mati_frage_ergebnis_balken_text {
     line-height: 1.4em;
     vertical-align: middle;
     font-weight: bold;
     color:white;
     text-shadow: 0 0 .25em black;
+    text-align: center;
+    white-space: nowrap;
+    padding: 0 .25em;
 }
 .mati_frage_ergebnis_balken,
 .mati_punktestand_balken {
     height: 100%;
 }
-#mati_frage_ergebnis_antwortmoeglichkeiten {
-    overflow:hidden;
-    padding: 0 .5em 0 10.5em;
-}
-#mati_frage_ergebnis_antwortmoeglichkeitA {
-    float:left;
-    line-height: 1.4em;
-    vertical-align:middle;
-}
-#mati_frage_ergebnis_antwortmoeglichkeitB {
-    float:right;
-    line-height: 1.4em;
-    vertical-align:middle;
-}
 #mati_frage_ergebnis_tatsaechlich_container {
     position: absolute;
-    top: 1.4em;
+    top: 0;
     left: 10.5em;
     right: .5em;
     bottom: 0;
@@ -572,9 +577,6 @@ span.mati_spieler_text {
     border-radius: .7em;
     font-weight: bold;
 }
-#mati_frage_ergebnis_platzhalter {
-    height: 1.4em;
-}
 #mati_frage_ergebnis_tatsaechlich_a {
     float:left;
     width: 1.25em;
@@ -594,15 +596,18 @@ span.mati_spieler_text {
     vertical-align: middle;
 }
 #mati_frage_ergebnis_tatsaechlich_label {
-    position: absolute;
-    font-size: 50%;
-    right: 3.5em;
-    bottom: 0;
-    color: black;
-    text-align: right;
-    line-height: 2.8em; 
+    height: 2.2em;
+    width: 10em;
     vertical-align: middle;
+    overflow: hidden;
+    text-align: center;
+    line-height: 2.2em; 
+}
+#mati_frage_ergebnis_tatsaechlich_label_content {
+    color: black;
     white-space: nowrap;
+    display: inline-block;
+    padding: 0 1px; /* Beim ermitteln, ob das Element passt, wird ein 1px als Spiel genutzt; durch das Padding wird sichergestellt, dass nichts vom Text abgeschnitten wird */
 }
 #mati_frage_ergebnis_strich {
     position: absolute;
@@ -762,4 +767,7 @@ span.mati_spieler_text {
 .mati_null_breite {
     width:0;
     height:1em;
+}
+.mati_null_hoehe {
+    height:0;
 }

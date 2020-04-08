@@ -228,7 +228,6 @@
 							<div id="mati_frage_ergebnis_tatsaechlich">
 								<div id="mati_frage_ergebnis_strich">
 								</div>
-								<div id="mati_frage_ergebnis_tatsaechlich_label"></div>
 								<div id="mati_frage_ergebnis_tatsaechlich_box">
 									<div id="mati_frage_ergebnis_tatsaechlich_a"></div>
 									<div id="mati_frage_ergebnis_tatsaechlich_doppelpunkt">:</div>
@@ -527,7 +526,7 @@
 						mati.setSpracheCode(data);
 						break;
 					case 'neuesSpiel':
-						mati.neuesSpiel(data);
+						mati.neuesSpiel();
 						break;
 					case 'clientReady':
 						//Client hat ggf. den letzten Befehl nicht mitbekommen

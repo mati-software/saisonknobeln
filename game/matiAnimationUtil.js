@@ -91,10 +91,10 @@ matiAnimationUtil.animate = function(parameter1, parameter2, parameter3) {
             }
             else {
                 let velocityAttributMap = {};
-                if (rootAnimationObject.list) {
+                if (typeof rootAnimationObject.list !== 'undefined') {
                     //Mehrere Werte zugleich aendern
                     for (let listElement of rootAnimationObject.list) {
-                        if (listElement.start) {
+                        if (typeof listElement.start !== 'undefined') {
                             velocityAttributMap[listElement.attribute] = [listElement.end, listElement.start];
                         }
                         else {
@@ -103,7 +103,7 @@ matiAnimationUtil.animate = function(parameter1, parameter2, parameter3) {
                     }
                 }
                 else {
-                    if (rootAnimationObject.start) {
+                    if (typeof rootAnimationObject.start !== 'undefined') {
                         velocityAttributMap[rootAnimationObject.attribute] = [rootAnimationObject.end, rootAnimationObject.start];
                     }
                     else {
