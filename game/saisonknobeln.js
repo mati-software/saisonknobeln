@@ -15,7 +15,8 @@ var mati = {
 	tatsaechlicheAnzahlStimmenFuerB : null,
 	maximalePunktzahl : 0,
 	platzwechselVorhanden : false,
-    lastDeltaThemeInThemeSelection : 0
+    lastDeltaThemeInThemeSelection : 0,
+    themeSelectionDeaktiviert : false
 };
 
 mati.Spieler = class {
@@ -972,12 +973,16 @@ mati.wechseleTheme = function(deltaTheme) {
         Velocity(neuesThemeDomObject, 'stop');
         Velocity(altesThemeDomObject, 'stop');
         
+        mati.themeSelectionDeaktiviert = true;
         Velocity(neuesThemeDomObject, {
             opacity: [1, 0],
             left: ['0em', (30 * deltaTheme) + 'em'],
         }, {
             easing: 'linear',
-            duration: 500
+            duration: 500,
+            complete: () => {
+                mati.themeSelectionDeaktiviert = false;
+            }
         });
         Velocity(altesThemeDomObject, {
             opacity: [0, 1],

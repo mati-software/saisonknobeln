@@ -627,10 +627,14 @@
 			window.addEventListener( 'resize', onAenderungDerFenstergroesse, false );
 			
 			document.getElementById('mati_theme_selection_button_prev').addEventListener('click', function() {
-                mati.wechseleTheme(-1);
+                if (!mati.themeSelectionDeaktiviert) {
+                    mati.wechseleTheme(-1);
+                }
             });
 			document.getElementById('mati_theme_selection_button_next').addEventListener('click', function() {
-                mati.wechseleTheme(1);
+                if (!mati.themeSelectionDeaktiviert) {
+                    mati.wechseleTheme(1);
+                }
             });
 			document.getElementById('mati_theme_selection_button_spacer').addEventListener('click', function() {
                 mati.pushThemeStarten();

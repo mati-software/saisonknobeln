@@ -24,8 +24,8 @@
             "img" : "action.jpg",
             "questions" : [
                 {
-                    "text" : "Schwarzenegger oder Stallone?",
-                    "answers" : ["Arnold Schwarzenegger", "Sylvester Stallone"]
+                    "text" : "Arnold Schwarzenegger oder Sylvester Stallone?",
+                    "answers" : ["Schwarzenegger", "Stallone"]
                 },
                 {
                     "text" : "James Bond oder Jason Bourne?",
