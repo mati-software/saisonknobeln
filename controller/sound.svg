@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="120" viewbox="0 0 200 120">
+    <path d="M5 105 q0 -15 25 -15 q15 0 15 10 q0 15 -25 15 q-15 0 -15 -10 z" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="white" />
+    <path d="M75 95 q0 -15 25 -15 q15 0 15 10 q0 15 -25 15 q-15 0 -15 -10 z" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="white" />
+    <path d="M45 100 l0 -85 l-5 0 l0 85 z" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="white" />
+    <path d="M115 90 l0 -85 l-5 5 l0 80 z" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="white" />
+    <path d="M40 15 l75 -10 l0 20 l-75 10 z" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="white" />
+    
+    <path d="M115 60 m60 -45 a75 75 0 0 1 0 90" stroke="white" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+    <path d="M115 60 m40 -30 a50 50 0 0 1 0 60" stroke="white" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+    <path d="M115 60 m20 -15 a25 25 0 0 1 0 30" stroke="white" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+</svg>
