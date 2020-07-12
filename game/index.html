@@ -4,26 +4,6 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Saisonknobeln</title>
-		
-		<style id="mati_keyframes_3d">
-			@keyframes mati_animation_box_show {
-				from {
-					transform: perspective(400vh) translateZ(-50vh) rotateX(-90deg) translateZ(50vh);
-				}
-				to {
-					transform: perspective(400vh) translateZ(-50vh) rotateX(0deg) translateZ(50vh);
-				}
-			}
-			@keyframes mati_animation_box_hide {
-				from {
-					transform: perspective(400vh) translateZ(-50vh) rotateX(0deg) translateZ(50vh);
-				}
-				to {
-					transform: perspective(400vh) translateZ(-50vh) rotateX(90deg) translateZ(50vh);
-				}
-			}
-		</style>
-		
         <link href="style.css" rel="stylesheet" type="text/css" />
 	</head>
 	<body>
@@ -601,27 +581,6 @@
 				document.getElementById('mati_frage').style['display'] = 'block';
 				mati.schrittweiseResizeBisEsPasst(document.getElementById('mati_frage_spieler_container'), document.getElementById('mati_frage_spieler'));
 				document.getElementById('mati_frage').style['display'] = oldMatiFrageDisplay;
-				
-				//Workaround fuer verbuggter Microsoft-Edge-Browser, der mit vh in Animationen nicht klar kommt.
-				let hoehe = document.getElementById('mati_spiel_alles').offsetHeight;
-				document.getElementById('mati_keyframes_3d').innerHTML = `
-					@keyframes mati_animation_box_show {
-						from {
-							transform: perspective(${hoehe*4}px) translateZ(${-hoehe/2}px) rotateX(-90deg) translateZ(${hoehe/2}px);
-						}
-						to {
-							transform: perspective(${hoehe*4}px) translateZ(${-hoehe/2}px) rotateX(0deg) translateZ(${hoehe/2}px);
-						}
-					}
-					@keyframes mati_animation_box_hide {
-						from {
-							transform: perspective(${hoehe*4}px) translateZ(${-hoehe/2}px) rotateX(0deg) translateZ(${hoehe/2}px);
-						}
-						to {
-							transform: perspective(${hoehe*4}px) translateZ(${-hoehe/2}px) rotateX(90deg) translateZ(${hoehe/2}px);
-						}
-					}
-				`;
 			};
 			onAenderungDerFenstergroesse();
 			window.addEventListener( 'resize', onAenderungDerFenstergroesse, false );

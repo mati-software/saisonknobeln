@@ -177,18 +177,6 @@ span.mati_spieler_text {
     background-position: center;				 
 }
 
-.mati_box_hide {
-    animation-name: mati_animation_box_hide;
-    animation-duration: 1s;
-    animation-iteration-count: 1;
-    transform: perspective(400vh) translateZ(-50vh) rotateX(90deg) translateZ(50vh);
-}
-.mati_box_show {
-    animation-name: mati_animation_box_show;
-    animation-duration: 1s;
-    animation-iteration-count: 1;
-}
-
 #mati_spiel_lobby {
     background-color: #ddd;
     color: black;

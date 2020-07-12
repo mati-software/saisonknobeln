@@ -1,9 +1,8 @@
 mati.glProgramObjects = {
     borderedBox : {
         vertexShader : `
-            //wenn man nicht genau die gleiche precision wie beim fragment shader angibt, kann man die gleiche uniform nicht in beidem verwenden
             precision mediump float;
-            // Attribut-Daten kommen aus Buffer, also fuer jeden Vetex eigene Werte. In diesem Fall hier gebe ich immer nur zwei Dreiecke die von -1 bis 1 reichen.
+            
             attribute vec2 a_position_in_em_absolute;
             attribute vec2 a_position_in_em_relativ;
             attribute vec2 a_size_in_em;
@@ -113,9 +112,8 @@ mati.glProgramObjects = {
 
     schatten : {
         vertexShader : `
-            //wenn man nicht genau die gleiche precision wie beim fragment shader angibt, kann man die gleiche uniform nicht in beidem verwenden
             precision mediump float;
-            // Attribut-Daten kommen aus Buffer, also fuer jeden Vetex eigene Werte. In diesem Fall hier gebe ich immer nur zwei Dreiecke die von -1 bis 1 reichen.
+            
             attribute vec2 a_position_in_em_absolute;
             attribute vec2 a_shadow_vector;
             attribute float a_shadow_offset;
@@ -153,10 +151,7 @@ mati.glProgramObjects = {
             varying float v_shadow_offset;
           
             void main() {
-                //gl_FragColor = vec4(1.0, v_shadow_vector.x, v_shadow_vector.y, 1.0);
-                
                 float schattenValue = length(v_shadow_vector);
-                
                 schattenValue = (schattenValue - v_shadow_offset) / (1.0 - v_shadow_offset);
                 schattenValue = clamp(schattenValue, 0.0, 1.0);
                 schattenValue = 1.0 - schattenValue;
@@ -257,13 +252,7 @@ mati.glProgramObjects = {
                 //TODO unnoetige elemente, die eh vom img verdeckt sind, nicht rendern (linke kante)
                 verticesArray.push(
                     {
-                        a_position_in_em_absolute : [namensblockX1 - shadow, namensblockY1 - shadow],
-                        a_shadow_vector : [1, 1],
-                        a_shadow_offset : 0,
-                        a_shrink_faktor : 0
-                    },
-                    {
-                        a_position_in_em_absolute : [namensblockX1 + shadow, namensblockY1 - shadow],
+                        a_position_in_em_absolute : [namensblockX1, namensblockY1 - shadow],
                         a_shadow_vector : [0, 1],
                         a_shadow_offset : 0,
                         a_shrink_faktor : 0
@@ -282,13 +271,7 @@ mati.glProgramObjects = {
                     },
                     
                     {
-                        a_position_in_em_absolute : [namensblockX1 - shadow, namensblockY1 + shadow],
-                        a_shadow_vector : [1, 0],
-                        a_shadow_offset : 0,
-                        a_shrink_faktor : 0
-                    },
-                    {
-                        a_position_in_em_absolute : [namensblockX1 + shadow, namensblockY1 + shadow],
+                        a_position_in_em_absolute : [namensblockX1, namensblockY1 + shadow],
                         a_shadow_vector : [0, 0],
                         a_shadow_offset : 0,
                         a_shrink_faktor : 0
@@ -306,15 +289,8 @@ mati.glProgramObjects = {
                         a_shrink_faktor : 1
                     },
                     
-                    
                     {
-                        a_position_in_em_absolute : [namensblockX1 - shadow, namensblockY2 - shadow],
-                        a_shadow_vector : [1, 0],
-                        a_shadow_offset : 0,
-                        a_shrink_faktor : 0
-                    },
-                    {
-                        a_position_in_em_absolute : [namensblockX1 + shadow, namensblockY2 - shadow],
+                        a_position_in_em_absolute : [namensblockX1, namensblockY2 - shadow],
                         a_shadow_vector : [0, 0],
                         a_shadow_offset : 0,
                         a_shrink_faktor : 0
@@ -333,13 +309,7 @@ mati.glProgramObjects = {
                     },
                     
                     {
-                        a_position_in_em_absolute : [namensblockX1 - shadow, namensblockY2 + shadow],
-                        a_shadow_vector : [1, 1],
-                        a_shadow_offset : 0,
-                        a_shrink_faktor : 0
-                    },
-                    {
-                        a_position_in_em_absolute : [namensblockX1 + shadow, namensblockY2 + shadow],
+                        a_position_in_em_absolute : [namensblockX1, namensblockY2 + shadow],
                         a_shadow_vector : [0, 1],
                         a_shadow_offset : 0,
                         a_shrink_faktor : 0
@@ -383,35 +353,23 @@ mati.glProgramObjects = {
                         a_shrink_faktor : 0
                     }
                 );
-                let indexArrayOhneOffset = [0, 4, 1,    1, 4, 5,
-                                            1, 5, 2,    2, 5, 6,
-                                            2, 6, 3,    3, 6, 7,
-                                            8, 12, 9,   9, 12, 13,
-                                            9, 13, 10,  10, 13, 14,
-                                            10, 14, 11, 11, 14, 15,
-                                            4, 8, 5,    5, 8, 9,
-                                            6, 10, 7,   7, 10, 11,
+                let indexArrayOhneOffset = [0, 3, 1,    1, 3, 4,
+                                            1, 4, 2,    2, 4, 5,
+                                            6, 9, 7,    7, 9, 10,
+                                            7, 10, 8,   8, 10, 11,
+                                            4, 7, 5,    5, 7, 8,
                                             
-                                            16, 18, 17, 17, 18, 19];
+                                            12, 14, 13, 13, 14, 15];
                 for (let indexArrayElement of indexArrayOhneOffset) {
                     indicesArray.push(indexArrayElement + indexOffset);
                 }
             }
-            
-            
-            
-            
-            
-            
-            
-            
             else if (elementObject.typ === 'pauseMenueSchatten') {
                 let koordinaten = mati.getRenderObjektKoordinatenInEm(elementObject);
                 let shadow = 0.4;
                 
                 let indexOffset = verticesArray.length;
                 
-                //TODO unnoetige elemente, die eh vom img verdeckt sind, nicht rendern (linke kante)
                 verticesArray.push(
                     {
                         a_position_in_em_absolute : [koordinaten.x - shadow, koordinaten.y - shadow],
@@ -535,19 +493,12 @@ mati.glProgramObjects = {
                     indicesArray.push(indexArrayElement + indexOffset);
                 }
             }
-            
-            
-            
-            
-            
-            
         }
     },
     spielerName : {
         vertexShader : `
-            //wenn man nicht genau die gleiche precision wie beim fragment shader angibt, kann man die gleiche uniform nicht in beidem verwenden
             precision mediump float;
-            // Attribut-Daten kommen aus Buffer, also fuer jeden Vetex eigene Werte. In diesem Fall hier gebe ich immer nur zwei Dreiecke die von -1 bis 1 reichen.
+            
             attribute vec2 a_position_in_em_absolute;
             attribute vec2 a_position_in_em_relative;
             attribute vec3 a_farbe1;
@@ -645,9 +596,8 @@ mati.glProgramObjects = {
     },
     spielerAvatar : {
         vertexShader : `
-            //wenn man nicht genau die gleiche precision wie beim fragment shader angibt, kann man die gleiche uniform nicht in beidem verwenden
             precision mediump float;
-            // Attribut-Daten kommen aus Buffer, also fuer jeden Vetex eigene Werte. In diesem Fall hier gebe ich immer nur zwei Dreiecke die von -1 bis 1 reichen.
+            
             attribute vec2 a_position_in_em_absolute;
             attribute vec2 a_position_in_em_relativ;
 
@@ -873,9 +823,8 @@ mati.glProgramObjects = {
     
     monocolor : {
         vertexShader : `
-            //wenn man nicht genau die gleiche precision wie beim fragment shader angibt, kann man die gleiche uniform nicht in beidem verwenden
             precision mediump float;
-            // Attribut-Daten kommen aus Buffer, also fuer jeden Vetex eigene Werte. In diesem Fall hier gebe ich immer nur zwei Dreiecke die von -1 bis 1 reichen.
+
             attribute vec2 a_position_in_em_absolute;
             attribute vec3 a_farbe;
 
@@ -1231,9 +1180,8 @@ mati.glProgramObjects = {
     },
     schaetzungBalken : {
         vertexShader : `
-            //wenn man nicht genau die gleiche precision wie beim fragment shader angibt, kann man die gleiche uniform nicht in beidem verwenden
             precision mediump float;
-            // Attribut-Daten kommen aus Buffer, also fuer jeden Vetex eigene Werte. In diesem Fall hier gebe ich immer nur zwei Dreiecke die von -1 bis 1 reichen.
+
             attribute vec2 a_position_in_em_absolute;
             attribute vec2 a_position_in_em_relative;
             attribute float a_width_in_em;
@@ -1375,9 +1323,8 @@ mati.glProgramObjects = {
     },
     text : {
         vertexShader : `
-            //wenn man nicht genau die gleiche precision wie beim fragment shader angibt, kann man die gleiche uniform nicht in beidem verwenden
             precision mediump float;
-            // Attribut-Daten kommen aus Buffer, also fuer jeden Vetex eigene Werte. In diesem Fall hier gebe ich immer nur zwei Dreiecke die von -1 bis 1 reichen.
+
             attribute vec2 a_position_in_em_absolute;
             attribute vec2 a_textur_pos;
 
@@ -1492,9 +1439,8 @@ mati.glProgramObjects = {
     },
     soundButton : {
         vertexShader : `
-            //wenn man nicht genau die gleiche precision wie beim fragment shader angibt, kann man die gleiche uniform nicht in beidem verwenden
             precision mediump float;
-            // Attribut-Daten kommen aus Buffer, also fuer jeden Vetex eigene Werte. In diesem Fall hier gebe ich immer nur zwei Dreiecke die von -1 bis 1 reichen.
+
             attribute vec2 a_position_in_em_absolute;
             attribute vec2 a_textur_pos;
 
@@ -1726,8 +1672,6 @@ mati.glProgramObjects = {
             uniform sampler2D u_image;
           
             void main() {
-                //gl_FragColor = vec4(1.0, v_shadow_vector.x, v_shadow_vector.y, 1.0);
-                
                 float abstand = length(v_shadow_vector);
                 
                 float schattenValue = (abstand - .3) / .8;

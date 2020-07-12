@@ -164,31 +164,45 @@ mati.zeigeContainer = function(containerElement, callback) {
 	}
 	
 	containerElement.style['display'] = 'block';
-
-	if (mati.aktuellSichbarerContainer !== null) {
-		containerElement.classList.add('mati_box_show');
-	
-		mati.aktuellSichbarerContainer.classList.remove('mati_box_show');
-		mati.aktuellSichbarerContainer.classList.add('mati_box_hide');
-	}
-	
-	setTimeout(function () {
-		if (mati.aktuellSichbarerContainer !== null) {
-            if (mati.aktuellSichbarerContainer.id === 'mati_spiel_lobby') {
-                //Sicherstellen, dass Animation beendet ist, da DIV ausgeblendet wird
-                matiAnimationUtil.finishQueue('matiIntroQueue');
+    if (mati.aktuellSichtbarerContainer !== null) {
+        let alterContainer = mati.aktuellSichtbarerContainer;
+        Velocity(alterContainer, {
+            'transform' : ['perspective(400vh) translateZ(-50vh) rotateX(90deg) translateZ(50vh)', 'perspective(400vh) translateZ(-50vh) rotateX(0deg) translateZ(50vh)']
+        }, {
+            easing: 'ease',
+            duration: 1000,
+            complete : function() {
+                alterContainer.style.display = 'none';
             }
+        });
+    }
+    
+    containerElement.style.transform = 'perspective(400vh) translateZ(-50vh) rotateX(-90deg) translateZ(50vh)';
+    containerElement.style.display = 'block';
+    Velocity(containerElement, {
+        'transform' : ['perspective(400vh) translateZ(-50vh) rotateX(0deg) translateZ(50vh)', 'perspective(400vh) translateZ(-50vh) rotateX(-90deg) translateZ(50vh)']
+    }, {
+        easing: 'ease',
+        duration: 1000,
+        complete : function() {
+            if (mati.aktuellSichbarerContainer !== null) {
+                if (mati.aktuellSichbarerContainer.id === 'mati_spiel_lobby') {
+                    //Sicherstellen, dass Animation beendet ist, da DIV ausgeblendet wird
+                    matiAnimationUtil.finishQueue('matiIntroQueue');
+                }
+                
+                mati.aktuellSichbarerContainer.style['display'] = 'none';
+            }
+            mati.aktuellSichtbarerContainer = containerElement;
             
-			mati.aktuellSichbarerContainer.style['display'] = 'none';
-			containerElement.classList.remove('mati_box_hide');
-		}
-		
-		mati.aktuellSichbarerContainer = containerElement;
-		if (containerElement.id !== 'mati_pausemenue') {
-			mati.aktuellerContainerLautSpielstatus = containerElement;
-		}
-		callback();
-	}, 1000);
+            mati.aktuellSichbarerContainer = containerElement;
+            if (containerElement.id !== 'mati_pausemenue') {
+                mati.aktuellerContainerLautSpielstatus = containerElement;
+            }            
+            
+            callback();
+        }
+    });
 };
 
 mati.setFrageGroesseUndPosition = function() {
