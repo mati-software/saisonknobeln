@@ -148,7 +148,7 @@
                         </svg>
                     </div>
 				</div>
-				<audio autoplay loop id="mati_hauptmusik">
+				<audio loop id="mati_hauptmusik">
 					<source src="hauptmusik.ogg" type="audio/ogg"-->
 					<source src="hauptmusik.mp3" type="audio/mpeg">
 				</audio> 
@@ -367,6 +367,8 @@
 					mati.broadcast('zeigeHauptmenue');
                     //FIXME wtf? wenn das direkt ausgefuehrt wird, springe ich zum naechsten befehl bevor ich die intro-animation starte
 					mati.zeigeContainer(document.getElementById('mati_spiel_lobby'), matiUtil.gotoNaechsterBefehl);
+                    
+                    document.getElementById('mati_hauptmusik').play();
 
                     var mati_svg_saisonknobeln = document.getElementById('mati_svg_saisonknobeln');
                     var mati_svg_saisonknobeln2 = document.getElementById('mati_svg_saisonknobeln2');
