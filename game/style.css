@@ -33,16 +33,14 @@ body {
     display:none;
 }
 
-#mati_spiel_spielerliste,
-#mati_spiel_spielerwarteliste {
+#mati_spiel_spielerliste {
     width:12em;
     background-color:rgba(0,0,0,.6);
     border-radius:1em;
     position: relative;
     margin: 0 .5em 1em .5em;
 }
-#mati_spiel_spielerliste_content,
-#mati_spiel_spielerwarteliste_content {
+#mati_spiel_spielerliste_content {
     position:absolute;
     top:2em;
     left:.2em;
@@ -54,8 +52,7 @@ body {
     border-bottom-right-radius:.8em;
     padding-left:.6em;
 }
-#mati_spiel_spielerliste_caption,
-#mati_spiel_spielerwarteliste_caption {
+#mati_spiel_spielerliste_caption {
     position:absolute;
     top:0;
     left:0;
@@ -83,8 +80,7 @@ h1 {
     text-align:center;
 }
 
-#mati_spiel_spielerliste_content .mati_liste,
-#mati_spiel_spielerwarteliste_content .mati_liste {
+#mati_spiel_spielerliste_content .mati_liste {
     margin:0;
     padding:.3em 0 .3em 0;
 }

@@ -1,21 +1,4 @@
 {
     "data_flagge" : "gb",
-    "data_name" : "English",
-
-	"Neues Spiel" : "New Game",
-	"Spiel fortsetzen" : "Resume Game",
-	"Beenden" : "Exit",
-	"Spieler" : "Players",
-	"Warteliste" : "Waitlist",
-	"Bitte warten bis die nächste Interaktion möglich ist!" : "Please wait until the next interaction is possible!",
-	"Schätze wie viele Spieler (inklusive Du selbst) für die jeweilige Antwortmöglichkeit gestimmt haben!" : "Guess how many players (including yourself) have voted for each answer!",
-	"Wähle eine Antwort! Halte Deine Wahl vor den anderen Spielern geheim!" : "Choose an answer! Keep your choice secret from the other players!",
-	"Tatsächliche Aufteilung" : "Actual distribution",
-	"Punkte" : "points",
-	"Endresultat" : "Final result",
-	"Zwischenstand" : "Score so far",
-	"Spiel abschließen" : "End game",
-	"Ein Spiel von Timo Scheit und Martin Dostert" : "A game by Timo Scheit and Martin Dostert",
-    "Laufendes Spiel abbrechen" : "Cancel Game",
-    "Thema wählen" : "Select Theme"
+    "data_name" : "English"
 }

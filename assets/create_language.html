@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="de">
+	<head>
+		<meta charset="utf-8" />
+        <title>Saisonknobeln</title>
+        <style>
+            body {
+                font-family: Helvetica, Arial, sans-serif;
+                font-size: 16px;
+            }
+            table, th, td {
+                border: none;
+                margin: 0;
+            }
+            td, th {
+                padding: 10px;
+                text-align: left;
+                vertical-align: top;
+            }
+            fieldset {
+                margin-bottom: 20px;
+            }
+            button {
+                font-size: 200%;
+            }
+            img.mati_flagge {
+                height: 40px;
+                width: auto;
+                margin: 10px;
+                box-shadow: 0 0 10px black;
+                cursor: pointer;
+            }
+            img.mati_flagge_ausgewaehlt {
+                box-shadow: 0 0 10px black, 0 0 0 10px #5566ff;
+            }
+            .mati_label_cell {
+                width: 250px;
+            }
+            input {
+                width: 300px;
+            }
+            small {
+                opacity: .5;
+            }
+        </style>
+        <script>
+            window.addEventListener('load', function() {
+                for (let imgElement of document.getElementsByClassName('mati_flagge')) {
+                    imgElement.addEventListener('click', function() {
+                        for (let innerImgElement of document.getElementsByClassName('mati_flagge')) {
+                            innerImgElement.classList.remove('mati_flagge_ausgewaehlt');
+                        }
+                        this.classList.add('mati_flagge_ausgewaehlt');
+                    });
+                }
+            });
+        </script>
+    </head>
+    <body>
+        <h1>Create a new Language</h1>
+        <fieldset>
+            <legend>Meta Data</legend>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class="mati_label_cell">Name for the new Language<br/><small>(in it's own language, e. g. 'English', 'Deutsch' etc.)</small></td>
+                        <td><input name="data_name" /></td>
+                    </tr>
+                    <tr>
+                        <td class="mati_label_cell">Unique Code<br/><small>(only lower case letters, e. g. 'en' for English, 'fr' for French etc.)</small></td>
+                        <td><input name="data_code" /></td>
+                    </tr>
+                    <tr>
+                        <td class="mati_label_cell">Flag</td>
+                        <td>
+                            <img class="mati_flagge" src="flags/bg.svg" />
+                            <img class="mati_flagge" src="flags/cn.svg" />
+                            <img class="mati_flagge" src="flags/cz.svg" />
+                            <img class="mati_flagge" src="flags/de.svg" />
+                            <img class="mati_flagge" src="flags/dk.svg" />
+                            <img class="mati_flagge" src="flags/ee.svg" />
+                            <img class="mati_flagge" src="flags/es.svg" />
+                            <img class="mati_flagge" src="flags/fi.svg" />
+                            <img class="mati_flagge" src="flags/fr.svg" />
+                            <img class="mati_flagge mati_flagge_ausgewaehlt" src="flags/gb.svg" />
+                            <img class="mati_flagge" src="flags/gr.svg" />
+                            <img class="mati_flagge" src="flags/hr.svg" />
+                            <img class="mati_flagge" src="flags/hu.svg" />
+                            <img class="mati_flagge" src="flags/it.svg" />
+                            <img class="mati_flagge" src="flags/lt.svg" />
+                            <img class="mati_flagge" src="flags/lv.svg" />
+                            <img class="mati_flagge" src="flags/nl.svg" />
+                            <img class="mati_flagge" src="flags/no.svg" />
+                            <img class="mati_flagge" src="flags/pl.svg" />
+                            <img class="mati_flagge" src="flags/pt.svg" />
+                            <img class="mati_flagge" src="flags/ro.svg" />
+                            <img class="mati_flagge" src="flags/rs.svg" />
+                            <img class="mati_flagge" src="flags/ru.svg" />
+                            <img class="mati_flagge" src="flags/se.svg" />
+                            <img class="mati_flagge" src="flags/si.svg" />
+                            <img class="mati_flagge" src="flags/sk.svg" />
+                            <img class="mati_flagge" src="flags/tr.svg" />
+                            <img class="mati_flagge" src="flags/ua.svg" />
+                            <img class="mati_flagge" src="flags/us.svg" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </fieldset>
+        
+        <fieldset>
+            <legend>Tranlations</legend>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="mati_label_cell">English text</th>
+                        <th>Translation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="mati_label_cell">New Game</td>
+                        <td><input name="text_1" /></td>
+                    </tr>
+                    <tr>
+                        <td class="mati_label_cell">Resume Game</td>
+                        <td><input name="text_2" /></td>
+                    </tr>
+                    <tr>
+                        <td class="mati_label_cell">Exit</td>
+                        <td><input name="text_3" /></td>
+                    </tr>
+                    <tr>
+                        <td class="mati_label_cell">Players</td>
+                        <td><input name="text_4" /></td>
+                    </tr>
+                    <tr>
+                        <td class="mati_label_cell">Please wait until the next interaction is possible!</td>
+                        <td><input name="text_6" /></td>
+                    </tr>
+                    <tr>
+                        <td class="mati_label_cell">Guess how many players (including yourself) have voted for each answer!</td>
+                        <td><input name="text_7" /></td>
+                    </tr>
+                    <tr>
+                        <td class="mati_label_cell">Choose an answer! Keep your choice secret from the other players!</td>
+                        <td><input name="text_8" /></td>
+                    </tr>
+                    <tr>
+                        <td class="mati_label_cell">Actual distribution</td>
+                        <td><input name="text_9" /></td>
+                    </tr>
+                    <tr>
+                        <td class="mati_label_cell">points</td>
+                        <td><input name="text_10" /></td>
+                    </tr>
+                    <tr>
+                        <td class="mati_label_cell">Final result</td>
+                        <td><input name="text_11" /></td>
+                    </tr>
+                    <tr>
+                        <td class="mati_label_cell">Score so far</td>
+                        <td><input name="text_12" /></td>
+                    </tr>
+                    <tr>
+                        <td class="mati_label_cell">End game</td>
+                        <td><input name="text_13" /></td>
+                    </tr>
+                    <tr>
+                        <td class="mati_label_cell">Cancel Game</td>
+                        <td><input name="text_14" /></td>
+                    </tr>
+                    <tr>
+                        <td class="mati_label_cell">Select Theme</td>
+                        <td><input name="text_15" /></td>
+                    </tr>
+                </tbody>
+            </table>
+        </fieldset>
+        <button>Save</button>
+        <button style="visibility: hidden">Cancel</button>
+    </body>
+</html>

@@ -87,14 +87,13 @@ mati.setSpracheCode = function(neuerSpracheCode) {
             }
         }
         
-		document.getElementById('mati_spiel_spielerliste_caption').innerText = matiUtil.l10n('Spieler');
-		document.getElementById('mati_spiel_spielerwarteliste_caption').innerText = matiUtil.l10n('Warteliste');
+		document.getElementById('mati_spiel_spielerliste_caption').innerText = matiUtil.l10n('Players');
 		
-		document.getElementById('mati_frage_erlaeuterung').innerText = matiUtil.l10n('Wähle eine Antwort! Halte Deine Wahl vor den anderen Spielern geheim!');
+		document.getElementById('mati_frage_erlaeuterung').innerText = matiUtil.l10n('Choose an answer! Keep your choice secret from the other players!');
 		
-		document.getElementById('mati_spiel_lobby_credits').innerText = matiUtil.l10n('Ein Spiel von Timo Scheit und Martin Dostert');
+		document.getElementById('mati_spiel_lobby_credits').innerText = matiUtil.l10n('A game by Timo Scheit and Martin Dostert');
         
-        document.getElementById('mati_theme_selection_erlaeuterung').innerText = matiUtil.l10n('Thema wählen');
+        document.getElementById('mati_theme_selection_erlaeuterung').innerText = matiUtil.l10n('Select Theme');
 		
 		matiUtil.gotoNaechsterBefehl();
 	});
@@ -197,9 +196,7 @@ mati.zeigeContainer = function(containerElement, callback) {
 		}
 		
 		mati.aktuellSichbarerContainer = containerElement;
-		if (containerElement.id !== 'mati_pausemenue') {
-			mati.aktuellerContainerLautSpielstatus = containerElement;
-		}
+        
 		callback();
 	}, 1100);
 };
@@ -509,7 +506,7 @@ mati.pushThemeStarten = function() {
                     <div class="mati_frage_ergebnis_zeile" id="mati_frage_ergebnis_zeile_tatsaechlich">
                         <div id="mati_frage_ergebnis_tatsaechlich_label">
                             <div id="mati_frage_ergebnis_tatsaechlich_label_content">
-                                ${matiUtil.l10nHtml('Tatsächliche Aufteilung')}
+                                ${matiUtil.l10nHtml('Actual distribution')}
                             </div>
                         </div>
                         <div class="mati_frage_ergebnis_balken_container">
@@ -695,7 +692,7 @@ mati.pushThemeStarten = function() {
 			
 			document.getElementById('mati_punktestand_spielerliste_container_container').classList.remove('mati_punktestand_endresultat');
 			
-			document.getElementById('mati_punktestand_ueberschrift').innerText = matiUtil.l10n(mati.aktuelleSection === mati.aktuellesTheme.content.sections[mati.aktuellesTheme.content.sections.length - 1] ? 'Endresultat' : 'Zwischenstand');
+			document.getElementById('mati_punktestand_ueberschrift').innerText = matiUtil.l10n(mati.aktuelleSection === mati.aktuellesTheme.content.sections[mati.aktuellesTheme.content.sections.length - 1] ? 'Final result' : 'Score so far');
 			
 			document.getElementById('mati_punktestand_spielerliste').innerHTML = `
                 <div class="mati_null_hoehe"></div>
@@ -707,7 +704,7 @@ mati.pushThemeStarten = function() {
                                 <div class="mati_punktestand_balken" style="background: ${knobelSpieler.cssFarbeHell50} linear-gradient(0deg, ${knobelSpieler.cssFarbe100}, ${knobelSpieler.cssFarbeHell50}); width: ${knobelSpieler.altePunktzahl / mati.maximalePunktzahl * 100}%">
                                 </div>
                                 <div class="mati_punktestand_balken_zahl">
-                                    <span class="mati_punktestand_balken_zahl_wert">${knobelSpieler.altePunktzahl}</span> ${matiUtil.l10nHtml('Punkte')}
+                                    <span class="mati_punktestand_balken_zahl_wert">${knobelSpieler.altePunktzahl}</span> ${matiUtil.l10nHtml('points')}
                                 </div>
                             </div>
                         </div>
@@ -902,7 +899,6 @@ mati.spielerChanged = function() {
 	let oldMatiLobbyDisplay = document.getElementById('mati_spiel_lobby').style['display'];
 	document.getElementById('mati_spiel_lobby').style['display'] = 'block';
 	mati.renderLobbySpielerListe(document.getElementById('mati_spiel_spielerliste_content'), mati.spielerImLaufendenSpiel);
-	mati.renderLobbySpielerListe(document.getElementById('mati_spiel_spielerwarteliste_content'), mati.spielerAufWarteliste);
 	document.getElementById('mati_spiel_lobby').style['display'] = oldMatiLobbyDisplay;
 };
 
