@@ -38,7 +38,7 @@ body {
     background-color:rgba(0,0,0,.6);
     border-radius:1em;
     position: relative;
-    margin: 0 .5em 1em .5em;
+    margin: 0 .5em 2em .5em;
 }
 #mati_spiel_spielerliste_content {
     position:absolute;
@@ -374,7 +374,8 @@ span.mati_spieler_text {
     background-color: #BBB;
 }
 #mati_frage_ergebnis_schaetzungen_container_container,
-#mati_punktestand_spielerliste_container_container {
+#mati_punktestand_spielerliste_container_container,
+#mati_toolbox_container_container {
     position: absolute;
     top: 1em;
     left: 1em;
@@ -767,4 +768,16 @@ span.mati_spieler_text {
 }
 .mati_null_hoehe {
     height:0;
+}
+
+.mati_toolbox_button {
+    color: white;
+    background-color: black;
+    padding:.5em;
+    text-align:center;
+    line-height:2em;
+    border-radius:1.5em;
+    vertical-align:middle;
+    box-shadow:0 0 1em black;
+    margin:1em;
 }

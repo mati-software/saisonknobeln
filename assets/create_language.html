@@ -20,7 +20,7 @@
             fieldset {
                 margin-bottom: 20px;
             }
-            button {
+            #mati_button_save {
                 font-size: 200%;
             }
             img.mati_flagge {
@@ -43,7 +43,35 @@
                 opacity: .5;
             }
         </style>
+        <script src="lib/FileSaver.js" rel="script" type="application/javascript"></script>
         <script>
+            function mati_createSpracheObjekt() {
+                let dataName = document.getElementsByName('mati_data_name')[0].value;
+                let flaggePfadBestandteilListe = document.getElementsByClassName('mati_flagge_ausgewaehlt')[0].src.split('/');
+                let dataFlagge = flaggePfadBestandteilListe[flaggePfadBestandteilListe.length - 1].split('.')[0];
+            
+                let sprache = {
+                    'data_flagge' : dataFlagge,
+                    'data_name' : dataName
+                };
+            
+                let tbodyElement = document.getElementById('mati_tbody_translations');
+                for (let trElement of tbodyElement.getElementsByTagName('tr')) {
+                    let tdElementListe = trElement.getElementsByTagName('td');
+                    let textCode = tdElementListe[0].innerText.trim();
+                    let textValue = tdElementListe[1].getElementsByTagName('input')[0].value.trim();
+                    if (textValue.length > 0) {
+                        sprache[textCode] = textValue;
+                    }
+                }
+                
+                return sprache;
+            }
+            
+            function isCodeValid(dataCode) {
+                return typeof dataCode === 'string' && dataCode.length > 0 && /^[a-z]+$/.test(dataCode);
+            }
+        
             window.addEventListener('load', function() {
                 for (let imgElement of document.getElementsByClassName('mati_flagge')) {
                     imgElement.addEventListener('click', function() {
@@ -53,22 +81,53 @@
                         this.classList.add('mati_flagge_ausgewaehlt');
                     });
                 }
+                
+                let mati_validate = function() {
+                    let fehlerVorhanden = false;
+                
+                    let dataName = document.getElementsByName('mati_data_name')[0].value;
+                    if (dataName.length === 0) {
+                        fehlerVorhanden = true;
+                    }
+                    
+                    let dataCode = document.getElementsByName('mati_data_code')[0].value;
+                    if (!isCodeValid(dataCode)) {
+                        fehlerVorhanden = true;
+                    }
+                
+                    document.getElementById('mati_button_save').disabled = fehlerVorhanden;
+                };
+                document.getElementsByName('mati_data_name')[0].addEventListener('blur', mati_validate);
+                document.getElementsByName('mati_data_code')[0].addEventListener('blur', mati_validate);
+                mati_validate();
+                document.getElementById('mati_button_save').addEventListener('click', function() {
+                    let dataCode = document.getElementsByName('mati_data_code')[0].value;
+                    //Zur Sicherheit den Code nochmal validieren, sollte aber an dieser Stelle immer valide sein
+                    if (!isCodeValid(dataCode)) {
+                        return;
+                    }
+                    
+                    let sprache = mati_createSpracheObjekt();
+                    
+                    var blob = new Blob([JSON.stringify(sprache)], {type: "text/plain;charset=utf-8"});
+                    saveAs(blob, dataCode + '.json');
+                });
             });
         </script>
     </head>
     <body>
         <h1>Create a new Language</h1>
         <fieldset>
-            <legend>Meta Data</legend>
+            <legend>Meta Data (mandatory)</legend>
             <table>
                 <tbody>
                     <tr>
                         <td class="mati_label_cell">Name for the new Language<br/><small>(in it's own language, e. g. 'English', 'Deutsch' etc.)</small></td>
-                        <td><input name="data_name" /></td>
+                        <td><input name="mati_data_name" /></td>
                     </tr>
                     <tr>
                         <td class="mati_label_cell">Unique Code<br/><small>(only lower case letters, e. g. 'en' for English, 'fr' for French etc.)</small></td>
-                        <td><input name="data_code" /></td>
+                        <td><input name="mati_data_code" /></td>
                     </tr>
                     <tr>
                         <td class="mati_label_cell">Flag</td>
@@ -117,67 +176,67 @@
                         <th>Translation</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="mati_tbody_translations">
                     <tr>
                         <td class="mati_label_cell">New Game</td>
-                        <td><input name="text_1" /></td>
+                        <td><input /></td>
                     </tr>
                     <tr>
                         <td class="mati_label_cell">Resume Game</td>
-                        <td><input name="text_2" /></td>
+                        <td><input /></td>
                     </tr>
                     <tr>
                         <td class="mati_label_cell">Exit</td>
-                        <td><input name="text_3" /></td>
+                        <td><input /></td>
                     </tr>
                     <tr>
                         <td class="mati_label_cell">Players</td>
-                        <td><input name="text_4" /></td>
+                        <td><input /></td>
                     </tr>
                     <tr>
                         <td class="mati_label_cell">Please wait until the next interaction is possible!</td>
-                        <td><input name="text_6" /></td>
+                        <td><input /></td>
                     </tr>
                     <tr>
                         <td class="mati_label_cell">Guess how many players (including yourself) have voted for each answer!</td>
-                        <td><input name="text_7" /></td>
+                        <td><input /></td>
                     </tr>
                     <tr>
                         <td class="mati_label_cell">Choose an answer! Keep your choice secret from the other players!</td>
-                        <td><input name="text_8" /></td>
+                        <td><input /></td>
                     </tr>
                     <tr>
                         <td class="mati_label_cell">Actual distribution</td>
-                        <td><input name="text_9" /></td>
+                        <td><input /></td>
                     </tr>
                     <tr>
                         <td class="mati_label_cell">points</td>
-                        <td><input name="text_10" /></td>
+                        <td><input /></td>
                     </tr>
                     <tr>
                         <td class="mati_label_cell">Final result</td>
-                        <td><input name="text_11" /></td>
+                        <td><input /></td>
                     </tr>
                     <tr>
                         <td class="mati_label_cell">Score so far</td>
-                        <td><input name="text_12" /></td>
+                        <td><input /></td>
                     </tr>
                     <tr>
                         <td class="mati_label_cell">End game</td>
-                        <td><input name="text_13" /></td>
+                        <td><input /></td>
                     </tr>
                     <tr>
                         <td class="mati_label_cell">Cancel Game</td>
-                        <td><input name="text_14" /></td>
+                        <td><input /></td>
                     </tr>
                     <tr>
                         <td class="mati_label_cell">Select Theme</td>
-                        <td><input name="text_15" /></td>
+                        <td><input /></td>
                     </tr>
                 </tbody>
             </table>
         </fieldset>
-        <button>Save</button>
+        <button id="mati_button_save">Save</button>
         <button style="visibility: hidden">Cancel</button>
     </body>
 </html>
