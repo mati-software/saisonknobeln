@@ -228,9 +228,8 @@ span.mati_spieler_text {
     left: 0;
     right: 0;
     bottom: 0;
-    display: flex;
     justify-content: center;
-    display:none;
+    display: none;
 }
 
 
@@ -374,8 +373,7 @@ span.mati_spieler_text {
     background-color: #BBB;
 }
 #mati_frage_ergebnis_schaetzungen_container_container,
-#mati_punktestand_spielerliste_container_container,
-#mati_toolbox_container_container {
+#mati_punktestand_spielerliste_container_container {
     position: absolute;
     top: 1em;
     left: 1em;
@@ -383,6 +381,16 @@ span.mati_spieler_text {
     bottom: 1em;
     border-radius: 1em;
     padding: 1em .5em;
+    background-color: rgba(255, 255, 255, .9);
+}
+#mati_toolbox_container_container {
+    position: absolute;
+    top: 1em;
+    left: 1em;
+    right: 1em;
+    bottom: 1em;
+    border-radius: 1em;
+    padding: .5em;
     background-color: rgba(255, 255, 255, .9);
 }
 @keyframes mati_animation_endresultat {
@@ -664,6 +672,20 @@ span.mati_spieler_text {
     width:100%;
     height:100%;
 }
+#mati_enter_toolbox_button {
+    position: absolute;
+    width:1.4em;
+    height:1.4em;
+    left: 7.2em;
+    bottom: .4em;
+}
+#mati_start_game_button {
+    position: absolute;
+    width:1.4em;
+    height:1.4em;
+    left: 9.1em;
+    bottom: .4em;
+}
 #mati_theme_selection {
     background-color: #eee;
     color: black;
@@ -770,14 +792,67 @@ span.mati_spieler_text {
     height:0;
 }
 
+#mati_toolbox,
+#mati_toolbox_sprache_erstellen {
+    background-image: url("lobby.jpg");
+}
 .mati_toolbox_button {
-    color: white;
-    background-color: black;
-    padding:.5em;
+    display: block;
+    color: black;
+    background-color: #eeeeee;
+    background-image: radial-gradient(circle, #eeeeee, #aaaaaa);
+    padding:.25em;
     text-align:center;
     line-height:2em;
-    border-radius:1.5em;
+    border-radius:1.25em;
     vertical-align:middle;
-    box-shadow:0 0 1em black;
+    box-shadow:0 0 0.5em black;
     margin:1em;
+}
+.mati_toolbox_button:hover,
+#mati_toolbox_verlassen_button:hover {
+    background-image: radial-gradient(circle, #ffffff, #bbbbbb);
+}
+#mati_toolbox_verlassen_button {
+    background-color: #eeeeee;
+    background-image: radial-gradient(circle, #eeeeee, #aaaaaa);
+    position:absolute;
+    left: 1.5em;
+    bottom: 1.5em;
+    padding:.5em;
+    width: 3.6em;
+    height: 2.9em;
+    border-radius:1.95em;
+    box-shadow:0 0 0.5em black;
+}
+#mati_toolbox_verlassen_button svg {
+    display: block;
+    width: 3.6em;
+    height: 2.9em;
+}
+#mati_toolbox_sprache_erstellen_container_container {
+    position: absolute;
+    top: 1em;
+    left: 1em;
+    right: 1em;
+    bottom: 1em;
+    border-radius: 1em;
+    padding: .3em;
+    background-color: rgba(255, 255, 255, .9);
+}
+#mati_toolbox_sprache_erstellen_container_container iframe {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+#mati_toolbox_theme_file_input,
+#mati_toolbox_language_file_input {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
 }

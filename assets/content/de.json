@@ -13,8 +13,12 @@
 	"points" : "Punkte",
 	"Final result" : "Endresultat",
 	"Score so far" : "Zwischenstand",
-	"End game" : "Spiel abschließen",
+	"To the Main Menu" : "Zum Hauptmenü",
 	"A game by Timo Scheit and Martin Dostert" : "Ein Spiel von Timo Scheit und Martin Dostert",
     "Cancel Game" : "Laufendes Spiel abbrechen",
-    "Select Theme" : "Thema wählen"
+    "Select Theme" : "Thema wählen",
+    "Create New Theme" : "Neues Thema erstellen",
+    "Import Theme" : "Thema importieren",
+    "Create New Language" : "Neue Sprache erstellen",
+    "Import Language" : "Sprache importieren"
 }

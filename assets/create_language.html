@@ -7,6 +7,10 @@
             body {
                 font-family: Helvetica, Arial, sans-serif;
                 font-size: 16px;
+                padding: 10px;
+            }
+            h1 {
+                margin-top: 0;
             }
             table, th, td {
                 border: none;
@@ -22,6 +26,9 @@
             }
             #mati_button_save {
                 font-size: 200%;
+            }
+            #mati_button_cancel {
+                font-size: 100%;
             }
             img.mati_flagge {
                 height: 40px;
@@ -111,7 +118,21 @@
                     
                     var blob = new Blob([JSON.stringify(sprache)], {type: "text/plain;charset=utf-8"});
                     saveAs(blob, dataCode + '.json');
+                    
+                    if (window.parent && window.parent.mati) {
+                        window.parent.mati.pushAddNewLaguage(dataCode, sprache);
+                        window.parent.mati.pushOpenToolbox();
+                    }
                 });
+                
+                
+                if (window.parent && window.parent.mati) {
+                    let cancelButton = document.getElementById('mati_button_cancel');
+                    cancelButton.style.visibility = 'visible';
+                    cancelButton.addEventListener('click', function() {
+                        window.parent.mati.pushOpenToolbox();
+                    });
+                }
             });
         </script>
     </head>
@@ -233,10 +254,26 @@
                         <td class="mati_label_cell">Select Theme</td>
                         <td><input /></td>
                     </tr>
+                    <tr>
+                        <td class="mati_label_cell">Create New Theme</td>
+                        <td><input /></td>
+                    </tr>
+                    <tr>
+                        <td class="mati_label_cell">Import Theme</td>
+                        <td><input /></td>
+                    </tr>
+                    <tr>
+                        <td class="mati_label_cell">Create New Language</td>
+                        <td><input /></td>
+                    </tr>
+                    <tr>
+                        <td class="mati_label_cell">Import Language</td>
+                        <td><input /></td>
+                    </tr>
                 </tbody>
             </table>
         </fieldset>
         <button id="mati_button_save">Save</button>
-        <button style="visibility: hidden">Cancel</button>
+        <button id="mati_button_cancel" style="visibility: hidden">Cancel</button>
     </body>
 </html>

@@ -52,11 +52,11 @@ mati.Spieler = class {
 
 
 
-mati.setSpracheCode = function(neuerSpracheCode) {
+mati.setSpracheCode = function(neuerSpracheCode, sendeKompletteSprachen) {
 	//neue Sprache uebernehmen (in Queue, damit Reihenfolge stimmt falls jemand 2 mal ganz schnell die Sprache umstellt)
 	matiUtil.pushBefehl(function() {
 		mati.spracheCode = neuerSpracheCode;
-		mati.broadcast();
+        mati.broadcast(undefined, sendeKompletteSprachen);
         for (let sprache of mati.sprachen) {
             document.getElementById(`mati_flagge_code_${sprache.code}`).style['display'] = sprache.code === mati.spracheCode ? 'block' : 'none';
         }
@@ -94,6 +94,11 @@ mati.setSpracheCode = function(neuerSpracheCode) {
 		document.getElementById('mati_spiel_lobby_credits').innerText = matiUtil.l10n('A game by Timo Scheit and Martin Dostert');
         
         document.getElementById('mati_theme_selection_erlaeuterung').innerText = matiUtil.l10n('Select Theme');
+        
+        document.getElementById('mati_toolbox_button_theme_erstellen').innerText = matiUtil.l10n('Create New Theme');
+        document.getElementById('mati_toolbox_button_theme_importieren').innerText = matiUtil.l10n('Import Theme');
+        document.getElementById('mati_toolbox_button_sprache_erstellen').innerText = matiUtil.l10n('Create New Language');
+        document.getElementById('mati_toolbox_button_sprache_importieren').innerText = matiUtil.l10n('Import Language');
 		
 		matiUtil.gotoNaechsterBefehl();
 	});
@@ -106,7 +111,7 @@ mati.setSpracheCode = function(neuerSpracheCode) {
 
 
 
-mati.sendMsg = function(spieler, befehl) {
+mati.sendMsg = function(spieler, befehl, sendeKompletteSprachen) {
 	if (typeof spieler !== 'object') {
 		spieler = mati.findeKnobelSpieler(spieler);
 	}
@@ -134,9 +139,7 @@ mati.sendMsg = function(spieler, befehl) {
     if (befehl === 'zeigeThemeSelection') {
         daten.aktuellesTheme = mati.aktuellesTheme.codeMitPrefix;
         daten.lastDeltaThemeInThemeSelection = mati.lastDeltaThemeInThemeSelection;
-        daten.verfuegbareThemes = mati.themes.filter(function(theme) {
-            return theme.codeMitPrefix.indexOf(mati.spracheCode + '_') === 0;
-        }).map(function(theme) {
+        daten.verfuegbareThemes = mati.getVerfuegbareThemes().map(function(theme) {
             let simplifiedThemeObject = {
                 sectionImages : theme.content.sections.map((section) => section.img),
                 name : theme.content.name,
@@ -145,14 +148,18 @@ mati.sendMsg = function(spieler, befehl) {
             return simplifiedThemeObject;
         });
     }
+    
+    if (sendeKompletteSprachen) {
+        daten.sprachen = mati.sprachen;
+    }
 	
 	Tiltspot.send.msg(spieler.id, befehl, daten);
 	spieler.lastMsg = befehl;
 };
 
-mati.broadcast = function(befehl) {
+mati.broadcast = function(befehl, sendeKompletteSprachen) {
 	for (let spieler of mati.spielerImLaufendenSpiel) {
-		mati.sendMsg(spieler, befehl);
+		mati.sendMsg(spieler, befehl, sendeKompletteSprachen);
 	}
 };
 
@@ -226,17 +233,26 @@ mati.setFrageGroesseUndPosition = function() {
 	divText.style['top'] = Math.floor((divTextContainer.clientHeight - divText.clientHeight) / 2) + 'px';
 };
 
+mati.getVerfuegbareThemes = function() {
+    let verfuegbareThemes = mati.themes.filter(function(theme) {
+        return theme.codeMitPrefix.indexOf(mati.spracheCode + '_') === 0;
+    });
+    
+    if (verfuegbareThemes.length === 0) {
+        //Fallback auf Englisch, falls noch keine Themes existieren
+        verfuegbareThemes = mati.themes.filter(function(theme) {
+            return theme.codeMitPrefix.indexOf('en_') === 0;
+        });
+    }
+    
+    return verfuegbareThemes;
+};
+
 mati.neuesSpiel = function() {
     matiUtil.pushBefehl(function() {
         mati.aktuellerStatus = 'themeauswahl';
         
-        let verfuegbareThemes = mati.themes.filter(function(theme) {
-            return theme.codeMitPrefix.indexOf(mati.spracheCode + '_') === 0;
-        });
-        
-        if (verfuegbareThemes.length === 0) {
-            //TODO
-        }
+        let verfuegbareThemes = mati.getVerfuegbareThemes();
         
         mati.aktuellesTheme = verfuegbareThemes[0];
         
@@ -964,9 +980,7 @@ mati.getIndexAktuelleSprache = function() {
 
 mati.wechseleTheme = function(deltaTheme) {
     if (mati.aktuellerStatus === 'themeauswahl') {
-        let verfuegbareThemes = mati.themes.filter(function(theme) {
-            return theme.codeMitPrefix.indexOf(mati.spracheCode + '_') === 0;
-        });
+        let verfuegbareThemes = mati.getVerfuegbareThemes();
         
         let aktuellerIndex = verfuegbareThemes.indexOf(mati.aktuellesTheme);
         let neuerIndex = (aktuellerIndex + deltaTheme + verfuegbareThemes.length) % verfuegbareThemes.length;
@@ -1014,4 +1028,44 @@ mati.changeUsername = function(id, neuerName) {
     for (let nameDomElement of document.querySelectorAll('.mati_spieler_id_' + id + ' .mati_spieler_text')) {
         nameDomElement.innerText = neuerName;
     }
+};
+
+mati.pushOpenToolbox = function() {
+    matiUtil.pushBefehl(function() {
+        mati.aktuellerStatus = 'toolbox';
+        mati.broadcast('zeigeWarten');
+        mati.zeigeContainer(document.getElementById('mati_toolbox'), matiUtil.gotoNaechsterBefehl);
+    });
+};
+
+mati.renderSprachauswahl = function() {
+    document.getElementById('mati_sprachauswahl_flaggen_container').innerHTML = mati.sprachen.map(function (sprache) {
+        return `
+            <img id="mati_flagge_code_${sprache.code}" style="${sprache.code === mati.spracheCode ? 'display:block' : 'display:none'}" src="${Tiltspot.get.assetUrl(`flags/${sprache.texte.data_flagge}.svg`)}" alt="${matiUtil.htmlEscape(sprache.texte.data_name)}" />
+        `;
+    }).join('');
+};
+
+
+mati.pushAddNewLaguage = function(code, languageObject) {
+    matiUtil.pushBefehl(function() {
+        let vorhandeneSpracheWurdeGeaendert = false;
+        for (let sprache of mati.sprachen) {
+            if (sprache.code === code) {
+                vorhandeneSpracheWurdeGeaendert = true;
+                sprache.texte = languageObject;
+            }
+        }
+        if (!vorhandeneSpracheWurdeGeaendert) {
+            mati.sprachen.push({
+                code : code,
+                texte : languageObject
+            });
+            
+            mati.renderSprachauswahl();
+        }
+        //TODO muss ich irgendwas bezüglich themes machen?
+        matiUtil.gotoNaechsterBefehl();
+    });
+    mati.setSpracheCode(code, true); //macht eigentlich push, kann daher problemlos unter dem psuhBefehl stehen
 };

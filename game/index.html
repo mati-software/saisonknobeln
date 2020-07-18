@@ -141,6 +141,23 @@
                             <path d="M45,50 l-40,-40 l0,80 z" fill="white" />
                         </svg>
                     </div>
+                    
+                    <svg id="mati_enter_toolbox_button" viewbox="0 0 120 120">
+                        <path d="M99,7 A24,24 0 1,0 113,21 L97,37 L85,35 L83,23 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M15,105 L75,45" stroke="black" stroke-width="28" stroke-linecap="round" />
+                        <path d="M99,7 A24,24 0 1,0 113,21 L97,37 L85,35 L83,23 z" fill="white" />
+                        <path d="M15,105 L75,45" stroke="white" stroke-width="20" stroke-linecap="round" />
+                        
+                        <path d="M25,15 L115,105 L105,115 L15,25 L5,5 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M25,15 L115,105 L105,115 L15,25 L5,5 z" fill="white" />
+                        <path d="M25,15 L15,25" stroke="black" stroke-width="4" stroke-linecap="round" />
+                        <path d="M9,7 L7,9" stroke="black" stroke-width="4" stroke-linecap="round" />
+                    </svg>
+                    
+                    <svg id="mati_start_game_button" viewbox="0 0 120 120">
+                        <path d="M115,60 L5,115 L5,5 z" stroke="black" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M115,60 L5,115 L5,5 z" fill="white" />
+                    </svg>
 				</div>
 				<audio loop id="mati_hauptmusik">
 					<source src="hauptmusik.ogg" type="audio/ogg"-->
@@ -271,10 +288,22 @@
             </div>
             <div id="mati_toolbox" class="mati_box">
 				<div id="mati_toolbox_container_container">
-                    <div class="mati_toolbox_button" id="mati_toolbox_button_theme_erstellen">TODO Neues Theme erstellen</div>
-                    <div class="mati_toolbox_button" id="mati_toolbox_button_theme_importieren">TODO Theme importieren</div>
-                    <div class="mati_toolbox_button" id="mati_toolbox_button_sprache_erstellen">TODO Neue Sprache erstellen</div>
-                    <div class="mati_toolbox_button" id="mati_toolbox_button_sprache_importieren">TODO Sprache importieren</div>
+                    <div class="mati_toolbox_button" id="mati_toolbox_button_theme_erstellen"></div>
+                    <label for="mati_toolbox_theme_file_input" class="mati_toolbox_button" id="mati_toolbox_button_theme_importieren"></label>
+                    <input id="mati_toolbox_theme_file_input" type="file"  accept=".zip" multiple="multiple" />
+                    <div class="mati_toolbox_button" id="mati_toolbox_button_sprache_erstellen"></div>
+                    <label for="mati_toolbox_language_file_input" class="mati_toolbox_button" id="mati_toolbox_button_sprache_importieren"></label>
+                    <input id="mati_toolbox_language_file_input" type="file" accept=".json" multiple="multiple" />
+                    
+                    <div id="mati_toolbox_verlassen_button">
+                        <svg viewbox="0 0 45 35">
+                            <path d="M5,25 L30,25 A10,10 0 1,0 30,5 L25,5 M15,20 L5,25 L15,30" fill="none" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+				</div>
+			</div>
+            <div id="mati_toolbox_sprache_erstellen" class="mati_box">
+				<div id="mati_toolbox_sprache_erstellen_container_container">
 				</div>
 			</div>
 		</div>
@@ -326,11 +355,7 @@
                                                 };
                                                 anzahlZuLadendeThemes--;
                                                 if (anzahlZuLadendeThemes === 0) {
-                                                    document.getElementById('mati_sprachauswahl_flaggen_container').innerHTML = mati.sprachen.map(function (sprache) {
-                                                        return `
-                                                            <img id="mati_flagge_code_${sprache.code}" style="${sprache.code === mati.spracheCode ? 'display:block' : 'display:none'}" src="${Tiltspot.get.assetUrl(`flags/${sprache.texte.data_flagge}.svg`)}" alt="${matiUtil.htmlEscape(sprache.texte.data_name)}" />
-                                                        `;
-                                                    }).join('');
+                                                    mati.renderSprachauswahl();
                                                     
                                                     document.getElementById('mati_sprachauswahl_button_links').addEventListener('click', function() {
                                                         let indexAktuelleSprache = mati.getIndexAktuelleSprache();
@@ -512,6 +537,14 @@
 						}
 						mati.broadcast();
 					});
+                    
+                    document.getElementById('mati_enter_toolbox_button').addEventListener("click",function() {
+                        mati.pushOpenToolbox();
+                    });
+                    
+                    document.getElementById('mati_start_game_button').addEventListener("click",function() {
+                        mati.neuesSpiel();
+                    });
 				});
 			};
 			Tiltspot.on.connect = function(controllerId) {
@@ -536,6 +569,9 @@
 						//Client hat ggf. den letzten Befehl nicht mitbekommen
 						mati.sendMsg(controllerId);
 						break;
+                    case 'getSprachen':
+                        mati.sendMsg(controllerId, undefined, true);
+                        break;
 					case 'antwortAbgeben':
 						let spieler = mati.getSpielerImLaufendenSpielById(controllerId);
 						spieler.antwortAufAktuelleFrage = data.antwort;
@@ -642,6 +678,46 @@
             });
 			document.getElementById('mati_theme_selection_button_spacer').addEventListener('click', function() {
                 mati.pushThemeStarten();
+            });
+            
+            document.getElementById('mati_toolbox_verlassen_button').addEventListener('click', function() {
+                matiUtil.pushBefehl(function() {
+                    mati.aktuellerStatus = 'hauptmenue';
+                    mati.broadcast('zeigeHauptmenue');
+                    mati.zeigeContainer(document.getElementById('mati_spiel_lobby'), matiUtil.gotoNaechsterBefehl);
+                });
+            });
+            document.getElementById('mati_toolbox_button_sprache_erstellen').addEventListener('click', function() {
+                matiUtil.pushBefehl(function() {
+                    mati.aktuellerStatus = 'toolbox';
+                    mati.broadcast('zeigeWarten');
+                    let spracheErstellenIframeContainer = document.getElementById('mati_toolbox_sprache_erstellen_container_container');
+                    if (spracheErstellenIframeContainer.getElementsByTagName('iframe').length === 0) {
+                        spracheErstellenIframeContainer.innerHTML = `<iframe src="${Tiltspot.get.assetUrl('create_language.html')}"></iframe>`;
+                    }
+                    else {
+                        //FIXME iframe kann nicht scrollen, wenn es in display:none-Block ist
+                        //spracheErstellenIframeContainer.getElementsByTagName('iframe')[0].contentWindow.scrollTo(0, 0);
+                    }
+                    mati.zeigeContainer(document.getElementById('mati_toolbox_sprache_erstellen'), matiUtil.gotoNaechsterBefehl);
+                });
+            });
+            document.getElementById('mati_toolbox_language_file_input').addEventListener('change', function() {
+                for (let file of this.files) {
+                    let reader = new FileReader();
+                    reader.readAsText(file, 'utf-8');
+                    //TODO Fehlermeldung und Erfolgsmeldung
+                    reader.onload = function() {
+                        let spracheCodeArray = file.name.match(/^[a-z]+/);
+                        if (Array.isArray(spracheCodeArray) && spracheCodeArray.length > 0) {
+                            let spracheCode = spracheCodeArray[0];
+                            if (typeof spracheCode === 'string' && spracheCode.length > 0) {
+                                let sprache = JSON.parse(reader.result);
+                                mati.pushAddNewLaguage(spracheCode, sprache);
+                            }
+                        }
+                    };
+                }
             });
 		</script>
 

@@ -228,7 +228,7 @@
                         textLine : 1,
                         onPointerDown : function() {
                             let delta = 0;
-                            if (this.left() + this.width/2 <= mati.mouseposInEmX) {
+                            if (mati.mouseposInEmX <= this.left() + this.width/2) {
                                 delta = -1;
                             }
                             else {
@@ -1350,7 +1350,7 @@
                         fontSize,
                         lineHeight);
                 mati.canvas2dRenderText(
-                        mati.ctx2d, matiUtil.l10n('End game'),
+                        mati.ctx2d, matiUtil.l10n('To the Main Menu'),
                         emGerundet * 8, emGerundet * 15, //Mittelpunkt-Pos
                         emGerundet * 16, emGerundet * 2, //Groesse
                         font,
@@ -1611,44 +1611,18 @@
                     mati.initAvatar();
                 }
 				
+                if (data.sprachen) {
+                    mati.sprachen = data.sprachen;
+                    mati.spracheCode = data.spracheCode;
+                    mati.initNeueSprache();
+                }
 				
 				if (mati.sprachen.length === 0) {
-                    //TODO boolean flag, dass Sprachen gerade geladen werden
-                    matiUtil.loadJson(Tiltspot.get.assetUrl("content-list.json"), function(contentList) {
-                        //Musik-Button auch einfach hier initialisieren
-                        for (let musikButton of document.getElementsByClassName('mati_hauptmusik_button')) {
-                            musikButton.addEventListener('click', function() {
-                                Tiltspot.send.msg('setSound', !mati.musikIstEingeschaltet);
-                            });
-                        }                            
-                    
-                        let zuLadendeSprachen = [];
-                        for (let contentName of contentList) {
-                            if (contentName.indexOf('_') === -1) {
-                                zuLadendeSprachen.push(contentName);
-                            }
-                        }
-                        let anzahlZuLadendeSprachen = zuLadendeSprachen.length;
-                        for (let spracheCode of zuLadendeSprachen) {
-                            matiUtil.loadJson(Tiltspot.get.assetUrl("content/" + spracheCode + ".json"), function(texte) {
-                                mati.sprachen[zuLadendeSprachen.indexOf(spracheCode)] = {
-                                    code : spracheCode,
-                                    texte : texte
-                                };
-                                anzahlZuLadendeSprachen--;
-                                if (spracheCode === mati.spracheCode) {
-                                    mati.initNeueSprache();
-                                }
-                                if (anzahlZuLadendeSprachen === 0) {                        
-                                    //TODO Lang-Chooser updaten
-                                }
-                            });
-                        }
-                    });
+                    Tiltspot.send.msg('getSprachen');
                 }
 			
             
-                if (data.spracheCode !== mati.spracheCode) {
+                if (data.spracheCode !== mati.spracheCode || data.sprachen) {
                     mati.spracheCode = data.spracheCode;
                     mati.initNeueSprache();
 				}
