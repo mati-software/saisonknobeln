@@ -183,7 +183,6 @@ span.mati_spieler_text {
     animation-name: mati_animation_box_show;
     animation-duration: 1s;
     animation-iteration-count: 1;
-    animation-fill-mode: forwards;
 }
 
 #mati_spiel_lobby {
@@ -793,7 +792,8 @@ span.mati_spieler_text {
 }
 
 #mati_toolbox,
-#mati_toolbox_sprache_erstellen {
+#mati_toolbox_sprache_erstellen,
+#mati_toolbox_theme_erstellen {
     background-image: url("lobby.jpg");
 }
 .mati_toolbox_button {
@@ -830,7 +830,8 @@ span.mati_spieler_text {
     width: 3.6em;
     height: 2.9em;
 }
-#mati_toolbox_sprache_erstellen_container_container {
+#mati_toolbox_sprache_erstellen_container_container,
+#mati_toolbox_theme_erstellen_container_container {
     position: absolute;
     top: 1em;
     left: 1em;
@@ -840,7 +841,8 @@ span.mati_spieler_text {
     padding: .3em;
     background-color: rgba(255, 255, 255, .9);
 }
-#mati_toolbox_sprache_erstellen_container_container iframe {
+#mati_toolbox_sprache_erstellen_container_container iframe,
+#mati_toolbox_theme_erstellen_container_container iframe {
     border: 0;
     margin: 0;
     padding: 0;

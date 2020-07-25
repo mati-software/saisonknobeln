@@ -306,6 +306,10 @@
 				<div id="mati_toolbox_sprache_erstellen_container_container">
 				</div>
 			</div>
+            <div id="mati_toolbox_theme_erstellen" class="mati_box">
+				<div id="mati_toolbox_theme_erstellen_container_container">
+				</div>
+			</div>
 		</div>
 
 
@@ -687,19 +691,40 @@
                     mati.zeigeContainer(document.getElementById('mati_spiel_lobby'), matiUtil.gotoNaechsterBefehl);
                 });
             });
+            document.getElementById('mati_toolbox_button_theme_erstellen').addEventListener('click', function() {
+                matiUtil.pushBefehl(function() {
+                    mati.aktuellerStatus = 'toolbox';
+                    mati.broadcast('zeigeWarten');
+                    mati.zeigeContainer(document.getElementById('mati_toolbox_theme_erstellen'), matiUtil.gotoNaechsterBefehl);
+                });
+                matiUtil.pushBefehl(function() {
+                    let iframeContainer = document.getElementById('mati_toolbox_theme_erstellen_container_container');
+                    if (iframeContainer.getElementsByTagName('iframe').length === 0) {
+                        iframeContainer.innerHTML = `<iframe src="${Tiltspot.get.assetUrl('create_theme.html')}"></iframe>`;
+                    }
+                    else {
+                        //FIXME iframe kann nicht scrollen, wenn es in display:none-Block ist
+                        //iframeContainer.getElementsByTagName('iframe')[0].contentWindow.scrollTo(0, 0);
+                    }
+                    matiUtil.gotoNaechsterBefehl();
+                });
+            });
             document.getElementById('mati_toolbox_button_sprache_erstellen').addEventListener('click', function() {
                 matiUtil.pushBefehl(function() {
                     mati.aktuellerStatus = 'toolbox';
                     mati.broadcast('zeigeWarten');
-                    let spracheErstellenIframeContainer = document.getElementById('mati_toolbox_sprache_erstellen_container_container');
-                    if (spracheErstellenIframeContainer.getElementsByTagName('iframe').length === 0) {
-                        spracheErstellenIframeContainer.innerHTML = `<iframe src="${Tiltspot.get.assetUrl('create_language.html')}"></iframe>`;
+                    mati.zeigeContainer(document.getElementById('mati_toolbox_sprache_erstellen'), matiUtil.gotoNaechsterBefehl);
+                });
+                matiUtil.pushBefehl(function() {
+                    let iframeContainer = document.getElementById('mati_toolbox_sprache_erstellen_container_container');
+                    if (iframeContainer.getElementsByTagName('iframe').length === 0) {
+                        iframeContainer.innerHTML = `<iframe src="${Tiltspot.get.assetUrl('create_language.html')}"></iframe>`;
                     }
                     else {
                         //FIXME iframe kann nicht scrollen, wenn es in display:none-Block ist
-                        //spracheErstellenIframeContainer.getElementsByTagName('iframe')[0].contentWindow.scrollTo(0, 0);
+                        //iframeContainer.getElementsByTagName('iframe')[0].contentWindow.scrollTo(0, 0);
                     }
-                    mati.zeigeContainer(document.getElementById('mati_toolbox_sprache_erstellen'), matiUtil.gotoNaechsterBefehl);
+                    matiUtil.gotoNaechsterBefehl();
                 });
             });
             document.getElementById('mati_toolbox_language_file_input').addEventListener('change', function() {

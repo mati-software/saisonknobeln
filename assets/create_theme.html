@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="de">
+	<head>
+		<meta charset="utf-8" />
+        <title>Saisonknobeln</title>
+        <style>
+            body {
+                font-family: Helvetica, Arial, sans-serif;
+                font-size: 16px;
+                padding: 10px;
+            }
+            h1 {
+                margin: 0;
+            }
+            table {
+                width: 100%;
+            }
+            table, th, td {
+                border: none;
+                margin: 0;
+            }
+            td, th {
+                padding: 10px;
+                text-align: left;
+                vertical-align: top;
+            }
+            input.mati_longinput {
+                width: 100%;
+                box-sizing: border-box;
+            }
+            fieldset {
+                margin-top: 20px;
+            }
+            .mati_questions_container fieldset:first-of-type {
+                margin-top: 10px;
+            }
+            button {
+                margin-top: 20px;
+                font-size: 100%;
+            }
+            #mati_button_save {
+                font-size: 200%;
+            }
+            .mati_label_cell {
+                width: 250px;
+            }
+            input {
+                width: 300px;
+            }
+            small {
+                opacity: .5;
+            }
+            .mati_button_icon_remove {
+                color: red;
+                font-weight: bold;
+            }
+            .mati_button_icon_add {
+                color: green;
+                font-weight: bold;
+            }
+            .mati_button_remove_question,
+            .mati_button_remove_section {
+                margin: 0;
+            }
+            .mati_removebutton_container {
+                text-align: right;
+            }
+            div.mati_infobox {
+                padding: 10px;
+            }
+            label.mati_section_image_label {
+                display: inline-block;
+                border: 3px dashed rgba(0,0,0,.5);
+                overflow: hidden;
+                width: 212px;
+                height: 128px;
+                position: relative;
+            }
+            span.mati_section_image_placeholder {
+                display: inline-block;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 192px;
+                height: 108px;
+                padding: 10px;
+            }
+            span.mati_section_image_placeholder span {
+                display: table-cell;
+                width: 192px;
+                height: 108px;
+                text-align: center;
+                vertical-align: middle;
+                color: rgba(0,0,0,.5);
+            }
+            span.mati_section_image_img_container_container {
+                display: inline-block;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 212px;
+                height: 128px;
+            }
+            span.mati_section_image_img_container {
+                display: table-cell;
+                width: 212px;
+                height: 128px;
+                text-align: center;
+                vertical-align: middle;
+            }
+            span.mati_section_image_img_container img {
+                max-width: 192px;
+                max-height: 108px;
+                marging: 0;
+                padding:0;
+            }
+            label.mati_section_image_label input {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 212px;
+                height: 128px;
+                margin: 0;
+                padding: 0;
+                font-size: 20px;
+                cursor: pointer;
+                opacity: 0;
+            }
+        </style>
+        <script src="lib/FileSaver.js" rel="script" type="application/javascript"></script>
+        <script src="lib/jszip.min.js" rel="script" type="application/javascript"></script>
+        <script>
+            function mati_addIntermediateChangesListener(inputElement, changeFunktion) {
+                let alterWert = inputElement.value;
+                inputElement.addEventListener('change', function(event) {
+                    if (alterWert !== inputElement.value) {
+                        alterWert = inputElement.value;
+                        changeFunktion.call(inputElement, event);
+                    }
+                });
+                inputElement.addEventListener('keyup', function(event) {
+                    if (alterWert !== inputElement.value) {
+                        alterWert = inputElement.value;
+                        changeFunktion.call(inputElement, event);
+                    }
+                });
+                inputElement.addEventListener('keydown', function(event) {
+                    setTimeout(function() {
+                        if (alterWert !== inputElement.value) {
+                            alterWert = inputElement.value;
+                            changeFunktion.call(inputElement, event);
+                        }
+                    }, 0);
+                });
+                inputElement.addEventListener('paste', function(event) {
+                    setTimeout(function() {
+                        if (alterWert !== inputElement.value) {
+                            alterWert = inputElement.value;
+                            changeFunktion.call(inputElement, event);
+                        }
+                    }, 0);
+                });
+                inputElement.addEventListener('cut', function(event) {
+                    setTimeout(function() {
+                        if (alterWert !== inputElement.value) {
+                            alterWert = inputElement.value;
+                            changeFunktion.call(inputElement, event);
+                        }
+                    }, 0);
+                });
+            }
+        
+            function isCodeValid(dataCode) {
+                return typeof dataCode === 'string' && dataCode.length > 0 && /^[a-z]+$/.test(dataCode);
+            }
+            
+            function mati_addSection() {
+                var sectionElement = document.createElement("fieldset");
+                sectionElement.className = 'mati_section';
+                sectionElement.innerHTML = document.getElementById('mati_section_template').innerHTML;
+                document.getElementsByClassName('mati_sections_container')[0].append(sectionElement);
+                mati_addQuestion(sectionElement);
+                mati_addQuestion(sectionElement);
+                mati_addQuestion(sectionElement);
+                
+                sectionElement.getElementsByClassName('mati_button_add_question')[0].addEventListener('click', function() {
+                    mati_addQuestion(sectionElement);
+                });
+                
+                mati_sectionsDurchnummerieren();
+                
+                sectionElement.getElementsByClassName('mati_button_remove_section')[0].addEventListener('click', function() {
+                    document.getElementsByClassName('mati_sections_container')[0].removeChild(sectionElement);
+                    mati_sectionsDurchnummerieren();
+                    mati_validate();
+                });
+                
+                mati_addIntermediateChangesListener(sectionElement.getElementsByClassName('mati_section_name')[0], mati_validate);
+                
+                sectionElement.getElementsByClassName('mati_section_image_input')[0].addEventListener('change', function(event) {
+                    //FIXME clss-namen sind sehr schlecht weil nicht klar wird, dass es um section geht
+                    var imgContainer = sectionElement.getElementsByClassName('mati_section_image_img_container')[0];
+                    var imgList = imgContainer.getElementsByTagName('img');
+                    var image;
+                    if (imgList.length > 0) {
+                        image = imgList[0];
+                    }
+                    else {
+                        image = document.createElement('img');
+                        sectionElement.getElementsByClassName('mati_section_image_img_container')[0].append(image);
+                    }
+                    image.src = URL.createObjectURL(event.target.files[0]);
+                    sectionElement.getElementsByClassName('mati_section_image_placeholder')[0].style['display'] = 'none';
+                    
+                    mati_validate();
+                });
+                
+                mati_validate();
+            }
+            
+            function mati_addQuestion(sectionElement) {
+                var questionElement = document.createElement("fieldset");
+                questionElement.className = 'mati_question';
+                questionElement.innerHTML = document.getElementById('mati_question_template').innerHTML;
+                sectionElement.getElementsByClassName('mati_questions_container')[0].append(questionElement);
+                mati_questionsDurchnummerieren(sectionElement);
+                
+                questionElement.getElementsByClassName('mati_button_remove_question')[0].addEventListener('click', function() {
+                    sectionElement.getElementsByClassName('mati_questions_container')[0].removeChild(questionElement);
+                    mati_questionsDurchnummerieren(sectionElement);
+                    mati_validate();
+                });
+                
+                //TODO onblur
+                mati_addIntermediateChangesListener(questionElement.getElementsByClassName('mati_question_text')[0], mati_validate);
+                for (let answerInput of questionElement.getElementsByClassName('mati_question_answer')) {
+                    mati_addIntermediateChangesListener(answerInput, mati_validate);
+                }
+                
+                mati_validate();
+            }
+            
+            function mati_sectionsDurchnummerieren() {
+                let sectionNr = 0;
+                for (let sectionElement of document.getElementsByClassName('mati_section')) {
+                    sectionNr++;
+                    let legendElement = sectionElement.getElementsByTagName('legend')[0];
+                    let neuerText = legendElement.innerText.replace(/[0-9]+/, sectionNr);
+                    legendElement.innerText = neuerText;
+                }
+            }
+        
+            function mati_questionsDurchnummerieren(sectionElement) {
+                let sectionNr = 0;
+                for (let questionElement of sectionElement.getElementsByClassName('mati_question')) {
+                    sectionNr++;
+                    let legendElement = questionElement.getElementsByTagName('legend')[0];
+                    let neuerText = legendElement.innerText.replace(/[0-9]+/, sectionNr);
+                    legendElement.innerText = neuerText;
+                }
+            }
+        
+            function mati_validate() {
+                let fehlerVorhanden = false;
+            
+                let dataName = document.getElementsByName('mati_data_name')[0].value.trim();
+                if (dataName.length === 0) {
+                    fehlerVorhanden = true;
+                }
+                
+                let dataCode = document.getElementsByName('mati_data_code')[0].value.trim();
+                if (!isCodeValid(dataCode)) {
+                    fehlerVorhanden = true;
+                }
+                
+                let anzahlSections = 0;
+                for (let sectionElement of document.getElementsByClassName('mati_section')) {
+                    let sectionName = sectionElement.getElementsByClassName('mati_section_name')[0].value.trim();
+                    if (sectionName.length === 0) {
+                        fehlerVorhanden = true;
+                    }
+                    
+                    if (sectionElement.getElementsByClassName('mati_section_image_input')[0].files.length === 0) {
+                        fehlerVorhanden = true;
+                    }
+                    
+                    let anzahlFragen = 0;
+                    for (let questionElement of sectionElement.getElementsByClassName('mati_question')) {
+                        let questionText = questionElement.getElementsByClassName('mati_question_text')[0].value.trim();
+                        if (questionText.length === 0) {
+                            fehlerVorhanden = true;
+                        }
+
+                        for (let answerInput of questionElement.getElementsByClassName('mati_question_answer')) {
+                            let answerText = answerInput.value.trim();
+                            if (answerText.length === 0) {
+                                fehlerVorhanden = true;
+                            }
+                        }
+                        
+                        anzahlFragen++;
+                    }
+                    
+                    if (anzahlFragen < 3) {
+                        fehlerVorhanden = true;
+                    }
+                    
+                    anzahlSections++;
+                }
+                
+                if (anzahlSections < 1) {
+                    fehlerVorhanden = true;
+                }
+            
+                document.getElementById('mati_button_save').disabled = fehlerVorhanden;
+            }
+            
+            function mati_createThemeObject() {
+                let themeObject = {
+                    name : document.getElementsByName('mati_data_name')[0].value.trim(),
+                    sections : []
+                };
+                
+                let author = document.getElementsByName('mati_data_author')[0].value.trim();
+                if (author.length > 0) {
+                    themeObject.author = author;
+                }
+            
+                let sectionNr = 0;
+                for (let sectionElement of document.getElementsByClassName('mati_section')) {
+                    sectionNr++;
+                
+                    let sectionObject = {
+                        name : sectionElement.getElementsByClassName('mati_section_name')[0].value.trim(),
+                        img : 'section' + sectionNr + '.jpg',
+                        questions : []
+                    };
+                    
+                    for (let questionElement of sectionElement.getElementsByClassName('mati_question')) {
+                        let questionObject = {
+                            text : questionElement.getElementsByClassName('mati_question_text')[0].value.trim(),
+                            answers : []
+                        };
+
+                        for (let answerInput of questionElement.getElementsByClassName('mati_question_answer')) {
+                            questionObject.answers.push(answerInput.value.trim());
+                        }
+                        
+                        sectionObject.questions.push(questionObject);
+                    }
+                    
+                    themeObject.sections.push(sectionObject);
+                }
+                
+                return themeObject;
+            }
+                
+            window.addEventListener('load', function() {
+                mati_addIntermediateChangesListener(document.getElementsByName('mati_data_name')[0], mati_validate);
+                mati_addIntermediateChangesListener(document.getElementsByName('mati_data_code')[0], mati_validate);
+                
+                mati_validate();
+                
+                document.getElementById('mati_button_save').addEventListener('click', function() {
+                    let langCode = document.getElementsByName('mati_data_language_code')[0].value;
+                    let dataCode = document.getElementsByName('mati_data_code')[0].value;
+                    //Zur Sicherheit den Code nochmal validieren, sollte aber an dieser Stelle immer valide sein
+                    if (!isCodeValid(dataCode)) {
+                        return;
+                    }
+                    
+                    let theme = mati_createThemeObject();
+                    console.log(theme);
+                    
+                    
+                    
+                    var zip = new JSZip();
+                    var ordner = zip.folder(langCode + '_' + dataCode);
+                    ordner.file('theme.json', JSON.stringify(theme));
+                    let sectionNr = 0;
+                    for (let section of document.getElementsByClassName('mati_section')) {
+                        sectionNr++;
+                        let fileInputElement = section.getElementsByClassName('mati_section_image_input')[0];
+                        ordner.file('section' + sectionNr + '.jpg', fileInputElement.files[0]);
+                    }
+                    zip.generateAsync({type:"blob"})
+                    .then(function(content) {
+                        saveAs(content, langCode + '_' + dataCode + '.zip');
+                    });
+                                        
+                    
+                    
+                    /*
+                    var blob = new Blob([JSON.stringify(theme)], {type: "text/plain;charset=utf-8"});
+                    saveAs(blob, dataCode + '.json');
+                    
+                    if (window.parent && window.parent.mati) {
+                        window.parent.mati.pushAddNewLaguage(dataCode, sprache);
+                        window.parent.mati.pushOpenToolbox();
+                    }
+                    */
+                });                
+                
+                if (window.parent && window.parent.mati) {
+                    let cancelButton = document.getElementById('mati_button_cancel');
+                    cancelButton.style.visibility = 'visible';
+                    cancelButton.addEventListener('click', function() {
+                        window.parent.mati.pushOpenToolbox();
+                    });
+                }
+                
+                document.getElementsByClassName('mati_button_add_theme')[0].addEventListener('click', function(event) {
+                    mati_addSection();
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <h1>Create a new Theme</h1>
+        <fieldset>
+            <legend>Meta Data</legend>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class="mati_label_cell">Name for the new Theme</td>
+                        <td><input name="mati_data_name" /></td>
+                    </tr>
+                    <tr>
+                        <td class="mati_label_cell">Language Code</td>
+                        <td><input name="mati_data_language_code" value="en" /></td>
+                    </tr>
+                    <tr>
+                        <td class="mati_label_cell">Unique Code<br/><small>(only lower case letters)</small></td>
+                        <td><input name="mati_data_code" /></td>
+                    </tr>
+                    <tr>
+                        <td class="mati_label_cell">Author<br/><small>(optional)</small></td>
+                        <td><input name="mati_data_name" /></td>
+                    </tr>
+                </tbody>
+            </table>
+        </fieldset>
+        
+        <fieldset>
+            <legend>Info</legend>
+            <ul>
+                <li>During one playthrough the players will play each section. For each section they will answer 3 randomly selected questions.</li>
+                <li>You can create as many sections as you want. To make the game not too short and not too long, something around 4 sections is a good amount.</li>
+                <li>For each section you can create as many questions as you want (at least 3).</li>
+            </ul>
+        </fieldset>
+        
+        <div class="mati_sections_container">
+        </div>
+        <button class="mati_button_add_theme"><span class="mati_button_icon_add">+</span> Add Section</button>
+        <fieldset>
+            <legend>Publish Your Theme</legend>
+            <div class="mati_infobox">
+                You want your theme to be publicly available for everyone? Send it via e-mail to timo.scheit@gmx.de !
+            </div>
+        </fieldset>
+        <button id="mati_button_save">Save</button>
+        <button id="mati_button_cancel" style="visibility: hidden">Cancel</button>
+        
+        
+        <script id="mati_section_template" type="nojs">
+            <legend>Section 1</legend>
+            <div class="mati_removebutton_container">
+                <button class="mati_button_remove_section"><span class="mati_button_icon_remove">&times;</span> Remove Section</button>
+            </div>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class="mati_label_cell">Section Name</td>
+                        <td><input class="mati_section_name" /></td>
+                    </tr>
+                    <tr>
+                        <td class="mati_label_cell">Background Image<br/><small>(ideally a .jpg with around 1920&times;1080 pixel)</small></td>
+                        <td>
+                            <label class="mati_section_image_label">
+                                <span class="mati_section_image_placeholder">
+                                    <span>Drop a file or click here to add an image</span>
+                                </span>
+                                <span class="mati_section_image_img_container_container">
+                                    <span class="mati_section_image_img_container"></span>
+                                </span>
+                                <input class="mati_section_image_input" type="file" accept="image/jpeg" />
+                            </label>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="mati_questions_container">
+            </div>
+            <button class="mati_button_add_question"><span class="mati_button_icon_add">&plus;</span> Add Question</button>
+        </script>
+        <script id="mati_question_template" type="nojs">
+            <legend>Question 1</legend>
+            <div class="mati_removebutton_container">
+                <button class="mati_button_remove_question"><span class="mati_button_icon_remove">&times;</span> Remove Question</button>
+            </div>
+            <table>
+                <tbody>
+                    <tr>
+                        <td class="mati_label_cell">Question</td>
+                        <td><input class="mati_question_text mati_longinput" /></td>
+                    </tr>
+                    <tr>
+                        <td class="mati_label_cell">Answer A</td>
+                        <td><input class="mati_question_answer mati_longinput" /></td>
+                    </tr>
+                    <tr>
+                        <td class="mati_label_cell">Answer B</td>
+                        <td><input class="mati_question_answer mati_longinput" /></td>
+                    </tr>
+                </tbody>
+            </table>
+        </script>
+    </body>
+</html>
