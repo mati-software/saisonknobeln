@@ -126,6 +126,68 @@
                 cursor: pointer;
                 opacity: 0;
             }
+            label.mati_question_image_label {
+                display: inline-block;
+                border: 3px dashed rgba(0,0,0,.5);
+                overflow: hidden;
+                width: 128px;
+                height: 128px;
+                position: relative;
+                vertical-align: middle;
+            }
+            span.mati_question_image_placeholder {
+                display: inline-block;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 108px;
+                height: 108px;
+                padding: 10px;
+            }
+            span.mati_question_image_placeholder span {
+                display: table-cell;
+                width: 108px;
+                height: 108px;
+                text-align: center;
+                vertical-align: middle;
+                color: rgba(0,0,0,.5);
+            }
+            span.mati_question_image_img_container_container {
+                display: inline-block;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 128px;
+                height: 128px;
+            }
+            span.mati_question_image_img_container {
+                display: table-cell;
+                width: 128px;
+                height: 128px;
+                text-align: center;
+                vertical-align: middle;
+            }
+            span.mati_question_image_img_container img {
+                max-width: 108px;
+                max-height: 108px;
+                marging: 0;
+                padding:0;
+            }
+            label.mati_question_image_label input {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 128px;
+                height: 128px;
+                margin: 0;
+                padding: 0;
+                font-size: 20px;
+                cursor: pointer;
+                opacity: 0;
+            }
+            button.mati_button_remove_image {
+                vertical-align: middle;
+            }
         </style>
         <script src="lib/FileSaver.js" rel="script" type="application/javascript"></script>
         <script src="lib/jszip.min.js" rel="script" type="application/javascript"></script>
@@ -198,7 +260,6 @@
                 mati_addIntermediateChangesListener(sectionElement.getElementsByClassName('mati_section_name')[0], mati_validate);
                 
                 sectionElement.getElementsByClassName('mati_section_image_input')[0].addEventListener('change', function(event) {
-                    //FIXME clss-namen sind sehr schlecht weil nicht klar wird, dass es um section geht
                     var imgContainer = sectionElement.getElementsByClassName('mati_section_image_img_container')[0];
                     var imgList = imgContainer.getElementsByTagName('img');
                     var image;
@@ -231,11 +292,43 @@
                     mati_validate();
                 });
                 
-                //TODO onblur
                 mati_addIntermediateChangesListener(questionElement.getElementsByClassName('mati_question_text')[0], mati_validate);
                 for (let answerInput of questionElement.getElementsByClassName('mati_question_answer')) {
                     mati_addIntermediateChangesListener(answerInput, mati_validate);
                 }
+
+                let questionInputOnChange = function(event) {
+                    var imgContainer = questionElement.getElementsByClassName('mati_question_image_img_container')[0];
+                    var imgList = imgContainer.getElementsByTagName('img');
+                    var image;
+                    if (imgList.length > 0) {
+                        image = imgList[0];
+                    }
+                    else {
+                        image = document.createElement('img');
+                        questionElement.getElementsByClassName('mati_question_image_img_container')[0].append(image);
+                    }
+                    image.src = URL.createObjectURL(event.target.files[0]);
+                    questionElement.getElementsByClassName('mati_question_image_placeholder')[0].style['visibility'] = 'hidden';
+                    
+                    questionElement.getElementsByClassName('mati_button_remove_image')[0].style['visibility'] = 'visible';
+                };
+                questionElement.getElementsByClassName('mati_question_image_input')[0].addEventListener('change', questionInputOnChange);
+
+                questionElement.getElementsByClassName('mati_button_remove_image')[0].addEventListener('click', function(event) {
+                    this.style['visibility'] = 'hidden';
+                    questionElement.getElementsByClassName('mati_question_image_img_container')[0].innerHTML = '';
+                    questionElement.getElementsByClassName('mati_question_image_placeholder')[0].style['visibility'] = 'visible';
+                    
+                    let labelElement = questionElement.getElementsByClassName('mati_question_image_label')[0];
+                    let altesInputElement = questionElement.getElementsByClassName('mati_question_image_input')[0];
+                    let neuesInputElement = document.createElement('input');
+                    neuesInputElement.className = 'mati_question_image_input';
+                    neuesInputElement.type = 'file';
+                    neuesInputElement.accept = altesInputElement.accept;
+                    labelElement.replaceChild(neuesInputElement, altesInputElement);
+                    neuesInputElement.addEventListener('change', questionInputOnChange);
+                });
                 
                 mati_validate();
             }
@@ -336,16 +429,24 @@
                         questions : []
                     };
                     
+                    let questionNr = 0;
                     for (let questionElement of sectionElement.getElementsByClassName('mati_question')) {
+                        questionNr++;
+                    
                         let questionObject = {
                             text : questionElement.getElementsByClassName('mati_question_text')[0].value.trim(),
                             answers : []
                         };
-
+                        
                         for (let answerInput of questionElement.getElementsByClassName('mati_question_answer')) {
                             questionObject.answers.push(answerInput.value.trim());
                         }
                         
+                        let fileInputElement = questionElement.getElementsByClassName('mati_question_image_input')[0];
+                        if (fileInputElement.files.length > 0) {
+                            questionObject.img = 'question' + sectionNr + '_' + questionNr + '.jpg';
+                        }
+
                         sectionObject.questions.push(questionObject);
                     }
                     
@@ -370,9 +471,6 @@
                     }
                     
                     let theme = mati_createThemeObject();
-                    console.log(theme);
-                    
-                    
                     
                     var zip = new JSZip();
                     var ordner = zip.folder(langCode + '_' + dataCode);
@@ -382,6 +480,15 @@
                         sectionNr++;
                         let fileInputElement = section.getElementsByClassName('mati_section_image_input')[0];
                         ordner.file('section' + sectionNr + '.jpg', fileInputElement.files[0]);
+                        
+                        let questionNr = 0;
+                        for (let question of section.getElementsByClassName('mati_question')) {
+                            questionNr++;
+                            let fileInputElement = question.getElementsByClassName('mati_question_image_input')[0];
+                            if (fileInputElement.files.length > 0) {
+                                ordner.file('question' + sectionNr + '_' + questionNr + '.jpg', fileInputElement.files[0]);
+                            }
+                        }
                     }
                     zip.generateAsync({type:"blob"})
                     .then(function(content) {
@@ -435,7 +542,7 @@
                     </tr>
                     <tr>
                         <td class="mati_label_cell">Author<br/><small>(optional)</small></td>
-                        <td><input name="mati_data_name" /></td>
+                        <td><input name="mati_data_author" /></td>
                     </tr>
                 </tbody>
             </table>
@@ -475,7 +582,7 @@
                         <td><input class="mati_section_name" /></td>
                     </tr>
                     <tr>
-                        <td class="mati_label_cell">Background Image<br/><small>(ideally a .jpg with around 1920&times;1080 pixel)</small></td>
+                        <td class="mati_label_cell">Background Image<br/><small>(ideally a .jpg with around 1920&times;1080 pixels)</small></td>
                         <td>
                             <label class="mati_section_image_label">
                                 <span class="mati_section_image_placeholder">
@@ -512,6 +619,22 @@
                     <tr>
                         <td class="mati_label_cell">Answer B</td>
                         <td><input class="mati_question_answer mati_longinput" /></td>
+                    </tr>
+                    <tr>
+                        <td class="mati_label_cell">Image<br/><small>(optional, ideally a .jpg with the longer side being around 500 pixels)</small></td>
+                        <td>
+                            <label class="mati_question_image_label">
+                                <span class="mati_question_image_placeholder">
+                                    <span>Drop a file or click here to add an image</span>
+                                </span>
+                                <span class="mati_question_image_img_container_container">
+                                    <span class="mati_question_image_img_container"></span>
+                                </span>
+                                <input class="mati_question_image_input" type="file" accept="image/jpeg" />
+                            </label>
+                            
+                            <button style="visibility:hidden" class="mati_button_remove_image"><span class="mati_button_icon_remove">&times;</span> Remove Image</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
