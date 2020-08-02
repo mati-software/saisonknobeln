@@ -31,6 +31,10 @@
             fieldset {
                 margin-top: 20px;
             }
+            #mati_fieldset_load_theme {
+                margin-top: 0;
+                margin-bottom: 20px;
+            }
             .mati_questions_container fieldset:first-of-type {
                 margin-top: 10px;
             }
@@ -188,6 +192,38 @@
             button.mati_button_remove_image {
                 vertical-align: middle;
             }
+            label#mati_load_theme_label {
+                display: inline-block;
+                overflow: hidden;
+                border: 1px solid #ADADAD;
+                background-color: #E1E1E1;
+                padding: 3px 10px;
+                margin-top: 20px;
+            }
+            label#mati_load_theme_label:hover {
+                border-color: #0078D7;
+                background-color: #E5F1FB;
+            }
+            label#mati_load_theme_label input {
+                display: none;
+            }
+            button {
+                display: inline-block;
+                border: 1px solid #ADADAD;
+                background-color: #E1E1E1;
+                padding: 3px 10px;
+                margin-top: 20px;
+                color: black;
+            }
+            button:hover {
+                border-color: #0078D7;
+                background-color: #E5F1FB;
+            }
+            button[disabled] {
+                border-color: #ADADAD;
+                background-color: #CCCCCC;
+                color: #ADADAD;
+            }
         </style>
         <script src="lib/FileSaver.js" rel="script" type="application/javascript"></script>
         <script src="lib/jszip.min.js" rel="script" type="application/javascript"></script>
@@ -236,6 +272,40 @@
                 return typeof dataCode === 'string' && dataCode.length > 0 && /^[a-z]+$/.test(dataCode);
             }
             
+            function mati_updateThemeImageVorschau(fileOrBlob, sectionElement) {
+                var imgContainer = sectionElement.getElementsByClassName('mati_section_image_img_container')[0];
+                var imgList = imgContainer.getElementsByTagName('img');
+                var image;
+                if (imgList.length > 0) {
+                    image = imgList[0];
+                }
+                else {
+                    image = document.createElement('img');
+                    imgContainer.append(image);
+                }
+                //FIXME TODO    URL.revokeObjectURL()    <-- muss man machen um URLs frei zu geben
+                image.src = URL.createObjectURL(fileOrBlob);
+                sectionElement.getElementsByClassName('mati_section_image_placeholder')[0].style['display'] = 'none';
+            }
+            
+            function mati_updateQuestionImageVorschau(fileOrBlob, questionElement) {
+                var imgContainer = questionElement.getElementsByClassName('mati_question_image_img_container')[0];
+                var imgList = imgContainer.getElementsByTagName('img');
+                var image;
+                if (imgList.length > 0) {
+                    image = imgList[0];
+                }
+                else {
+                    image = document.createElement('img');
+                    imgContainer.append(image);
+                }
+                //FIXME TODO    URL.revokeObjectURL()    <-- muss man machen um URLs frei zu geben
+                image.src = URL.createObjectURL(fileOrBlob);
+                questionElement.getElementsByClassName('mati_question_image_placeholder')[0].style['display'] = 'none';
+                
+                questionElement.getElementsByClassName('mati_button_remove_image')[0].style['visibility'] = 'visible';
+            }
+            
             function mati_addSection() {
                 var sectionElement = document.createElement("fieldset");
                 sectionElement.className = 'mati_section';
@@ -260,19 +330,7 @@
                 mati_addIntermediateChangesListener(sectionElement.getElementsByClassName('mati_section_name')[0], mati_validate);
                 
                 sectionElement.getElementsByClassName('mati_section_image_input')[0].addEventListener('change', function(event) {
-                    var imgContainer = sectionElement.getElementsByClassName('mati_section_image_img_container')[0];
-                    var imgList = imgContainer.getElementsByTagName('img');
-                    var image;
-                    if (imgList.length > 0) {
-                        image = imgList[0];
-                    }
-                    else {
-                        image = document.createElement('img');
-                        sectionElement.getElementsByClassName('mati_section_image_img_container')[0].append(image);
-                    }
-                    image.src = URL.createObjectURL(event.target.files[0]);
-                    sectionElement.getElementsByClassName('mati_section_image_placeholder')[0].style['display'] = 'none';
-                    
+                    mati_updateThemeImageVorschau(event.target.files[0], sectionElement);
                     mati_validate();
                 });
                 
@@ -298,27 +356,14 @@
                 }
 
                 let questionInputOnChange = function(event) {
-                    var imgContainer = questionElement.getElementsByClassName('mati_question_image_img_container')[0];
-                    var imgList = imgContainer.getElementsByTagName('img');
-                    var image;
-                    if (imgList.length > 0) {
-                        image = imgList[0];
-                    }
-                    else {
-                        image = document.createElement('img');
-                        questionElement.getElementsByClassName('mati_question_image_img_container')[0].append(image);
-                    }
-                    image.src = URL.createObjectURL(event.target.files[0]);
-                    questionElement.getElementsByClassName('mati_question_image_placeholder')[0].style['visibility'] = 'hidden';
-                    
-                    questionElement.getElementsByClassName('mati_button_remove_image')[0].style['visibility'] = 'visible';
+                    mati_updateQuestionImageVorschau(event.target.files[0], questionElement);
                 };
                 questionElement.getElementsByClassName('mati_question_image_input')[0].addEventListener('change', questionInputOnChange);
 
                 questionElement.getElementsByClassName('mati_button_remove_image')[0].addEventListener('click', function(event) {
                     this.style['visibility'] = 'hidden';
                     questionElement.getElementsByClassName('mati_question_image_img_container')[0].innerHTML = '';
-                    questionElement.getElementsByClassName('mati_question_image_placeholder')[0].style['visibility'] = 'visible';
+                    questionElement.getElementsByClassName('mati_question_image_placeholder')[0].style['display'] = 'inline-block';
                     
                     let labelElement = questionElement.getElementsByClassName('mati_question_image_label')[0];
                     let altesInputElement = questionElement.getElementsByClassName('mati_question_image_input')[0];
@@ -373,7 +418,8 @@
                         fehlerVorhanden = true;
                     }
                     
-                    if (sectionElement.getElementsByClassName('mati_section_image_input')[0].files.length === 0) {
+                    let imageInput = sectionElement.getElementsByClassName('mati_section_image_input')[0];
+                    if (imageInput.files.length === 0 && !imageInput.matiImageBlob) {
                         fehlerVorhanden = true;
                     }
                     
@@ -455,12 +501,200 @@
                 
                 return themeObject;
             }
+            
+            function mati_drawThemeIcon(canvas) {
+                var ctx = canvas.getContext("2d");
+                let sections = document.getElementsByClassName('mati_section');
+                let sectionIndex = 0;
                 
+                let allgemeineTeilbildZielWidth = Math.round(canvas.width / sections.length);
+                let letztesTeilbildZielWidth = canvas.width - allgemeineTeilbildZielWidth * (sections.length-1);
+                
+                for (let sectionElement of sections) {
+                    let img = sectionElement.getElementsByClassName('mati_section_image_img_container')[0].getElementsByTagName('img')[0];
+                    let zielBreite = sectionIndex === sections.length-1 ? letztesTeilbildZielWidth : allgemeineTeilbildZielWidth;
+                    let zielHoehe = canvas.height;
+                    let zielSeitenverhaeltnis = zielBreite / canvas.height;
+                    let quellSeitenverhaeltnis = img.naturalWidth / img.naturalHeight;
+                    let quellBreite;
+                    let quellHoehe;
+                    if (zielSeitenverhaeltnis > quellSeitenverhaeltnis) {
+                        //oben und unten muss abgeschnitten werden
+                        quellBreite = img.naturalWidth;
+                        quellHoehe = img.naturalWidth / zielSeitenverhaeltnis;
+                    }
+                    else {
+                        //Links und rechts muss abgeschnitten werden
+                        quellBreite = img.naturalHeight * zielSeitenverhaeltnis;
+                        quellHoehe = img.naturalHeight;
+                    }
+                    
+                    ctx.drawImage(img,
+                            (img.naturalWidth - quellBreite) / 2,
+                            (img.naturalHeight - quellHoehe) / 2,
+                            quellBreite,
+                            quellHoehe,
+                            allgemeineTeilbildZielWidth * sectionIndex,
+                            0,
+                            zielBreite,
+                            zielHoehe);
+                    
+                    sectionIndex++;
+                }
+                
+                //Teilweise Hintergrund aufhellen
+                let diagonalLaenge = Math.sqrt(canvas.width * canvas.width + canvas.height * canvas.height);
+                var grd = ctx.createRadialGradient(
+                        canvas.width/2, canvas.height/2, 0, //innerer Kreis (bei mir nur ein Punkt)
+                        canvas.width/2, canvas.height/2, Math.ceil(diagonalLaenge / 2) //aeusserer Kreis
+                );
+                grd.addColorStop(0, "rgba(255,255,255,.7)");
+                grd.addColorStop(1, "rgba(255,255,255,0)");
+                ctx.fillStyle = grd;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                //Name als Text rendern
+                ctx.fillStyle = 'black';
+                ctx.shadowColor = 'white';
+                ctx.shadowBlur = 20;
+                mati_canvas2dRenderText(
+                        ctx,
+                        document.getElementsByName('mati_data_name')[0].value, //text
+                        canvas.width/2, //x
+                        canvas.height/2, //y
+                        canvas.width - 40, //maxWidthInPx
+                        canvas.height - 40, //maxHeightInPx
+                        'Arial', //font
+                        100, //fontSizeInPx
+                        100 * 1.3, //lineHeightInPx
+                        true //bold
+                );
+            }
+            
+            function mati_canvas2dCreateLineBreaks(ctx, words, maxWidthInPx, maxNumberOfLines) {
+                let lines = [];
+                let textPasst = true;
+                let wordIndex = 0;
+                while (wordIndex < words.length) {
+                    if (lines.length === maxNumberOfLines) {
+                        //Es ist noch text uebrig, aber die maximale Zeilenzahl ist bereits erreicht
+                        return null;
+                    }
+                    let line = words[wordIndex++];
+                    if (ctx.measureText(line).width > maxWidthInPx) {
+                        //das einzelne Wort ist bereits zu lang
+                        return null;
+                    }
+                    while (wordIndex < words.length) {
+                        let lineMitEinemWortMehr = line + ' ' + words[wordIndex];
+                        if (ctx.measureText(lineMitEinemWortMehr).width > maxWidthInPx) {
+                            break;
+                        }
+                        line = lineMitEinemWortMehr;
+                        wordIndex++;
+                    }
+                    lines.push(line);
+                }
+                return lines;
+            }
+                        
+            function mati_canvas2dRenderText(ctx, text, x, y, maxWidthInPx, maxHeightInPx, font, fontSizeInPx, lineHeightInPx, bold = false) {
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+            
+                let words = text.split(' ');
+                let lines;
+                let angepassteLineHeightInPx;
+                let angepassteFontSizeInPx = fontSizeInPx;
+                for (let i=0; i<20; i++) {
+                    ctx.font = (bold ? 'bold ' : '') + angepassteFontSizeInPx + "px " + font;
+                    angepassteLineHeightInPx = Math.ceil(lineHeightInPx * angepassteFontSizeInPx / fontSizeInPx);
+                    
+                    let maxNumberOfLines = Math.floor(maxHeightInPx / angepassteLineHeightInPx);
+                    lines = mati_canvas2dCreateLineBreaks(ctx, words, maxWidthInPx, maxNumberOfLines);
+                    if (lines !== null) {
+                        break;
+                    }
+
+                    angepassteFontSizeInPx *= .9;
+                }
+                
+                if (lines !== null) {
+                    for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+                        let yOffset = (lineIndex - (lines.length-1)/2) * angepassteLineHeightInPx;
+                        ctx.fillText(lines[lineIndex], x, y + yOffset);
+                    }
+                }
+            }
+            
             window.addEventListener('load', function() {
                 mati_addIntermediateChangesListener(document.getElementsByName('mati_data_name')[0], mati_validate);
                 mati_addIntermediateChangesListener(document.getElementsByName('mati_data_code')[0], mati_validate);
                 
                 mati_validate();
+                
+                document.getElementById('mati_load_theme_label').getElementsByTagName('input')[0].addEventListener('change', function(event) {
+                    let zip = new JSZip();
+                    zip.loadAsync(event.target.files[0]).then(function(contents) {
+                        let folderName;
+                        for (let fileName of Object.keys(contents.files)) {
+                            if (contents.files[fileName].dir) {
+                                folderName = fileName;
+                                break;
+                            }
+                        }
+                        let languageAndThemeCodes = folderName.substring(0, folderName.length - 1).split('_');
+                        document.getElementsByName('mati_data_language_code')[0].value = languageAndThemeCodes[0];
+                        document.getElementsByName('mati_data_code')[0].value = languageAndThemeCodes[1];
+                        
+                        zip.file(folderName + 'theme.json').async('string').then(function(jsonContent) {
+                            let parsedTheme = JSON.parse(jsonContent);
+                            document.getElementsByName('mati_data_name')[0].value = parsedTheme.name;
+                            document.getElementsByName('mati_data_author')[0].value = parsedTheme.author ? parsedTheme.author : '';
+                            
+                            let sectionsContainer = document.getElementsByClassName('mati_sections_container')[0];
+                            sectionsContainer.innerHTML = '';
+                            
+                            while (sectionsContainer.getElementsByClassName('mati_section').length < parsedTheme.sections.length) {
+                                mati_addSection();
+                            }
+                            
+                            let sectionElements = sectionsContainer.getElementsByClassName('mati_section');
+                            for (let sectionIndex = 0; sectionIndex < parsedTheme.sections.length; sectionIndex++) {
+                                let parsedSection = parsedTheme.sections[sectionIndex];
+                                let sectionElement = sectionElements[sectionIndex];
+                                
+                                sectionElement.getElementsByClassName('mati_section_name')[0].value = parsedSection.name;
+                                zip.file(folderName + parsedSection.img).async('blob').then(function(imageBlob) {
+                                    sectionElement.getElementsByClassName('mati_section_image_input')[0].matiImageBlob = imageBlob;
+                                    mati_updateThemeImageVorschau(imageBlob, sectionElement);
+                                    mati_validate();
+                                });
+                                
+                                while (sectionElement.getElementsByClassName('mati_question').length < parsedSection.questions.length) {
+                                    mati_addQuestion(sectionElement);
+                                }
+                                
+                                let questionElements = sectionElement.getElementsByClassName('mati_question');
+                                for (let questionIndex = 0; questionIndex < parsedSection.questions.length; questionIndex++) {
+                                    let parsedQuestion = parsedSection.questions[questionIndex];
+                                    let questionElement = questionElements[questionIndex];
+                                    questionElement.getElementsByClassName('mati_question_text')[0].value = parsedQuestion.text;
+                                    questionElement.getElementsByClassName('mati_question_answer')[0].value = parsedQuestion.answers[0];
+                                    questionElement.getElementsByClassName('mati_question_answer')[1].value = parsedQuestion.answers[1];
+                                    if (parsedQuestion.img) {
+                                        zip.file(folderName + parsedQuestion.img).async('blob').then(function(imageBlob) {
+                                            questionElement.getElementsByClassName('mati_question_image_input')[0].matiImageBlob = imageBlob;
+                                            mati_updateQuestionImageVorschau(imageBlob, questionElement);
+                                        });
+                                    }
+                                }
+                            }
+                            
+                            console.log(parsedTheme);
+                        });
+                    });
+                });
                 
                 document.getElementById('mati_button_save').addEventListener('click', function() {
                     let langCode = document.getElementsByName('mati_data_language_code')[0].value;
@@ -479,21 +713,31 @@
                     for (let section of document.getElementsByClassName('mati_section')) {
                         sectionNr++;
                         let fileInputElement = section.getElementsByClassName('mati_section_image_input')[0];
-                        ordner.file('section' + sectionNr + '.jpg', fileInputElement.files[0]);
+                        let imageFileOrBlob = fileInputElement.files.length > 0 ? fileInputElement.files[0] : fileInputElement.matiImageBlob;
+                        ordner.file('section' + sectionNr + '.jpg', imageFileOrBlob);
                         
                         let questionNr = 0;
                         for (let question of section.getElementsByClassName('mati_question')) {
                             questionNr++;
                             let fileInputElement = question.getElementsByClassName('mati_question_image_input')[0];
-                            if (fileInputElement.files.length > 0) {
-                                ordner.file('question' + sectionNr + '_' + questionNr + '.jpg', fileInputElement.files[0]);
+                            if (fileInputElement.files.length > 0 || fileInputElement.matiImageBlob) {
+                                let imageFileOrBlob = fileInputElement.files.length > 0 ? fileInputElement.files[0] : fileInputElement.matiImageBlob;
+                                ordner.file('question' + sectionNr + '_' + questionNr + '.jpg', imageFileOrBlob);
                             }
                         }
                     }
-                    zip.generateAsync({type:"blob"})
-                    .then(function(content) {
-                        saveAs(content, langCode + '_' + dataCode + '.zip');
-                    });
+                    
+                    let canvas = document.getElementById('mati_canvas');
+                    mati_drawThemeIcon(canvas);
+                    canvas.toBlob(function(themeIconBlob) {
+                        ordner.file('theme.jpg', themeIconBlob);
+                    
+                        zip.generateAsync({type:"blob"})
+                        .then(function(content) {
+                            saveAs(content, langCode + '_' + dataCode + '.zip');
+                        });
+                    }, 'image/jpeg', .9);
+                    
                                         
                     
                     
@@ -523,6 +767,17 @@
         </script>
     </head>
     <body>
+        <fieldset id="mati_fieldset_load_theme">
+            <legend>Load .zip File</legend>
+            <div class="mati_infobox">
+                You can use this button, if you already have a theme file that you want to change or extend.
+                <br/>
+                <label id="mati_load_theme_label">
+                    Load Theme
+                    <input type="file" accept="application/zip" />
+                </label>
+            </div>
+        </fieldset>
         <h1>Create a new Theme</h1>
         <fieldset>
             <legend>Meta Data</legend>
@@ -537,7 +792,7 @@
                         <td><input name="mati_data_language_code" value="en" /></td>
                     </tr>
                     <tr>
-                        <td class="mati_label_cell">Unique Code<br/><small>(only lower case letters)</small></td>
+                        <td class="mati_label_cell">Unique Theme Code<br/><small>(only lower case letters, e. g. "seasons", "movies" etc.)</small></td>
                         <td><input name="mati_data_code" /></td>
                     </tr>
                     <tr>
@@ -568,6 +823,11 @@
         </fieldset>
         <button id="mati_button_save">Save</button>
         <button id="mati_button_cancel" style="visibility: hidden">Cancel</button>
+        
+        
+        
+        <canvas style="display:none" id="mati_canvas" width="844" height="422"></canvas>
+        
         
         
         <script id="mati_section_template" type="nojs">
