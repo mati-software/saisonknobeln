@@ -312,7 +312,7 @@
 			</div>
 		</div>
 
-
+        <script src="lib/jszip.min.js" rel="script" type="application/javascript"></script>
 		<script src="lib/velocity.min.js" rel="script" type="application/javascript"></script>
 		<script src="matiUtil.js" rel="script" type="application/javascript"></script>
 		<script src="matiFarbutil.js" rel="script" type="application/javascript"></script>
@@ -354,6 +354,7 @@
                                                 mati.themes[zuLadendeThemes.indexOf(themeCodeMitPrefix)] = {
                                                     codeMitPrefix : themeCodeMitPrefix,
                                                     content : themeContent,
+                                                    themeImage : null,
                                                     sectionImages : null,
                                                     shuffledQuestionOrderForSections : []
                                                 };
@@ -742,6 +743,50 @@
                             }
                         }
                     };
+                }
+            });
+            document.getElementById('mati_toolbox_theme_file_input').addEventListener('change', function() {
+                for (let file of this.files) {
+                    let zip = new JSZip();
+                    zip.loadAsync(file).then(function(contents) {
+                        let folderName;
+                        for (let fileName of Object.keys(contents.files)) {
+                            if (contents.files[fileName].dir) {
+                                folderName = fileName;
+                                break;
+                            }
+                        }
+                        let fullThemeCode = folderName.substring(0, folderName.length - 1);
+                        zip.file(folderName + 'theme.json').async('string').then(function(jsonContent) {
+                            let parsedTheme = JSON.parse(jsonContent);
+
+                            //TODO validieren
+                            
+                            let imageMap = {};
+                            imageMap['theme.jpg'] = null;
+                            for (let section of parsedTheme.sections) {
+                                imageMap[section.img] = null;
+                                for (let question of section.questions) {
+                                    if (question.img) {
+                                        imageMap[question.img] = null;
+                                    }
+                                }
+                            }
+                            let anzahlZuLadendeBilder = 0;
+                            for (let imgName in imageMap) {
+                                anzahlZuLadendeBilder++;
+                            }
+                            for (let imgName in imageMap) {
+                                zip.file(folderName + imgName).async('blob').then(function(imgBlob) {
+                                    imageMap[imgName] = imgBlob;
+                                    anzahlZuLadendeBilder--;
+                                    if (anzahlZuLadendeBilder === 0) {
+                                        mati.pushAddNewTheme(fullThemeCode, parsedTheme, imageMap);
+                                    }
+                                });
+                            }
+                        });
+                    });
                 }
             });
 		</script>

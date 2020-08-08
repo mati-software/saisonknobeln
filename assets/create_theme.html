@@ -489,7 +489,7 @@
                         }
                         
                         let fileInputElement = questionElement.getElementsByClassName('mati_question_image_input')[0];
-                        if (fileInputElement.files.length > 0) {
+                        if (fileInputElement.files.length > 0 || fileInputElement.matiImageBlob) {
                             questionObject.img = 'question' + sectionNr + '_' + questionNr + '.jpg';
                         }
 
@@ -690,8 +690,6 @@
                                     }
                                 }
                             }
-                            
-                            console.log(parsedTheme);
                         });
                     });
                 });
@@ -710,11 +708,13 @@
                     var ordner = zip.folder(langCode + '_' + dataCode);
                     ordner.file('theme.json', JSON.stringify(theme));
                     let sectionNr = 0;
+                    let imgBlobMap = {};
                     for (let section of document.getElementsByClassName('mati_section')) {
                         sectionNr++;
                         let fileInputElement = section.getElementsByClassName('mati_section_image_input')[0];
                         let imageFileOrBlob = fileInputElement.files.length > 0 ? fileInputElement.files[0] : fileInputElement.matiImageBlob;
                         ordner.file('section' + sectionNr + '.jpg', imageFileOrBlob);
+                        imgBlobMap['section' + sectionNr + '.jpg'] = imageFileOrBlob;
                         
                         let questionNr = 0;
                         for (let question of section.getElementsByClassName('mati_question')) {
@@ -723,6 +723,7 @@
                             if (fileInputElement.files.length > 0 || fileInputElement.matiImageBlob) {
                                 let imageFileOrBlob = fileInputElement.files.length > 0 ? fileInputElement.files[0] : fileInputElement.matiImageBlob;
                                 ordner.file('question' + sectionNr + '_' + questionNr + '.jpg', imageFileOrBlob);
+                                imgBlobMap['question' + sectionNr + '_' + questionNr + '.jpg'] = imageFileOrBlob;
                             }
                         }
                     }
@@ -731,11 +732,17 @@
                     mati_drawThemeIcon(canvas);
                     canvas.toBlob(function(themeIconBlob) {
                         ordner.file('theme.jpg', themeIconBlob);
+                        imgBlobMap['theme.jpg'] = themeIconBlob;
                     
                         zip.generateAsync({type:"blob"})
                         .then(function(content) {
                             saveAs(content, langCode + '_' + dataCode + '.zip');
                         });
+                        
+                        if (window.parent && window.parent.mati) {
+                            window.parent.mati.pushAddNewTheme(langCode + '_' + dataCode, theme, imgBlobMap);
+                            window.parent.mati.pushOpenToolbox();
+                        }
                     }, 'image/jpeg', .9);
                     
                                         

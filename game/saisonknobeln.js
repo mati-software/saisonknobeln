@@ -66,12 +66,19 @@ mati.setSpracheCode = function(neuerSpracheCode, sendeKompletteSprachen) {
     //Section-Bilder laden
 	matiUtil.pushBefehl(function() {
         for (let theme of mati.themes) {
-            if (theme.codeMitPrefix.indexOf(neuerSpracheCode + '_') === 0 && theme.sectionImages === null) {
-                theme.sectionImages = {};
-                for (let section of theme.content.sections) {
+            if (theme.codeMitPrefix.indexOf(neuerSpracheCode + '_') === 0) {
+                if (theme.themeImage === null) {
                     let img = document.createElement("IMG");
-                    img.src = Tiltspot.get.assetUrl("content/" + theme.codeMitPrefix + "/" + section.img);
-                    theme.sectionImages[img.src] = img;
+                    img.src = Tiltspot.get.assetUrl("content/" + theme.codeMitPrefix + "/theme.jpg");
+                    theme.themeImage = img;
+                }
+                if (theme.sectionImages === null) {
+                    theme.sectionImages = {};
+                    for (let section of theme.content.sections) {
+                        let img = document.createElement("IMG");
+                        img.src = Tiltspot.get.assetUrl("content/" + theme.codeMitPrefix + "/" + section.img);
+                        theme.sectionImages[section.img] = img;
+                    }
                 }
             }
         }
@@ -141,7 +148,6 @@ mati.sendMsg = function(spieler, befehl, sendeKompletteSprachen) {
         daten.lastDeltaThemeInThemeSelection = mati.lastDeltaThemeInThemeSelection;
         daten.verfuegbareThemes = mati.getVerfuegbareThemes().map(function(theme) {
             let simplifiedThemeObject = {
-                sectionImages : theme.content.sections.map((section) => section.img),
                 name : theme.content.name,
                 codeMitPrefix : theme.codeMitPrefix
             };
@@ -265,19 +271,7 @@ mati.neuesSpiel = function() {
                 ${verfuegbareThemes.map(function(theme) {
                     return `
                         <div style="display:none" class="mati_themeselection_item_container" id="mati_themeselection_item_container_${theme.codeMitPrefix}">
-                            <div class="mati_themeselection_item">
-                                <div class="mati_themeselection_item_imagecontainer">
-                                    ${theme.content.sections.map(function(section) {
-                                        //FIXME alles was aus json kommt muss sicherheitshalber ordentlich gefiltert werden
-                                        return `
-                                            <div style="background-image:url(${Tiltspot.get.assetUrl('content/' + theme.codeMitPrefix + '/' + section.img)})">
-                                            </div>
-                                        `;
-                                    }).join('')}
-                                </div>
-                                <div class="mati_themeselection_item_text">
-                                    ${matiUtil.htmlEscape(theme.content.name)}
-                                </div>
+                            <div class="mati_themeselection_item" style="background-image:url(${theme.themeImage.src})">
                             </div>
                         </div>
                     `;
@@ -319,20 +313,22 @@ mati.pushThemeStarten = function() {
 		mati.schrittweiseResizeBisEsPasst(document.getElementById('mati_frage_spieler_container'), document.getElementById('mati_frage_spieler'));
 		document.getElementById('mati_frage').style['display'] = 'none';
         
-        //Alle Fragen-Bilder vorladen
-        mati.aktuellesTheme.questionImages = {};
-        for (let section of mati.aktuellesTheme.content.sections) {
-            for (let question of section.questions) {
-                if (question.img) {
-                    //zunaechst nur Map mit null-Werten aufbauen, damit DOM-Objekte bei gleichen Bildern nicht unnoetig mehrfach erstellt werden
-                    mati.aktuellesTheme.questionImages[question.img] = null;
+        if (!mati.aktuellesTheme.questionImages) {
+            //Alle Fragen-Bilder vorladen
+            mati.aktuellesTheme.questionImages = {};
+            for (let section of mati.aktuellesTheme.content.sections) {
+                for (let question of section.questions) {
+                    if (question.img) {
+                        //zunaechst nur Map mit null-Werten aufbauen, damit DOM-Objekte bei gleichen Bildern nicht unnoetig mehrfach erstellt werden
+                        mati.aktuellesTheme.questionImages[question.img] = null;
+                    }
                 }
             }
-        }
-        for (let imgName in mati.aktuellesTheme.questionImages) {
-            let img = document.createElement("IMG");
-            img.src = Tiltspot.get.assetUrl("content/" + mati.aktuellesTheme.codeMitPrefix + "/" + imgName);
-            mati.aktuellesTheme.questionImages[imgName] = img;
+            for (let imgName in mati.aktuellesTheme.questionImages) {
+                let img = document.createElement("IMG");
+                img.src = Tiltspot.get.assetUrl("content/" + mati.aktuellesTheme.codeMitPrefix + "/" + imgName);
+                mati.aktuellesTheme.questionImages[imgName] = img;
+            }
         }
 		
 		matiUtil.gotoNaechsterBefehl();
@@ -356,7 +352,7 @@ mati.pushThemeStarten = function() {
 			document.getElementById('mati_section_intro_balken2').style['width'] = '0';
 			
 			document.getElementById('mati_section_intro_name').textContent = mati.aktuelleSection.name;
-			document.getElementById('mati_section_intro').style['background-image'] = `url(${Tiltspot.get.assetUrl("content/" + mati.aktuellesTheme.codeMitPrefix + "/" + mati.aktuelleSection.img)})`;
+			document.getElementById('mati_section_intro').style['background-image'] = `url(${mati.aktuellesTheme.sectionImages[mati.aktuelleSection.img].src})`;
 			
 			mati.zeigeContainer(document.getElementById('mati_section_intro'), matiUtil.gotoNaechsterBefehl);
 			matiUtil.fadeOut(document.getElementById("mati_hauptmusik"), 1000);
@@ -439,7 +435,7 @@ mati.pushThemeStarten = function() {
 				
                 mati.aktuelleFrage = mati.aktuelleSection.questions[shuffledOrderForSection.shuffledArray[shuffledOrderForSection.aktuellerArrayIndex]];
 				document.getElementById('mati_frage_text').innerText = mati.aktuelleFrage.text;
-				document.getElementById('mati_frage').style['background-image'] = `url(${Tiltspot.get.assetUrl("content/" + mati.aktuellesTheme.codeMitPrefix + "/" + mati.aktuelleSection.img)})`;
+				document.getElementById('mati_frage').style['background-image'] = `url(${mati.aktuellesTheme.sectionImages[mati.aktuelleSection.img].src})`;
 				
 				document.getElementById('mati_frage_bild').innerHTML = '';
 				if (mati.aktuelleFrage.img) {
@@ -494,7 +490,7 @@ mati.pushThemeStarten = function() {
 					}
 				}
 				
-                document.getElementById('mati_frage_ergebnis').style['background-image'] = `url(${Tiltspot.get.assetUrl("content/" + mati.aktuellesTheme.codeMitPrefix + "/" + mati.aktuelleSection.img)})`;
+                document.getElementById('mati_frage_ergebnis').style['background-image'] = `url(${mati.aktuellesTheme.sectionImages[mati.aktuelleSection.img].src})`;
 				
 				let sortierteSpieler = mati.spielerImLaufendenSpiel.slice().sort(function(spieler1, spieler2) {
 					return spieler2.schaetzungAFuerAktuelleFrage - spieler1.schaetzungAFuerAktuelleFrage;
@@ -728,7 +724,7 @@ mati.pushThemeStarten = function() {
                 }).join('')}
                 <div class="mati_null_hoehe"></div>
             `;
-            document.getElementById('mati_punktestand').style['background-image'] = `url(${Tiltspot.get.assetUrl("content/" + mati.aktuellesTheme.codeMitPrefix + "/" + mati.aktuelleSection.img)})`;
+            document.getElementById('mati_punktestand').style['background-image'] = `url(${mati.aktuellesTheme.sectionImages[mati.aktuelleSection.img].src})`;
 			
 			//bei vielen Spielern skalieren
 			document.getElementById('mati_punktestand').style['display'] = 'block';
@@ -1046,7 +1042,6 @@ mati.renderSprachauswahl = function() {
     }).join('');
 };
 
-
 mati.pushAddNewLaguage = function(code, languageObject) {
     matiUtil.pushBefehl(function() {
         let vorhandeneSpracheWurdeGeaendert = false;
@@ -1068,4 +1063,44 @@ mati.pushAddNewLaguage = function(code, languageObject) {
         matiUtil.gotoNaechsterBefehl();
     });
     mati.setSpracheCode(code, true); //macht eigentlich push, kann daher problemlos unter dem psuhBefehl stehen
+};
+
+mati.convertBlobOrFileToImageElement = function(blobOrFile) {
+    let img = document.createElement("IMG");
+    //FIXME TODO    URL.revokeObjectURL()    <-- muss man machen um URLs frei zu geben
+    img.src = URL.createObjectURL(blobOrFile);
+    return img;
+};
+
+mati.pushAddNewTheme = function(codeMitPrefix, themeContent, imagesMap) {
+    matiUtil.pushBefehl(function() {
+        let vorhandenesThemeWurdeGeaendert = false;
+        let theme;
+        for (theme of mati.themes) {
+            if (theme.codeMitPrefix === codeMitPrefix) {
+                vorhandenesThemeWurdeGeaendert = true;
+                break;
+            }
+        }
+        if (!vorhandenesThemeWurdeGeaendert) {
+            theme = {
+                codeMitPrefix : codeMitPrefix
+            };
+            mati.themes.push(theme);
+        }
+        theme.content = themeContent;
+        theme.themeImage = mati.convertBlobOrFileToImageElement(imagesMap['theme.jpg']);
+        theme.sectionImages = {};
+        theme.questionImages = {};
+        for (let section of themeContent.sections) {
+            theme.sectionImages[section.img] = mati.convertBlobOrFileToImageElement(imagesMap[section.img]);
+            for (let question of section.questions) {
+                if (question.img) {
+                    theme.questionImages[question.img] = mati.convertBlobOrFileToImageElement(imagesMap[question.img]);
+                }
+            }
+        }
+        theme.shuffledQuestionOrderForSections = [];
+        matiUtil.gotoNaechsterBefehl();
+    });
 };

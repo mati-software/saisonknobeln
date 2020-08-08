@@ -691,38 +691,12 @@ span.mati_spieler_text {
     background-image: url("lobby.jpg");
 }
 .mati_themeselection_item {
-    position:relative;
     width:18em;
     height:9em;
     box-shadow: 0 0 .5em black;
-}
-.mati_themeselection_item_imagecontainer {
-    width:100%;
-    height:100%;
-    display: flex;
-    align-items: stretch;
-}
-.mati_themeselection_item_imagecontainer div {
-    flex-grow: 1;
     background-size: cover;
     background-repeat:no-repeat;
     background-position: center;
-}
-.mati_themeselection_item_text {
-    position: absolute;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-    line-height: 4.5em;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size:200%;
-    text-align:center;
-    background-image: radial-gradient(rgba(255,255,255,.7), rgba(255,255,255,0));
-    font-weight:bold;
-    text-shadow:0 0 .2em white;
 }
 .mati_themeselection_item_container {
     position:absolute;
