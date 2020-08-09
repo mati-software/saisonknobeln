@@ -278,15 +278,20 @@
                 var imgContainer = sectionElement.getElementsByClassName('mati_section_image_img_container')[0];
                 var imgList = imgContainer.getElementsByTagName('img');
                 var image;
+                var oldObjectUrl;
                 if (imgList.length > 0) {
                     image = imgList[0];
+                    oldObjectUrl = image.src;
                 }
                 else {
                     image = document.createElement('img');
+                    image.className = 'mati_img_mit_objecturl';
                     imgContainer.append(image);
                 }
-                //FIXME TODO    URL.revokeObjectURL()    <-- muss man machen um URLs frei zu geben
                 image.src = URL.createObjectURL(fileOrBlob);
+                if (oldObjectUrl) {
+                    URL.revokeObjectURL(oldObjectUrl);
+                }
                 sectionElement.getElementsByClassName('mati_section_image_placeholder')[0].style['display'] = 'none';
             }
             
@@ -294,15 +299,20 @@
                 var imgContainer = questionElement.getElementsByClassName('mati_question_image_img_container')[0];
                 var imgList = imgContainer.getElementsByTagName('img');
                 var image;
+                var oldObjectUrl;
                 if (imgList.length > 0) {
                     image = imgList[0];
+                    oldObjectUrl = image.src;
                 }
                 else {
                     image = document.createElement('img');
+                    image.className = 'mati_img_mit_objecturl';
                     imgContainer.append(image);
                 }
-                //FIXME TODO    URL.revokeObjectURL()    <-- muss man machen um URLs frei zu geben
                 image.src = URL.createObjectURL(fileOrBlob);
+                if (oldObjectUrl) {
+                    URL.revokeObjectURL(oldObjectUrl);
+                }
                 questionElement.getElementsByClassName('mati_question_image_placeholder')[0].style['display'] = 'none';
                 
                 questionElement.getElementsByClassName('mati_button_remove_image')[0].style['visibility'] = 'visible';
@@ -324,7 +334,9 @@
                 mati_sectionsDurchnummerieren();
                 
                 sectionElement.getElementsByClassName('mati_button_remove_section')[0].addEventListener('click', function() {
+                    let objectUrls = mati_getAllObjectUrls(sectionElement);
                     document.getElementsByClassName('mati_sections_container')[0].removeChild(sectionElement);
+                    mati_revokeAllObjectUrls(objectUrls);
                     mati_sectionsDurchnummerieren();
                     mati_validate();
                 });
@@ -359,6 +371,23 @@
                 mati_validate();
             }
             
+            function mati_getAllObjectUrls(element) {
+                let objectUrls = [];
+                let imgListe = element.getElementsByClassName('mati_img_mit_objecturl');
+                if (imgListe) {
+                    for (let img of imgListe) {
+                        objectUrls.push(img.src);
+                    }
+                }
+                return objectUrls;
+            }
+            
+            function mati_revokeAllObjectUrls(objectUrls) {
+                for (let objectUrl of objectUrls) {
+                    URL.revokeObjectURL(objectUrl);
+                }
+            }
+            
             function mati_addQuestion(sectionElement) {
                 var questionElement = document.createElement("fieldset");
                 questionElement.className = 'mati_question';
@@ -367,7 +396,9 @@
                 mati_questionsDurchnummerieren(sectionElement);
                 
                 questionElement.getElementsByClassName('mati_button_remove_question')[0].addEventListener('click', function() {
+                    let objectUrls = mati_getAllObjectUrls(questionElement);
                     sectionElement.getElementsByClassName('mati_questions_container')[0].removeChild(questionElement);
+                    mati_revokeAllObjectUrls(objectUrls);
                     mati_questionsDurchnummerieren(sectionElement);
                     mati_validate();
                 });
@@ -384,8 +415,18 @@
 
                 questionElement.getElementsByClassName('mati_button_remove_image')[0].addEventListener('click', function(event) {
                     this.style['visibility'] = 'hidden';
-                    questionElement.getElementsByClassName('mati_question_image_img_container')[0].innerHTML = '';
+                    
+                    let oldObjectUrl;
+                    let imgContainer = questionElement.getElementsByClassName('mati_question_image_img_container')[0];
+                    if (imgContainer.getElementsByTagName('img').length > 0) {
+                        oldObjectUrl = imgContainer.getElementsByTagName('img')[0].src;
+                    }
+                    imgContainer.innerHTML = '';
                     questionElement.getElementsByClassName('mati_question_image_placeholder')[0].style['display'] = 'inline-block';
+                    
+                    if (oldObjectUrl) {
+                        URL.revokeObjectURL(oldObjectUrl);
+                    }
                     
                     let labelElement = questionElement.getElementsByClassName('mati_question_image_label')[0];
                     let altesInputElement = questionElement.getElementsByClassName('mati_question_image_input')[0];
@@ -814,19 +855,6 @@
                             window.parent.mati.pushOpenToolbox();
                         }
                     }, 'image/jpeg', .9);
-                    
-                                        
-                    
-                    
-                    /*
-                    var blob = new Blob([JSON.stringify(theme)], {type: "text/plain;charset=utf-8"});
-                    saveAs(blob, dataCode + '.json');
-                    
-                    if (window.parent && window.parent.mati) {
-                        window.parent.mati.pushAddNewLaguage(dataCode, sprache);
-                        window.parent.mati.pushOpenToolbox();
-                    }
-                    */
                 });                
                 
                 if (window.parent && window.parent.mati) {
