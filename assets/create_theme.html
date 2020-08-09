@@ -835,6 +835,18 @@
                     cancelButton.addEventListener('click', function() {
                         window.parent.mati.pushOpenToolbox();
                     });
+                    
+                    let languageInput = document.getElementsByName('mati_data_language_code')[0];
+                    let languageSelect = document.createElement('SELECT');
+                    languageSelect.name = 'mati_data_language_code';
+                    for (let sprache of window.parent.mati.sprachen) {
+                        let languageOption = document.createElement('OPTION');
+                        languageOption.value = sprache.code;
+                        languageOption.innerText = sprache.code + ' (' + sprache.texte['data_name'] + ')';
+                        languageSelect.append(languageOption);
+                    }
+                    languageInput.parentElement.replaceChild(languageSelect, languageInput);
+                    languageSelect.value = window.parent.mati.spracheCode;
                 }
                 
                 document.getElementsByClassName('mati_button_add_theme')[0].addEventListener('click', function(event) {
