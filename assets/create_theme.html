@@ -79,6 +79,7 @@
                 width: 212px;
                 height: 128px;
                 position: relative;
+                vertical-align: middle;
             }
             span.mati_section_image_placeholder {
                 display: inline-block;
@@ -189,7 +190,8 @@
                 cursor: pointer;
                 opacity: 0;
             }
-            button.mati_button_remove_image {
+            button.mati_button_remove_image,
+            button.mati_button_random_section_image {
                 vertical-align: middle;
             }
             label#mati_load_theme_label {
@@ -329,9 +331,29 @@
                 
                 mati_addIntermediateChangesListener(sectionElement.getElementsByClassName('mati_section_name')[0], mati_validate);
                 
-                sectionElement.getElementsByClassName('mati_section_image_input')[0].addEventListener('change', function(event) {
+                let sectionInputOnChange = function(event) {
                     mati_updateThemeImageVorschau(event.target.files[0], sectionElement);
                     mati_validate();
+                };
+                sectionElement.getElementsByClassName('mati_section_image_input')[0].addEventListener('change', sectionInputOnChange);
+                
+                sectionElement.getElementsByClassName('mati_button_random_section_image')[0].addEventListener('click', function(event) {
+                    let labelElement = sectionElement.getElementsByClassName('mati_section_image_label')[0];
+                    let altesInputElement = sectionElement.getElementsByClassName('mati_section_image_input')[0];
+                    let neuesInputElement = document.createElement('input');
+                    neuesInputElement.className = 'mati_section_image_input';
+                    neuesInputElement.type = 'file';
+                    neuesInputElement.accept = altesInputElement.accept;
+                    labelElement.replaceChild(neuesInputElement, altesInputElement);
+                    neuesInputElement.addEventListener('change', sectionInputOnChange);
+                    
+                    let canvas = document.getElementById('mati_canvas');
+                    mati_drawRandomSectionImage(canvas);
+                    canvas.toBlob(function(sectionImageBlob) {
+                        neuesInputElement.matiImageBlob = sectionImageBlob;
+                        mati_updateThemeImageVorschau(sectionImageBlob, sectionElement);
+                        mati_validate();
+                    });
                 });
                 
                 mati_validate();
@@ -502,7 +524,55 @@
                 return themeObject;
             }
             
+            function mati_drawRandomSectionImage(canvas) {
+                canvas.width = 1920;
+                canvas.height = 1080;
+                var ctx = canvas.getContext("2d");
+                ctx.fillStyle = createRandomColor(1);
+                ctx.fillRect(0, 0, 1920, 1080);
+                let bildRadius = Math.sqrt(1920 * 1920 + 1080 * 1080) / 2;
+                for (let i=0; i<10; i++) {
+                    for (let j=0; j<90-i*10; j++) {
+                        ctx.beginPath();
+                        ctx.strokeStyle=createRandomColor(1);
+                        ctx.lineWidth=20;
+                        ctx.lineCap = "round";
+                        ctx.moveTo(Math.random()*1920, Math.random()*1080);
+                        ctx.bezierCurveTo(Math.random()*1920, Math.random()*1080, Math.random()*1920, Math.random()*1080, Math.random()*1920, Math.random()*1080);
+                        ctx.stroke();
+                    }
+                
+                    let randomGradient;
+                    if (Math.random() < .5) {
+                        let gradientWinkel = Math.random() * Math.PI * 2;
+                        let gradientCos = Math.cos(gradientWinkel);
+                        let gradientSin = Math.sin(gradientWinkel);
+                        let auslaufLaenge = Math.random();
+                        randomGradient = ctx.createLinearGradient(960 + gradientCos * bildRadius, 540 + gradientSin * bildRadius, 960 - gradientCos * bildRadius * auslaufLaenge, 540 - gradientSin * bildRadius * auslaufLaenge);
+                    }
+                    else {
+                        let x = Math.random() * 1920;
+                        let y = Math.random() * 1080;
+                        randomGradient = ctx.createRadialGradient(x, y, 0, x, y, bildRadius + bildRadius * Math.random());
+                    }
+                    randomGradient.addColorStop(0, createRandomColor(1));
+                    randomGradient.addColorStop(1, createRandomColor(0));
+                    ctx.fillStyle = randomGradient;
+                    ctx.fillRect(0, 0, 1920, 1080);
+                        
+                }
+            }
+            
+            function createRandomColor(alpha) {
+                let r = Math.floor(Math.random() * 256);
+                let g = Math.floor(Math.random() * 256);
+                let b = Math.floor(Math.random() * 256);
+                return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+            }
+            
             function mati_drawThemeIcon(canvas) {
+                canvas.width = 844;
+                canvas.height = 422;
                 var ctx = canvas.getContext("2d");
                 let sections = document.getElementsByClassName('mati_section');
                 let sectionIndex = 0;
@@ -860,6 +930,7 @@
                                 </span>
                                 <input class="mati_section_image_input" type="file" accept="image/jpeg" />
                             </label>
+                            <button class="mati_button_random_section_image">Generate Random Image</button>
                         </td>
                     </tr>
                 </tbody>
