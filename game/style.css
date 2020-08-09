@@ -394,35 +394,29 @@ span.mati_spieler_text {
 }
 @keyframes mati_animation_endresultat {
     0% {
-        border-color: #FF0000;
+        box-shadow: 0 0 0 .5em #FF0000;
     }
     16.66% {
-        border-color: #FFFF00;
+        box-shadow: 0 0 0 .5em #FFFF00;
     }
     33.33% {
-        border-color: #00FF00;
+        box-shadow: 0 0 0 .5em #00FF00;
     }
     50% {
-        border-color: #00FFFF;
+        box-shadow: 0 0 0 .5em #00FFFF;
     }
     66.66% {
-        border-color: #0000FF;
+        box-shadow: 0 0 0 .5em #0000FF;
     }
     83.33% {
-        border-color: #FF00FF;
+        box-shadow: 0 0 0 .5em #FF00FF;
     }
     100% {
-        border-color: #FF0000;
+        box-shadow: 0 0 0 .5em #FF0000;
     }
 }
 #mati_punktestand_spielerliste_container_container.mati_punktestand_endresultat {
-    top: .5em;
-    left: .5em;
-    right: .5em;
-    bottom: .5em;
-    border-radius: 1.5em;
-    border-width: .5em;
-    border-style: solid;
+    box-shadow: 0 0 0 .5em red;
     animation-name: mati_animation_endresultat;
     animation-duration: 6s;
     animation-iteration-count: infinite;

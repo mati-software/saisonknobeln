@@ -801,7 +801,16 @@ mati.pushThemeStarten = function() {
 		});
 		if (section === mati.aktuellesTheme.content.sections[mati.aktuellesTheme.content.sections.length - 1]) {
 			matiUtil.pushBefehl(function() {
+                matiUtil.fadeOut(document.getElementById("mati_hauptmusik"), 1000);
+				setTimeout(matiUtil.gotoNaechsterBefehl, 500);
+			});
+			matiUtil.pushBefehl(function() {
+                matiUtil.play(document.getElementById("mati_erfolgsjingle_musik"));
 				document.getElementById('mati_punktestand_spielerliste_container_container').classList.add('mati_punktestand_endresultat');
+				setTimeout(matiUtil.gotoNaechsterBefehl, 6000);
+			});
+			matiUtil.pushBefehl(function() {
+                matiUtil.fadeIn(document.getElementById("mati_hauptmusik"), 2000);
 				mati.broadcast('zeigeSpielAbschliessen');
                 return true; //unterbrechbar, da auf userinteraktion gewartet wird
 			});
