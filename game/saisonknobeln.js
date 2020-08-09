@@ -1067,7 +1067,7 @@ mati.pushAddNewLaguage = function(code, languageObject) {
 
 mati.convertBlobOrFileToImageElement = function(blobOrFile) {
     let img = document.createElement("IMG");
-    //FIXME TODO    URL.revokeObjectURL()    <-- muss man machen um URLs frei zu geben
+    img.className = 'mati_img_mit_objecturl';
     img.src = URL.createObjectURL(blobOrFile);
     return img;
 };
@@ -1076,13 +1076,35 @@ mati.pushAddNewTheme = function(codeMitPrefix, themeContent, imagesMap) {
     matiUtil.pushBefehl(function() {
         let vorhandenesThemeWurdeGeaendert = false;
         let theme;
+        let alteObjectUrls = [];
         for (theme of mati.themes) {
             if (theme.codeMitPrefix === codeMitPrefix) {
                 vorhandenesThemeWurdeGeaendert = true;
                 break;
             }
         }
-        if (!vorhandenesThemeWurdeGeaendert) {
+        if (vorhandenesThemeWurdeGeaendert) {
+            if (theme.themeImage && theme.themeImage.classList.contains('mati_img_mit_objecturl')) {
+                alteObjectUrls.push(theme.themeImage.src);
+            }
+            if (theme.sectionImages) {
+                for (let imageName in theme.sectionImages) {
+                    let img = theme.sectionImages[imageName];
+                    if (img.classList.contains('mati_img_mit_objecturl')) {
+                        alteObjectUrls.push(img.src);
+                    }
+                }
+            }
+            if (theme.questionImages) {
+                for (let imageName in theme.questionImages) {
+                    let img = theme.questionImages[imageName];
+                    if (img.classList.contains('mati_img_mit_objecturl')) {
+                        alteObjectUrls.push(img.src);
+                    }
+                }
+            }
+        }
+        else {
             theme = {
                 codeMitPrefix : codeMitPrefix
             };
@@ -1092,6 +1114,11 @@ mati.pushAddNewTheme = function(codeMitPrefix, themeContent, imagesMap) {
         theme.themeImage = mati.convertBlobOrFileToImageElement(imagesMap['theme.jpg']);
         theme.sectionImages = {};
         theme.questionImages = {};
+        
+        for (let objectUrl of alteObjectUrls) {
+            URL.revokeObjectURL(objectUrl);
+        }
+        
         for (let section of themeContent.sections) {
             theme.sectionImages[section.img] = mati.convertBlobOrFileToImageElement(imagesMap[section.img]);
             for (let question of section.questions) {
