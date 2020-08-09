@@ -1059,7 +1059,6 @@ mati.pushAddNewLaguage = function(code, languageObject) {
             
             mati.renderSprachauswahl();
         }
-        //TODO muss ich irgendwas bezüglich themes machen?
         matiUtil.gotoNaechsterBefehl();
     });
     mati.setSpracheCode(code, true); //macht eigentlich push, kann daher problemlos unter dem psuhBefehl stehen
@@ -1102,5 +1101,26 @@ mati.pushAddNewTheme = function(codeMitPrefix, themeContent, imagesMap) {
         }
         theme.shuffledQuestionOrderForSections = [];
         matiUtil.gotoNaechsterBefehl();
+    });
+};
+
+mati.pushShowSuccessIcon = function() {
+    matiUtil.pushBefehl(function() {
+        document.getElementById('mati_icon_success').style['opacity'] = 1;
+        document.getElementById('mati_icon_success').style['display'] = 'block';
+        setTimeout(matiUtil.gotoNaechsterBefehl, 250);
+    });
+    matiUtil.pushBefehl(function() {
+        matiAnimationUtil.animate({
+            element : document.getElementById('mati_icon_success'),
+            attribute : 'opacity',
+            start : 1,
+            end : 0,
+            easing : 'ease',
+            duration : 1500
+        }, function() {
+            document.getElementById('mati_icon_success').style['display'] = 'none';
+            matiUtil.gotoNaechsterBefehl();
+        });
     });
 };

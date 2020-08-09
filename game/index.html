@@ -301,6 +301,10 @@
                         </svg>
                     </div>
 				</div>
+                <svg id="mati_icon_success" preserveAspectRatio="xMidYMid meet" viewBox="0 0 70 70" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <circle cx="35" cy="35" r="30" fill="#00CC22" />
+                    <path d="M18,43 L27,52 L51,24" fill="none" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
 			</div>
             <div id="mati_toolbox_sprache_erstellen" class="mati_box">
 				<div id="mati_toolbox_sprache_erstellen_container_container">
@@ -608,8 +612,7 @@
 						mati.broadcast();
 						break;
                     case 'spielAbbrechen':
-                        //FIXME wenn man im Endresultat ist und Spiel abbricht, geht er nicht ins Hauptmenue
-                        if (mati.aktuellerStatus === 'themeauswahl' || mati.aktuellerStatus === 'spiel') {
+                        if (mati.aktuellerStatus === 'themeauswahl' || mati.aktuellerStatus === 'spiel' || mati.aktuellerStatus === 'toolbox') {
                             if (mati.queueEnthaeltLaufendesSpiel) {
                                 matiUtil.befehlsqueueLeeren();
                                 mati.queueEnthaeltLaufendesSpiel = false;
@@ -740,6 +743,7 @@
                             if (typeof spracheCode === 'string' && spracheCode.length > 0) {
                                 let sprache = JSON.parse(reader.result);
                                 mati.pushAddNewLaguage(spracheCode, sprache);
+                                mati.pushShowSuccessIcon();
                             }
                         }
                     };
@@ -782,6 +786,7 @@
                                     anzahlZuLadendeBilder--;
                                     if (anzahlZuLadendeBilder === 0) {
                                         mati.pushAddNewTheme(fullThemeCode, parsedTheme, imageMap);
+                                        mati.pushShowSuccessIcon();
                                     }
                                 });
                             }

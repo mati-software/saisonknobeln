@@ -3,7 +3,9 @@ var matiUtil = {
 	befehlsQueueWirdAbgearbeitet : false,
 	l10nTexte : {},
 	musikIstEingeschaltet : true,
-    aktuellerBefehlIstUnterbrechbar : false
+    aktuellerBefehlIstUnterbrechbar : false,
+    esWirdGeradeEinBefehlAusgefuehrt : false,
+    callGotoNaechsterBefehlSobaldVorherigerBefehlBeendet : false
 };
 
 
@@ -26,9 +28,20 @@ matiUtil.l10nHtml = function(textKey) {
 
 matiUtil.gotoNaechsterBefehl = function() {
 	if (matiUtil.befehlsQueue.length > 0) {
+        if (matiUtil.esWirdGeradeEinBefehlAusgefuehrt) {
+            //die Function des alten Befehls soll erst komplett zuende laufen, bevor der neue gestartet wird
+            matiUtil.callGotoNaechsterBefehlSobaldVorherigerBefehlBeendet = true;
+            return;
+        }
 		let befehl = matiUtil.befehlsQueue.shift();
 		matiUtil.befehlsQueueWirdAbgearbeitet = true;
+        matiUtil.esWirdGeradeEinBefehlAusgefuehrt = true;
 		matiUtil.aktuellerBefehlIstUnterbrechbar = befehl();
+        matiUtil.esWirdGeradeEinBefehlAusgefuehrt = false;
+        if (matiUtil.callGotoNaechsterBefehlSobaldVorherigerBefehlBeendet) {
+            matiUtil.callGotoNaechsterBefehlSobaldVorherigerBefehlBeendet = false;
+            matiUtil.gotoNaechsterBefehl();
+        }
 	}
 	else {
 		matiUtil.befehlsQueueWirdAbgearbeitet = false;
