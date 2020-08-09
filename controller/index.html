@@ -10,14 +10,13 @@
 				padding:0;
 				border:0;
 				margin:0;
+                background-color: black;
 			}        
         
             #mati_canvas {
                 position: absolute;
                 left: 0;
                 top: 0;
-                width: 100vw;
-                height: 100vh;
             }
             input#mati_spieler_text {
 				position:absolute;
@@ -983,11 +982,8 @@
                 //mati.buttonMitFokus = null;
             };
             
-            
-            
             mati.onWindowResize = function() {
-                //TODO FIXME das hier muss mit einsatzverzoegerung sein (debounce)
-                mati.setEmAndCreateVertecies();
+                mati.debouncedSetEmAndCreateVertecies();
             };
             
             
@@ -1089,6 +1085,8 @@
                 
                 mati.gl.canvas.width = width;
                 mati.gl.canvas.height = height;
+                mati.gl.canvas.style['width'] = window.innerWidth + 'px';
+                mati.gl.canvas.style['height'] = window.innerHeight + 'px';
                 mati.gl.viewport(0, 0, mati.gl.drawingBufferWidth, mati.gl.drawingBufferHeight);
                 
                 for (let programObjectKey in mati.glProgramObjects) {
@@ -1126,6 +1124,8 @@
                 
                 mati.updateSpielerTextInputSize();
             };
+            
+            mati.debouncedSetEmAndCreateVertecies = matiUtil.createDebouncedVersion(mati.setEmAndCreateVertecies, 250);
             
             mati.executeProgram = function(programObject, vertexStartIndexUndAnzahl, rotation, zoom) {
                 mati.gl.useProgram(programObject.program);

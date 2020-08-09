@@ -401,7 +401,7 @@
                 
 				matiUtil.pushBefehl(function() {
 					mati.broadcast('zeigeHauptmenue');
-                    //FIXME wtf? wenn das direkt ausgefuehrt wird, springe ich zum naechsten befehl bevor ich die intro-animation starte
+                    //TODO seltsam, dass das ganz oben statt unten steht
 					mati.zeigeContainer(document.getElementById('mati_spiel_lobby'), matiUtil.gotoNaechsterBefehl);
                     
                     document.getElementById('mati_hauptmusik').play();
@@ -707,7 +707,6 @@
                         iframeContainer.innerHTML = `<iframe src="${Tiltspot.get.assetUrl('create_theme.html')}"></iframe>`;
                     }
                     else {
-                        //FIXME iframe kann nicht scrollen, wenn es in display:none-Block ist
                         //iframeContainer.getElementsByTagName('iframe')[0].contentWindow.scrollTo(0, 0);
                     }
                     matiUtil.gotoNaechsterBefehl();
@@ -725,7 +724,6 @@
                         iframeContainer.innerHTML = `<iframe src="${Tiltspot.get.assetUrl('create_language.html')}"></iframe>`;
                     }
                     else {
-                        //FIXME iframe kann nicht scrollen, wenn es in display:none-Block ist
                         //iframeContainer.getElementsByTagName('iframe')[0].contentWindow.scrollTo(0, 0);
                     }
                     matiUtil.gotoNaechsterBefehl();

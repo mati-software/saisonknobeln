@@ -99,4 +99,16 @@ matiUtil.loadJson = function(dateipfad, callback) {
     });
     request.open('GET', dateipfad, true);
     request.send();  
- };
+};
+
+matiUtil.createDebouncedVersion = function(fn, delay) {
+    let timeoutId;
+    return function(...args) {
+        if(timeoutId) {
+            clearTimeout(timeoutId);
+        }
+        timeoutId = setTimeout(function() {
+            fn(...args);
+        }, delay);
+    }
+}
