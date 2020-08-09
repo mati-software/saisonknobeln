@@ -272,6 +272,7 @@ mati.neuesSpiel = function() {
                     return `
                         <div style="display:none" class="mati_themeselection_item_container" id="mati_themeselection_item_container_${theme.codeMitPrefix}">
                             <div class="mati_themeselection_item" style="background-image:url(${theme.themeImage.src})">
+                                ${theme.content.author ? `<div class="mati_themeselection_item_autor"><b>${matiUtil.l10nHtml('Author')}:</b> ${matiUtil.htmlEscape(theme.content.author)}</div>` : ''}
                             </div>
                         </div>
                     `;

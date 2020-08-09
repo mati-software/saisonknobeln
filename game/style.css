@@ -698,6 +698,15 @@ span.mati_spieler_text {
     background-repeat:no-repeat;
     background-position: center;
 }
+.mati_themeselection_item_autor {
+    width: 18em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+    position: relative;
+    top: 10em;
+}
 .mati_themeselection_item_container {
     position:absolute;
     left:0;
